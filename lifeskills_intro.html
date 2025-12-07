@@ -49,17 +49,34 @@
     }
 
     .top-bar-right a {
-      font-size: 0.8rem;
-      color: #a5f3fc;
-      text-decoration: none;
-      padding: 0.35rem 0.8rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.9);
-    }
+  font-size: 0.8rem;
+  color: #a5f3fc;
+  text-decoration: none;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.7);
+  background: rgba(15,23,42,0.9);
 
-    .top-bar-right a:hover { border-color: #38bdf8; }
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
+.top-bar-right a:hover {
+  border-color: #38bdf8;
+}
+
+@media (max-width: 480px) {
+  .top-bar-right a {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    max-width: 140px;
+  }
+}
     .step-label {
       font-size: 0.8rem;
       color: #94a3b8;
