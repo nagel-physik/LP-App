@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>ETF-/Sparrechner – Dein Zukunfts-Geld</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    /* Zurück-Button */
+    .top-bar-back {
+      max-width: 1120px;
+      margin: 0 auto 0.75rem;
+      padding: 0.5rem 0.25rem 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .back-link:hover {
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    /* Header */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .input-row input, .input-row select {
+      padding: 0.4rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.82rem;
+    }
+
+    .input-row input {
+      width: 120px;
+    }
+
+    .input-row span {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.4rem;
+    }
+
+    .risk-hint {
+      font-size: 0.78rem;
+      margin-top: -0.2rem;
+      margin-bottom: 0.6rem;
+      color: #fef9c3;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    /* Quick-Buttons */
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-btn {
+      font-size: 0.78rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .quick-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    /* Ergebnis + Kurve */
+    .result-highlight {
+      font-size: 1rem;
+      font-weight: 800;
+      margin: 0.4rem 0;
+    }
+
+    .result-line {
+      font-size: 0.82rem;
+      margin: 0.15rem 0;
+    }
+
+    .chart {
+      margin-top: 0.8rem;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.95);
+      padding: 0.6rem 0.7rem 0.8rem;
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 0.78rem;
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 170px;
+      display: block;
+    }
+
+    .axis {
+      stroke: rgba(148,163,184,0.8);
+      stroke-width: 0.5;
+    }
+
+    .grid-line {
+      stroke: rgba(30,64,175,0.6);
+      stroke-width: 0.3;
+    }
+
+    .curve {
+      fill: none;
+      stroke: #22c55e;
+      stroke-width: 1.4;
+    }
+
+    .curve-fill {
+      fill: url(#curveGradient);
+      opacity: 0.4;
+    }
+
+    .chart-caption {
+      margin-top: 0.45rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Zurück-Button -->
+<div class="top-bar-back">
+  <a href="sparen_intro.html" class="back-link">← zurück zu Sparen &amp; Zukunft</a>
+</div>
+
+<div class="shell">
+
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <h1><span class="icon">📈</span>ETF-/Sparrechner</h1>
+      <p>Teste, wie sich monatliche Beträge, Laufzeiten &amp; Renditen über viele Jahre entwickeln.</p>
+    </div>
+  </header>
+
+  <p class="step-label">Kapitel 3 · Teil 2 von 3 · Interaktiver „Börsenkurven“-Rechner</p>
+
+  <main class="layout">
+
+    <!-- Linke Spalte: Eingaben -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">⚙️</div>
+          <div class="card-header-title">Deine Eingaben</div>
+        </div>
+        <div class="card-body">
+
+          <div class="input-row">
+            <div>
+              <label for="monthly">Monatliche Sparrate</label>
+              <input type="number" id="monthly" value="50" min="0" />
+            </div>
+            <span>€</span>
+          </div>
+
+          <div class="input-row">
+            <div>
+              <label for="years">Dauer</label>
+              <input type="number" id="years" value="30" min="1" />
+            </div>
+            <span>Jahre</span>
+          </div>
+
+          <div class="input-row">
+            <div>
+              <label for="percentSelect">Durchschnittliche Rendite pro Jahr</label>
+              <select id="percentSelect">
+                <!-- Werte 1–12 %, 6 % vorausgewählt -->
+                <option value="1">1 %</option>
+                <option value="2">2 %</option>
+                <option value="3">3 %</option>
+                <option value="4">4 %</option>
+                <option value="5">5 %</option>
+                <option value="6" selected>6 %</option>
+                <option value="7">7 %</option>
+                <option value="8">8 %</option>
+                <option value="9">9 %</option>
+                <option value="10">10 %</option>
+                <option value="11">11 %</option>
+                <option value="12">12 %</option>
+              </select>
+            </div>
+            <span>pro Jahr (nur als vereinfachte Annahme)</span>
+          </div>
+
+          <p class="risk-hint" id="riskHint">
+            6 %: Wird oft als langfristiger Durchschnitt für breite Aktien-ETFs genannt.
+            Nicht garantiert, kann zwischendurch stark schwanken.
+          </p>
+
+          <div class="quick-buttons">
+            <span style="font-size:0.78rem; margin-right:0.3rem;">Beispiele:</span>
+            <button class="quick-btn" data-monthly="20" data-years="30" data-percent="6">20 €/30 J./6 %</button>
+            <button class="quick-btn" data-monthly="50" data-years="30" data-percent="7">50 €/30 J./7 %</button>
+            <button class="quick-btn" data-monthly="100" data-years="20" data-percent="6">100 €/20 J./6 %</button>
+            <button class="quick-btn" data-monthly="200" data-years="15" data-percent="9">200 €/15 J./9 %</button>
+          </div>
+
+          <button class="btn-primary" id="calcBtn">Berechnen ▶</button>
+
+          <p class="small" style="margin-top:0.7rem;">
+            ⚠️ <strong>Wichtig:</strong> Der Rechner nimmt zur Vereinfachung eine
+            <strong>glatte, durchschnittliche Rendite</strong> an. In der Realität
+            schwanken Kurse stark: Es kann Jahre mit Verlusten geben. An Börsen
+            gibt es <strong>immer Risiko</strong> – Gewinne sind nie garantiert.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechte Spalte: Ergebnis & Kurve -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📊</div>
+          <div class="card-header-title">Ergebnis &amp; „Börsenkurve“</div>
+        </div>
+        <div class="card-body">
+          <div class="result-highlight" id="headlineResult">
+            Gib Werte ein und klicke auf „Berechnen“.
+          </div>
+
+          <p class="result-line" id="lineInvested"></p>
+          <p class="result-line" id="lineFinal"></p>
+          <p class="result-line" id="lineProfit"></p>
+
+          <div class="chart" id="chartBox" style="display:none;">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <!-- Verlauf für die Fläche -->
+              <defs>
+                <linearGradient id="curveGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#22c55e" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#22c55e" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+
+              <!-- horizontale Grid-Linien -->
+              <line x1="0" y1="90" x2="100" y2="90" class="axis" />
+              <line x1="0" y1="10" x2="100" y2="10" class="grid-line" />
+              <line x1="0" y1="30" x2="100" y2="30" class="grid-line" />
+              <line x1="0" y1="50" x2="100" y2="50" class="grid-line" />
+              <line x1="0" y1="70" x2="100" y2="70" class="grid-line" />
+
+              <!-- vertikale Achse -->
+              <line x1="5" y1="5" x2="5" y2="95" class="axis" />
+              <!-- Kurve (Linie) -->
+              <polyline id="curveLine" class="curve" points=""></polyline>
+              <!-- Fläche unter der Kurve -->
+              <polygon id="curveFill" class="curve-fill" points=""></polygon>
+            </svg>
+
+            <p class="chart-caption">
+              So könnte sich dein Depot bei gleichbleibender Durchschnittsrendite
+              Jahr für Jahr entwickeln (vereinfacht dargestellt).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const monthlyInput = document.getElementById('monthly');
+  const yearsInput = document.getElementById('years');
+  const percentSelect = document.getElementById('percentSelect');
+  const riskHint = document.getElementById('riskHint');
+
+  const headlineResult = document.getElementById('headlineResult');
+  const lineInvested = document.getElementById('lineInvested');
+  const lineFinal = document.getElementById('lineFinal');
+  const lineProfit = document.getElementById('lineProfit');
+
+  const chartBox = document.getElementById('chartBox');
+  const curveLine = document.getElementById('curveLine');
+  const curveFill = document.getElementById('curveFill');
+
+  function fmtEuro(value) {
+    return value.toLocaleString('de-DE', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }) + ' €';
+  }
+
+  function updateRiskHint() {
+    const p = parseFloat(percentSelect.value);
+    let text = '';
+
+    if (p <= 3) {
+      text = p + ' %: Sehr defensiv. Entspricht eher sicheren Anlagen '
+            + '(Tagesgeld/Sparbuch/Anleihen), oft aber nur zeitweise erreichbar.';
+    } else if (p <= 7) {
+      text = p + ' %: Bereich, der häufig für breit gestreute Aktien-ETFs '
+            + 'als langfristiger Durchschnitt genannt wird – aber nie garantiert.';
+    } else if (p <= 10) {
+      text = p + ' %: Eher optimistisch. Könnte zu wachstumsstarken Aktien/ETFs passen, '
+            + 'mit deutlich stärkeren Schwankungen.';
+    } else {
+      text = p + ' %: Sehr optimistisch/spekulativ. Eher vergleichbar mit einzelnen '
+            + 'Aktien oder riskanten Anlagen. Hohe Chancen, aber auch hohes Risiko.';
+    }
+
+    riskHint.textContent = text;
+  }
+
+  percentSelect.addEventListener('change', updateRiskHint);
+  updateRiskHint();
+
+  function calcCurve() {
+    const m = parseFloat(monthlyInput.value) || 0;
+    const y = parseInt(yearsInput.value, 10) || 0;
+    const p = (parseFloat(percentSelect.value) || 0) / 100;
+
+    if (m <= 0 || y <= 0) {
+      headlineResult.textContent = 'Bitte gib eine sinnvolle Sparrate und Dauer ein.';
+      lineInvested.textContent = '';
+      lineFinal.textContent = '';
+      lineProfit.textContent = '';
+      chartBox.style.display = 'none';
+      return;
+    }
+
+    // jährliche Simulation
+    let invested = 0;
+    let value = 0;
+    const yearlyValues = [];
+
+    for (let year = 1; year <= y; year++) {
+      invested += m * 12;
+      value = (value + m * 12) * (1 + p);
+      yearlyValues.push(value);
+    }
+
+    const finalValue = value;
+    const profit = finalValue - invested;
+
+    headlineResult.textContent = 'Ergebnis deiner Sparsimulation:';
+
+    lineInvested.textContent = 'Insgesamt eingezahlt: ' + fmtEuro(invested);
+    lineFinal.textContent = 'Endwert nach ' + y + ' Jahren: ' + fmtEuro(finalValue);
+    lineProfit.textContent = 'davon Wertzuwachs/Zinseszins: ' + fmtEuro(profit);
+
+    // Kurve berechnen
+    chartBox.style.display = 'block';
+
+    const maxValue = Math.max(...yearlyValues);
+    if (maxValue <= 0) {
+      curveLine.setAttribute('points', '');
+      curveFill.setAttribute('points', '');
+      return;
+    }
+
+    const points = yearlyValues.map((v, i) => {
+      const x = (i / (y - 1 || 1)) * 95 + 5; // von 5 bis 100-? (Rand bei Achse)
+      const ySvg = 95 - (v / maxValue) * 85; // oben 10, unten 95
+      return `${x.toFixed(2)},${ySvg.toFixed(2)}`;
+    });
+
+    curveLine.setAttribute('points', points.join(' '));
+
+    // Fläche unter der Kurve
+    const fillPoints = [
+      `5,95`,
+      ...points,
+      `${points.length ? points[points.length - 1].split(',')[0] : 100},95`
+    ];
+    curveFill.setAttribute('points', fillPoints.join(' '));
+  }
+
+  document.getElementById('calcBtn').addEventListener('click', calcCurve);
+
+  // Quick-Buttons
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      monthlyInput.value = btn.dataset.monthly;
+      yearsInput.value = btn.dataset.years;
+      percentSelect.value = btn.dataset.percent;
+      updateRiskHint();
+      calcCurve();
+    });
+  });
+</script>
+
+</body>
+</html>

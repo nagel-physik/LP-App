@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steuererklärung – einfach erklärt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+
+    .back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 1rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    ul {
+      padding-left: 1.1rem;
+      margin: 0.35rem 0 0.2rem;
+      font-size: 0.84rem;
+    }
+
+    li { margin-bottom: 0.2rem; }
+
+    .hint {
+      font-size: 0.8rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .warn-box {
+      background: rgba(127,29,29,0.85);
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: #fee2e2;
+      margin-top: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="lohnzettel.html" class="back-link">← zurück zum Lohnzettel</a>
+
+  <header class="top-bar-left">
+    <h1><span class="icon">📄</span>Steuererklärung – was ist das?</h1>
+    <p>
+      Hier geht es darum, was eine Steuererklärung ist, warum viele Menschen damit
+      Geld zurückbekommen und warum die Steuerklasse nicht alles entscheidet.
+    </p>
+  </header>
+
+  <!-- Karte 1: Grundidee -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">💡</div>
+      <div class="card-header-title">Grundidee der Steuererklärung</div>
+    </div>
+    <div class="card-body">
+      <p>
+        Wenn du einen Lohnzettel bekommst, zahlst du jeden Monat schon
+        <strong>Lohnsteuer</strong> – das ist eine Vorauszahlung an den Staat.
+      </p>
+      <p>
+        In der <strong>Steuererklärung</strong> rechnet das Finanzamt am Ende (für ein Kalenderjahr) nach:
+      </p>
+      <ul>
+        <li>Wie viel hast du insgesamt verdient?</li>
+        <li>Wie viel Lohnsteuer wurde schon gezahlt?</li>
+        <li>Hast du Ausgaben gehabt, die deine Steuer senken können (z.B. Werbungskosten)?</li>
+      </ul>
+      <p>
+        Ergebnis:
+      </p>
+      <ul>
+        <li>Du hast zu viel gezahlt → du bekommst Geld <strong>zurück</strong>.</li>
+        <li>Du hast zu wenig gezahlt → du musst noch etwas <strong>nachzahlen</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Karte 2: Wer macht überhaupt eine Steuererklärung? (vereinfacht) -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">👥</div>
+      <div class="card-header-title">Wer macht eine Steuererklärung? (vereinfacht)</div>
+    </div>
+    <div class="card-body">
+      <p>
+        Viele junge Leute machen die erste Steuererklärung, wenn sie:
+      </p>
+      <ul>
+        <li>eine Ausbildung oder den ersten Job hatten,</li>
+        <li>im Jahr Lohnsteuer gezahlt haben (steht auf der Lohnsteuerbescheinigung),</li>
+        <li>Wege zur Arbeit hatten (Fahrtkosten),</li>
+        <li>oder Arbeitsmittel bezahlt haben (z.B. Bücher, Laptop für Ausbildung/Beruf).</li>
+      </ul>
+      <p>
+        In manchen Fällen ist eine Steuererklärung <strong>Pflicht</strong> (z.B. mehrere Jobs, bestimmte Steuerklassen­kombis),
+        in anderen Fällen ist sie <strong>freiwillig</strong>, kann sich aber lohnen.
+      </p>
+      <p class="hint">
+        Für euch wichtig: Wenn Lohnsteuer gezahlt wurde, lohnt es sich oft zu prüfen,
+        ob man Geld zurückbekommt – gerade bei Azubis und Berufsanfänger:innen.
+      </p>
+      <p class="warn-box">
+        ⚠️ <strong>Wichtig:</strong> Die genauen Regeln, wer eine Steuererklärung abgeben muss,
+        ändern sich manchmal und sind ziemlich kompliziert.
+        Diese Seite ersetzt keine Steuerberatung. Im Zweifel solltest du
+        aktuelle Infos beim Finanzamt, einer Lohnsteuerhilfe oder einer
+        Steuerberaterin / einem Steuerberater einholen.
+      </p>
+    </div>
+  </div>
+
+  <!-- Karte 3: Was braucht man für die Steuererklärung? -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">📂</div>
+      <div class="card-header-title">Was brauchst du für deine Steuererklärung?</div>
+    </div>
+    <div class="card-body">
+      <p>
+        Typische Unterlagen (Beispiele):
+      </p>
+      <ul>
+        <li><strong>Lohnsteuerbescheinigung</strong> (vom Arbeitgeber, meist digital und als Papier/PDF)</li>
+        <li><strong>IBAN</strong> (für Erstattung vom Finanzamt)</li>
+        <li>Nachweise über <strong>Werbungskosten</strong> (z.B. Fahrtkosten zur Arbeit, Arbeitskleidung, Arbeitsmittel)</li>
+        <li>ggf. Bescheinigungen über andere Einkünfte oder Versicherungen</li>
+      </ul>
+      <p class="hint">
+        Keine Panik: Am Anfang ist es oft nur eine kleine Sammlung – bei vielen jungen Menschen
+        reichen Lohnsteuerbescheinigung, IBAN und ein paar einfache Angaben.
+      </p>
+    </div>
+  </div>
+
+  <!-- Karte 4: Wie läuft das praktisch ab? -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">🖥️</div>
+      <div class="card-header-title">Wie läuft eine Steuererklärung ab? (vereinfacht)</div>
+    </div>
+    <div class="card-body">
+      <p>
+        Ganz grob könnte es so aussehen:
+      </p>
+      <ul>
+        <li>Du sammelst deine Unterlagen (z.B. Lohnsteuerbescheinigung).</li>
+        <li>Du gibst deine Daten in ein Programm oder Portal ein (z.B. offizielle Online-Portale oder Apps).</li>
+        <li>Das Programm berechnet, ob du eher Geld zurückbekommst oder etwas nachzahlen müsstest.</li>
+        <li>Du schickst die Erklärung digital ans Finanzamt.</li>
+        <li>Ein paar Wochen später kommt ein <strong>Bescheid</strong> mit dem Ergebnis.</li>
+      </ul>
+      <p class="hint">
+        Für euch: Wichtig ist erstmal nur, zu verstehen, dass die Steuererklärung
+        eine Art „Endabrechnung“ ist – und kein Monster, das man für immer meiden muss.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

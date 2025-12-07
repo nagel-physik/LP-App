@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rechte-Check – Arbeit & Ausbildung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .top-bar-back {
+      max-width: 1120px;
+      margin: 0 auto 0.75rem;
+      padding: 0.5rem 0.25rem 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .back-link:hover {
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.5rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.84rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .checklist {
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.16rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-right: 0.3rem;
+    }
+
+    .badge-right {
+      background: rgba(22,163,74,0.2);
+      color: #bbf7d0;
+      border: 1px solid rgba(22,163,74,0.7);
+    }
+
+    .badge-duty {
+      background: rgba(234,179,8,0.18);
+      color: #fef9c3;
+      border: 1px solid rgba(234,179,8,0.8);
+    }
+
+    .badge-note {
+      background: rgba(148,163,184,0.18);
+      color: #e5e7eb;
+      border: 1px solid rgba(148,163,184,0.8);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar-back">
+  <a href="arbeit_intro.html" class="back-link">← zurück zu Arbeit &amp; Rechte (Grundlagen)</a>
+</div>
+
+<div class="shell">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <h1><span class="icon">💼</span>Rechte-Check – Arbeit &amp; Ausbildung</h1>
+      <p>
+        Wähle deine Situation und sieh dir an, welche typischen Rechte und Pflichten
+        du ungefähr hast – z.B. im Schülerjob oder in der Ausbildung.
+      </p>
+    </div>
+  </header>
+
+  <p class="step-label">Kapitel 6 · Teil 2 von 3 · Interaktiver Rechte-Check</p>
+
+  <main class="layout">
+    <!-- Auswahl -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">⚙️</div>
+          <div class="card-header-title">Deine Situation</div>
+        </div>
+        <div class="card-body">
+          <label for="workStage">Was passt im Moment am besten zu dir?</label>
+          <select id="workStage">
+            <option value="schuelerjob">Schülerjob / Minijob neben der Schule</option>
+            <option value="azubi_u18">Ausbildung (unter 18)</option>
+            <option value="azubi_18">Ausbildung (ab 18)</option>
+            <option value="berufseinsteiger">Erster Job nach Ausbildung/Schule</option>
+            <option value="schulpraktikum">Schulpraktikum</option>
+          </select>
+
+          <button class="btn-primary" id="checkBtn">Übersicht anzeigen ▶</button>
+
+          <p class="small">
+            Die Infos sind bewusst vereinfacht und geben nur einen groben Überblick.
+            Exakte Regeln (z.B. Arbeitszeiten, Mindestlohn, Urlaubsanspruch)
+            solltest du immer aktuell nachschlagen oder nachfragen.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ergebnis -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📋</div>
+          <div class="card-header-title">Deine Rechte &amp; Pflichten im Überblick</div>
+        </div>
+        <div class="card-body">
+          <div id="resultBox" class="checklist">
+  Wähle links deine Situation und klicke auf „Übersicht anzeigen“.
+</div>
+
+<div style="margin-top:0.8rem;">
+  <button class="btn-primary" onclick="window.location.href='arbeit_faelle.html'">
+    Fallbeispiele ansehen ▶
+  </button>
+</div>
+
+<p class="small">
+  🟢 <span class="badge badge-right">Recht</span> = Dinge, auf die du Anspruch hast<br>
+  🟡 <span class="badge badge-duty">Pflicht</span> = Dinge, die von dir erwartet werden<br>
+  ⚪ <span class="badge badge-note">Hinweis</span> = wichtige Infos/Tipps
+</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const workStageSelect = document.getElementById('workStage');
+  const resultBox = document.getElementById('resultBox');
+  const checkBtn = document.getElementById('checkBtn');
+
+  function renderResult() {
+    const stage = workStageSelect.value;
+    let html = '';
+
+    if (stage === 'schuelerjob') {
+      html = `
+        <p><strong>Schülerjob / Minijob neben der Schule</strong></p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Schriftliche Vereinbarung / Vertrag</strong><br>
+          Auch bei kleinen Jobs sollte geregelt sein, wann du arbeitest, was du machst
+          und wie viel du bekommst.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Pausen &amp; Arbeitszeiten</strong><br>
+          Als Jugendliche:r gelten besondere Schutzregeln (z.B. max. Stunden/Tag,
+          Pausen, keine späte Nachtarbeit). Die stehen im Jugendarbeitsschutzgesetz.
+        </p>
+        <p>
+          <span class="badge badge-duty">Pflicht</span>
+          <strong>Pünktlichkeit &amp; Zuverlässigkeit</strong><br>
+          Du erscheinst zum vereinbarten Dienst und meldest dich rechtzeitig,
+          wenn du krank bist oder verhindert bist.
+        </p>
+        <p>
+          <span class="badge badge-note">Hinweis</span>
+          <strong>Schule geht vor</strong><br>
+          Dein Job darf die Schule nicht gefährden – Noten, Hausaufgaben und
+          Prüfungen haben Vorrang.
+        </p>
+      `;
+    } else if (stage === 'azubi_u18') {
+      html = `
+        <p><strong>Ausbildung (unter 18)</strong></p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Ausbildungsvertrag &amp; Ausbildungsplan</strong><br>
+          Es muss klar sein, in welchem Beruf du ausgebildet wirst und welche Inhalte
+          dir vermittelt werden sollen.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Berufsschule &amp; Lernzeit</strong><br>
+          Unterricht in der Berufsschule gehört zur Arbeitszeit – du wirst
+          freigestellt, damit du hingehen kannst.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Schutz durch Jugendarbeitsschutz</strong><br>
+          Es gibt klare Grenzen für tägliche Arbeitszeit, Pausen und bestimmte
+          Arbeiten. Diese Regeln sind dafür da, dich zu schützen.
+        </p>
+        <p>
+          <span class="badge badge-duty">Pflicht</span>
+          <strong>Mitlernen &amp; Berichtsheft</strong><br>
+          Du musst aktiv mitarbeiten, Fragen stellen und – wo vorgeschrieben –
+          dein Berichtsheft führen.
+        </p>
+        <p>
+          <span class="badge badge-note">Hinweis</span>
+          <strong>Ansprechpersonen</strong><br>
+          Bei Problemen kannst du dich an Ausbilder:in, Betriebsrat/JAV oder
+          ggf. die zuständige Kammer wenden.
+        </p>
+      `;
+    } else if (stage === 'azubi_18') {
+      html = `
+        <p><strong>Ausbildung (ab 18)</strong></p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Ausbildung statt Ausnutzung</strong><br>
+          Auch als volljährige:r Azubi bist du nicht einfach billige Arbeitskraft.
+          Du hast Anspruch darauf, den Beruf zu lernen.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Vergütung &amp; Urlaub</strong><br>
+          Du bekommst eine Ausbildungsvergütung und bezahlten Urlaub –
+          wie viel genau, steht im Vertrag bzw. Tarifvertrag.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Berufsschule</strong><br>
+          Auch hier gehört der Besuch der Berufsschule zur Ausbildung und wird
+          entsprechend berücksichtigt.
+        </p>
+        <p>
+          <span class="badge badge-duty">Pflicht</span>
+          <strong>Mitwirken &amp; Regeln einhalten</strong><br>
+          Du hältst Sicherheits- und Betriebsregeln ein, meldest dich krank
+          und gehst zur Berufsschule.
+        </p>
+        <p>
+          <span class="badge badge-note">Hinweis</span>
+          <strong>Rechtliche Details nachschlagen</strong><br>
+          Exakte Arbeitszeiten, Fristen und Ansprüche stehen in Gesetzen
+          und Tarifverträgen. Im Zweifel: informieren oder nachfragen.
+        </p>
+      `;
+    } else if (stage === 'berufseinsteiger') {
+      html = `
+        <p><strong>Erster Job nach Ausbildung/Schule</strong></p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Arbeitsvertrag &amp; Lohn</strong><br>
+          Du hast Anspruch auf einen schriftlichen Vertrag, aus dem
+          Aufgaben, Arbeitszeit, Lohn/Gehaltsart und Urlaub hervorgehen.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Arbeitszeit &amp; Pausen</strong><br>
+          Es gibt Obergrenzen für Arbeitszeit und Pflichtpausen
+          (Arbeitszeitgesetz). Überstunden müssen geregelt sein.
+        </p>
+        <p>
+          <span class="badge badge-duty">Pflicht</span>
+          <strong>Leistung &amp; Professionalität</strong><br>
+          Du übernimmst Verantwortung für deine Aufgaben, arbeitest
+          mit Kolleg:innen zusammen und hältst Absprachen ein.
+        </p>
+        <p>
+          <span class="badge badge-note">Hinweis</span>
+          <strong>Interessenvertretung &amp; Hilfe</strong><br>
+          In vielen Betrieben gibt es Betriebsrat oder Personalrat.
+          Sie sind da, wenn du Fragen oder Konflikte im Job hast.
+        </p>
+      `;
+    } else if (stage === 'schulpraktikum') {
+      html = `
+        <p><strong>Schulpraktikum</strong></p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Begleitung &amp; Aufgaben zum Lernen</strong><br>
+          Ein Praktikum ist vor allem zum Reinschnuppern da.
+          Du sollst Einblicke bekommen und einfache Aufgaben ausprobieren –
+          nicht eine volle Stelle ersetzen.
+        </p>
+        <p>
+          <span class="badge badge-right">Recht</span>
+          <strong>Schutz &amp; Betreuung</strong><br>
+          Du wirst angeleitet, bekommst erklärt, was du tust,
+          und man achtet auf deine Sicherheit.
+        </p>
+        <p>
+          <span class="badge badge-duty">Pflicht</span>
+          <strong>Mitmachen &amp; Rückmeldung</strong><br>
+          Du gibst dir Mühe, kommst pünktlich, fragst nach und
+          gibst Rückmeldung an Schule/Betrieb.
+        </p>
+        <p>
+          <span class="badge badge-note">Hinweis</span>
+          <strong>Probleme ernst nehmen</strong><br>
+          Wenn du dich unwohl oder unfair behandelt fühlst,
+          sprich mit deiner Lehrkraft oder den Ansprechpersonen im Betrieb.
+        </p>
+      `;
+    }
+
+    html += `
+      <p class="small">
+        ❗ <strong>Wichtig:</strong> Diese Übersicht ersetzt keine Rechtsberatung.
+        Sie soll dir helfen, ein Gefühl für Rechte &amp; Pflichten zu bekommen.
+        Konkrete Fragen solltest du mit Vertrauenspersonen, Betriebsrat,
+        Jugendvertretung oder Beratungsstellen klären.
+      </p>
+    `;
+
+    resultBox.innerHTML = html;
+  }
+
+  checkBtn.addEventListener('click', renderResult);
+</script>
+
+</body>
+</html>

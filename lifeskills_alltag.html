@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Life Skills – Alltag & Organisation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      margin-bottom: 1rem;
+    }
+    .back-link:hover {
+      border-color: #38bdf8;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+    header p {
+      margin: 0.3rem 0 1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1f2937;
+      padding: 1rem;
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+      margin-bottom: 0.8rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.4rem;
+    }
+
+    /* Felder */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-top: 0.5rem;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.8rem;
+    }
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .field input[type="text"],
+    .field input[type="time"] {
+      padding: 0.32rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.82rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+    .pill {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .btn-primary {
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.55);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .result-box {
+      margin-top: 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #020617;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.8rem;
+      white-space: pre-line;
+    }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.45rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+
+    /* Info-Liste */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .info-item-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .info-item-text {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="lifeskills_intro.html" class="back-link">← zurück zu Life Skills</a>
+
+    <header>
+      <h1><span>🗂</span>Alltag &amp; Organisation</h1>
+      <p>
+        Viele fühlen sich so, als würden sie dauernd Dingen hinterherlaufen:
+        Aufgaben, Chats, Termine. Hier übst du, deinen Tag einfacher zu strukturieren –
+        ohne perfektes Bullet Journal.
+      </p>
+    </header>
+
+    <p class="step-label">Level 11 · Bereich 1 · Deinen Alltag im Griff haben.</p>
+
+    <main class="layout">
+      <!-- linke Spalte -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📝</div>
+            <div class="card-header-title">Mini-Tagesplan: 3 wichtigste Aufgaben</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Schreib drei Dinge auf, die heute wirklich wichtig sind.
+              Mehr schafft man oft sowieso nicht richtig konzentriert.
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label><span>1. Aufgabe</span></label>
+                <input id="task1" type="text" placeholder="z.B. Mathe-Hausaufgabe fertig machen" />
+              </div>
+              <div class="field">
+                <label><span>2. Aufgabe</span></label>
+                <input id="task2" type="text" placeholder="z.B. Zimmer aufräumen" />
+              </div>
+              <div class="field">
+                <label><span>3. Aufgabe</span></label>
+                <input id="task3" type="text" placeholder="z.B. 20 Minuten für Bewerbung / Praktikum" />
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <div class="pill">Tipp: erst Schule, dann Haushalt, dann Freizeit</div>
+              <div class="pill">„Done ist besser als perfekt.“</div>
+            </div>
+
+            <button class="btn-primary" id="planBtn">Plan zusammenfassen ▶</button>
+
+            <div class="result-box" id="planResult" style="display:none;"></div>
+
+            <p class="small">
+              Idee für den Unterricht: Die Klasse erstellt gemeinsam Beispiel-Tagespläne
+              für „normalen Tag“, „Lerntag vor Arbeit“ und „Tag mit Nebenjob“.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">⏰</div>
+            <div class="card-header-title">Zeitfenster statt Stundenplan im Kopf</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Wähle grobe Zeitfenster. Es geht nicht um Minuten, sondern um Reihenfolge.
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label><span>Schule / Weg nach Hause</span></label>
+                <input type="time" id="homeTime" value="15:00" />
+              </div>
+              <div class="field">
+                <label><span>Start „Pflicht-Dinge“ (Hausaufgaben / Haushalt)</span></label>
+                <input type="time" id="focusTime" value="16:00" />
+              </div>
+              <div class="field">
+                <label><span>Spätestens Schluss mit Pflichten</span></label>
+                <input type="time" id="endTime" value="19:00" />
+              </div>
+            </div>
+
+            <button class="btn-primary" id="timeBtn">Zeitfenster anzeigen ▶</button>
+
+            <div class="result-box" id="timeResult" style="display:none;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- rechte Spalte -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📊</div>
+            <div class="card-header-title">Prioritäten – was ist wirklich wichtig?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Du kannst alles machen – aber nicht alles gleichzeitig. Typische Reihenfolge:
+            </p>
+
+            <div class="info-list">
+              <div>
+                <div class="info-item-title">1. Muss heute (Deadline / Konsequenzen)</div>
+                <div class="info-item-text">
+                  z.B. Arbeit morgen, heute letzte Chance; wichtige Mail; verschobene Aufgabe von gestern.
+                </div>
+              </div>
+              <div>
+                <div class="info-item-title">2. Gut für Zukunft</div>
+                <div class="info-item-text">
+                  z.B. Bewerbungen, Praktikumssuche, Lernplan für Prüfungen, Wohnungssuche.
+                </div>
+              </div>
+              <div>
+                <div class="info-item-title">3. Nice to have</div>
+                <div class="info-item-text">
+                  z.B. Zimmer perfekt dekorieren, Handy-Ordner sortieren, Serien weiterbingen.
+                </div>
+              </div>
+            </div>
+
+            <p class="small">
+              Viele haben Stress, weil sie Punkt 3 zuerst machen.
+              Diese Seite soll helfen, das bewusster zu entscheiden – nicht verbieten.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Check: Was wäre eine gute Entscheidung?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Morgen hast du eine Klassenarbeit, dein Zimmer ist etwas chaotisch,
+              Freunde schreiben wegen Gaming. Was ist eine sinnvolle Reihenfolge?
+            </p>
+
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>1. Lernen für die Arbeit · 2. Kurz aufräumen · 3. Danach mit Freunden zocken.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>Erst 3 Stunden zocken, dann schauen, ob noch Zeit zum Lernen ist.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Nur aufräumen, Lernen kann man ja in der Pause.</span>
+              </button>
+            </div>
+
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Mini-Tagesplan
+    const planBtn = document.getElementById("planBtn");
+    const planResult = document.getElementById("planResult");
+
+    planBtn.addEventListener("click", () => {
+      const t1 = document.getElementById("task1").value.trim();
+      const t2 = document.getElementById("task2").value.trim();
+      const t3 = document.getElementById("task3").value.trim();
+
+      let items = [t1, t2, t3].filter(t => t !== "");
+      if (items.length === 0) {
+        planResult.textContent = "Schreib mindestens eine Aufgabe auf – klein ist okay.";
+      } else {
+        planResult.textContent =
+          "Dein Fokus heute:\n• " + items.join("\n• ") +
+          "\n\nAlles andere ist Bonus. Wenn diese Punkte erledigt sind, bist du im Plus.";
+      }
+      planResult.style.display = "block";
+    });
+
+    // Zeitfenster
+    const timeBtn = document.getElementById("timeBtn");
+    const timeResult = document.getElementById("timeResult");
+
+    timeBtn.addEventListener("click", () => {
+      const home = document.getElementById("homeTime").value || "??:??";
+      const focus = document.getElementById("focusTime").value || "??:??";
+      const end = document.getElementById("endTime").value || "??:??";
+
+      const text =
+        "Grobe Struktur für heute:\n" +
+        "• Bis " + home + ": Schule / Heimweg\n" +
+        "• " + home + "–" + end + ": Pflichten (Hausaufgaben, Haushalt, Bewerbungen)\n" +
+        "• Danach: freie Zeit / Entspannung\n\n" +
+        "Du darfst die Zeiten anpassen – wichtig ist, dass es einen Rahmen gibt.";
+      timeResult.textContent = text;
+      timeResult.style.display = "block";
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent = "Genau: Erst das, was Konsequenzen hat (Klassenarbeit), dann Ordnung, dann Zocken.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent = "Nicht ideal. Freizeit ist wichtig, aber Prüfungen haben meist stärkere Folgen.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

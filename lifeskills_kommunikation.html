@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<title>Life Skills – Kommunikation & Konflikte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+/* ---------- Layout & Grunddesign wie in den anderen Life-Skills-Seiten ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+  color: #e5e7eb;
+  min-height: 100vh;
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.6rem 1.2rem 2.1rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.88rem;
+  color: #a5f3fc;
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.7);
+  background: rgba(15,23,42,0.9);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+}
+.back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+header h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+header h1 span.icon { font-size: 1.7rem; }
+header p {
+  margin: 0.25rem 0 1rem;
+  font-size: 0.86rem;
+  color: #cbd5f5;
+  max-width: 36rem;
+}
+
+.step-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 0.6rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 1.3rem;
+  align-items: flex-start;
+}
+@media (max-width: 880px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+/* ---------- Karten-Styling ---------- */
+.card {
+  background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+  border-radius: 18px;
+  padding: 1rem 1.05rem 1.1rem;
+  border: 1px solid rgba(148,163,184,0.6);
+  box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+  margin-bottom: 1rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.4rem;
+}
+.card-header-icon { font-size: 1.3rem; }
+.card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+.card-body { font-size: 0.86rem; line-height: 1.5; }
+
+/* ---------- Avatar-Auswahl ---------- */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+.avatar-card {
+  border-radius: 14px;
+  border: 1px solid rgba(148,163,184,0.6);
+  background: radial-gradient(circle at top, rgba(59,130,246,0.4), rgba(15,23,42,0.98));
+  padding: 0.75rem 0.8rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.avatar-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+  border-color: #38bdf8;
+}
+.avatar-card.selected {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+}
+.avatar-icon { font-size: 1.6rem; }
+.avatar-name { font-size: 0.9rem; font-weight: 700; }
+.avatar-role { font-size: 0.76rem; color: #cbd5f5; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-radius: 999px;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #022c22;
+  cursor: pointer;
+  box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+  margin-top: 0.7rem;
+}
+.btn-primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+/* ---------- Tipp-Effekt ---------- */
+.typing {
+  border-right: 2px solid #a5f3fc;
+  white-space: pre-line;
+  min-height: 3.2rem;
+}
+
+/* ---------- Quiz ---------- */
+.answers { display: grid; gap: 0.45rem; margin-top: 0.6rem; }
+.answer-btn {
+  width: 100%;
+  text-align: left;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(148,163,184,0.65);
+  background: rgba(15,23,42,0.9);
+  color: #e5e7eb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.answer-btn:hover { border-color: #38bdf8; }
+.feedback { margin-top: 0.5rem; font-size: 0.8rem; }
+.feedback.error { color: #fecaca; }
+
+/* ---------- Info-Karten ---------- */
+.info-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.info-card {
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,0.75);
+  background: rgba(15,23,42,0.95);
+  overflow: hidden;
+}
+.info-header {
+  width: 100%;
+  border: none;
+  padding: 0.6rem 0.7rem;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer;
+}
+.info-arrow { transition: transform 0.2s; }
+.info-card.open .info-arrow { transform: rotate(90deg); }
+.info-body {
+  display: none;
+  border-top: 1px solid rgba(51,65,85,0.9);
+  padding: 0.6rem;
+}
+.info-body-inner { white-space: pre-line; font-size: 0.82rem; }
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<a href="lifeskills_intro.html" class="back-link">← zurück zu Life Skills</a>
+
+<header>
+  <h1><span class="icon">💬</span>Kommunikation &amp; Konflikte lösen</h1>
+  <p>
+    Streit, Missverständnisse, Druck – das passiert in jeder Familie, Freundschaft
+    und auch in der Schule oder im Praktikum. Hier lernst du, wie man fair bleibt,
+    ruhig bleibt und trotzdem klare Grenzen setzt.
+  </p>
+</header>
+
+<p class="step-label">Level 11 · Bereich 2 · Respektvoll reden, Probleme lösen.</p>
+
+<main class="layout">
+
+<!-- ======================= LINKE SPALTE ======================= -->
+<section>
+
+<!-- Avatar-Coach -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-header-icon">🗣️</div>
+    <div class="card-header-title">Dein Kommunikations-Coach</div>
+  </div>
+  <div class="card-body">
+    <p>Wähl aus, wer dich durch typische Konflikte begleitet:</p>
+
+    <div class="avatar-grid">
+      <div class="avatar-card" data-avatar="Mia">
+        <div class="avatar-icon">🧑‍🎤</div>
+        <div class="avatar-name">Mia</div>
+        <div class="avatar-role">„Ich helfe dir, ruhig zu bleiben &amp; klar zu reden.“</div>
+      </div>
+
+      <div class="avatar-card" data-avatar="Leon">
+        <div class="avatar-icon">🧑‍🏫</div>
+        <div class="avatar-name">Leon</div>
+        <div class="avatar-role">„Ich zeige dir, wie man fair streitet &amp; Grenzen setzt.“</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="startCoachBtn" disabled>Coach starten ▶</button>
+  </div>
+</div>
+
+<!-- Coach-Text -->
+<div class="card" id="coachTalk" style="display:none;">
+  <div class="card-header">
+    <div class="card-header-icon" id="coachIcon">🧑‍🎤</div>
+    <div class="card-header-title" id="coachTitle">Dein Coach</div>
+  </div>
+  <div class="card-body">
+    <div id="coachText" class="typing"></div>
+  </div>
+</div>
+
+<!-- Szenario 1 -->
+<div class="card question-card">
+  <div class="card-header">
+    <div class="card-header-icon">🏫</div>
+    <div class="card-header-title">Szenario 1: Streit in der Schule</div>
+  </div>
+  <div class="card-body">
+    <p>
+      Eine Lehrkraft sagt streng: „Warum hast du deine Aufgabe nicht gemacht?“  
+      Du fühlst dich unfair behandelt – du hattest sie gemacht, aber zu Hause vergessen.
+    </p>
+
+    <div class="answers">
+      <button class="answer-btn" data-q="1" data-correct="true">
+        <span>🅰️</span>
+        <span>„Ich verstehe, warum Sie ärgerlich sind. Ich habe sie gemacht, aber leider vergessen mitzunehmen.“</span>
+      </button>
+
+      <button class="answer-btn" data-q="1" data-correct="false">
+        <span>🅱️</span>
+        <span>„Warum schreien Sie mich an? Andere machen NIE was und ich bin schuld?!“</span>
+      </button>
+
+      <button class="answer-btn" data-q="1" data-correct="false">
+        <span>🅾️</span>
+        <span>Ich schweige, schaue genervt weg und sage gar nichts.</span>
+      </button>
+    </div>
+    <div id="fb1" class="feedback"></div>
+  </div>
+</div>
+
+<!-- Szenario 2 -->
+<div class="card question-card">
+  <div class="card-header">
+    <div class="card-header-icon">🏠</div>
+    <div class="card-header-title">Szenario 2: Stress zu Hause</div>
+  </div>
+  <div class="card-body">
+    <p>
+      Deine Eltern werfen dir vor: „Du machst NIE im Haushalt mit!“  
+      (Du findest das unfair.)
+    </p>
+
+    <div class="answers">
+      <button class="answer-btn" data-q="2" data-correct="true">
+        <span>🅰️</span>
+        <span>„Ich sehe, dass ihr viel macht. Ich möchte helfen. Können wir konkret absprechen, was ich übernehme?“</span>
+      </button>
+
+      <button class="answer-btn" data-q="2" data-correct="false">
+        <span>🅱️</span>
+        <span>„Immer meckert ihr nur! Dann mache ich halt gar nichts mehr!“</span>
+      </button>
+
+      <button class="answer-btn" data-q="2" data-correct="false">
+        <span>🅾️</span>
+        <span>Ich knalle die Tür zu und gehe.</span>
+      </button>
+    </div>
+    <div id="fb2" class="feedback"></div>
+  </div>
+</div>
+
+<!-- Szenario 3 -->
+<div class="card question-card">
+  <div class="card-header">
+    <div class="card-header-icon">💼</div>
+    <div class="card-header-title">Szenario 3: Praktikum – Kritik</div>
+  </div>
+  <div class="card-body">
+    <p>
+      Dein Chef sagt: „Du bist zu langsam.“  
+      Du bist enttäuscht und fühlst dich angegriffen.
+    </p>
+
+    <div class="answers">
+      <button class="answer-btn" data-q="3" data-correct="true">
+        <span>🅰️</span>
+        <span>„Danke für das Feedback. Können Sie mir zeigen, wie ich es schneller machen kann?“</span>
+      </button>
+
+      <button class="answer-btn" data-q="3" data-correct="false">
+        <span>🅱️</span>
+        <span>„Was soll das? Ich mache das zum ersten Mal!“</span>
+      </button>
+
+      <button class="answer-btn" data-q="3" data-correct="false">
+        <span>🅾️</span>
+        <span>Ich ignoriere es und arbeite einfach weiter.</span>
+      </button>
+    </div>
+    <div id="fb3" class="feedback"></div>
+  </div>
+</div>
+
+</section>
+
+<!-- ======================= RECHTE SPALTE ======================= -->
+<section>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-header-icon">📘</div>
+    <div class="card-header-title">Drei wichtige Grundlagen</div>
+  </div>
+
+  <div class="card-body">
+    <div class="info-list">
+
+      <!-- Info 1 -->
+      <div class="info-card">
+        <button class="info-header">
+          <div class="info-title-wrap">
+            <div class="info-icon">💡</div>
+            <div class="info-title">1. Ich-Botschaften statt Vorwürfe</div>
+          </div>
+          <div class="info-arrow">▶</div>
+        </button>
+        <div class="info-body">
+          <div class="info-body-inner">
+            Vorwürfe machen Menschen dicht.
+            Beispiel:
+            ❌ „Du nervst immer!“  
+            ✔ „Ich fühle mich gestresst, wenn so viel auf einmal kommt.“
+
+            Formel (einfach merken):
+            • Ich fühle …  
+            • weil …  
+            • ich brauche …
+          </div>
+        </div>
+      </div>
+
+      <!-- Info 2 -->
+      <div class="info-card">
+        <button class="info-header">
+          <div class="info-title-wrap">
+            <div class="info-icon">🧱</div>
+            <div class="info-title">2. Grenzen setzen</div>
+          </div>
+          <div class="info-arrow">▶</div>
+        </button>
+        <div class="info-body">
+          <div class="info-body-inner">
+            Grenzen sind nichts Schlechtes. Sie zeigen, was für dich okay ist und was nicht.
+
+            Beispiele:
+            ✔ „Ich beantworte Nachrichten erst nach den Hausaufgaben.“  
+            ✔ „Ich brauche kurz Pause. Lass uns in 10 Minuten weiterreden.“
+
+            Merksatz:
+            Grenzen schützen Beziehungen.
+          </div>
+        </div>
+      </div>
+
+      <!-- Info 3 -->
+      <div class="info-card">
+        <button class="info-header">
+          <div class="info-title-wrap">
+            <div class="info-icon">🤝</div>
+            <div class="info-title">3. Konflikte fair lösen</div>
+          </div>
+          <div class="info-arrow">▶</div>
+        </button>
+        <div class="info-body">
+          <div class="info-body-inner">
+            Gute Gespräche bestehen aus:
+            • Zuhören (wirklich!)  
+            • Nachfragen („Habe ich dich richtig verstanden?“)  
+            • Eigene Sicht ruhig erklären  
+            • Gemeinsam Lösung finden
+
+            Wichtig:
+            Fair heißt nicht „alles schlucken“, sondern respektvoll bleiben.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" style="margin-top:1rem;" onclick="window.location.href='lifeskills_intro.html'">
+      Zurück zur Life-Skills-Übersicht
+    </button>
+
+  </div>
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+// Auswahl Coach
+let selectedAvatar = null;
+const startBtn = document.getElementById("startCoachBtn");
+const coachTalk = document.getElementById("coachTalk");
+const coachIcon = document.getElementById("coachIcon");
+const coachTitle = document.getElementById("coachTitle");
+const coachText = document.getElementById("coachText");
+let typingInterval;
+
+document.querySelectorAll(".avatar-card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelectorAll(".avatar-card").forEach(c => c.classList.remove("selected"));
+    card.classList.add("selected");
+    selectedAvatar = card.getAttribute("data-avatar");
+    startBtn.disabled = false;
+  });
+});
+
+// Tipp-Effekt
+function typeText(element, text, speed = 25) {
+  if (typingInterval) clearInterval(typingInterval);
+  element.textContent = "";
+  let index = 0;
+  typingInterval = setInterval(() => {
+    if (index <= text.length) {
+      element.textContent = text.slice(0, index);
+      index++;
+    } else {
+      clearInterval(typingInterval);
+    }
+  }, speed);
+}
+
+function coachMessage() {
+  if (selectedAvatar === "Mia") {
+    coachIcon.textContent = "🧑‍🎤";
+    coachTitle.textContent = "Mia – ruhig & klar bleiben";
+    return (
+      "Hey, ich bin Mia.\n\n" +
+      "Konflikte sind normal – niemand ist immer gut drauf.\n" +
+      "Wichtig ist, dass du in schwierigen Momenten ruhig bleibst\n" +
+      "und klar sagst, was du fühlst und brauchst.\n\n" +
+      "Lass uns gemeinsam anschauen, wie man fair bleibt,\n" +
+      "auch wenn die Situation erstmal schwierig wirkt."
+    );
+  } else {
+    coachIcon.textContent = "🧑‍🏫";
+    coachTitle.textContent = "Leon – fair streiten lernen";
+    return (
+      "Hey, ich bin Leon.\n\n" +
+      "Es gibt gute Wege, Streit zu klären – ohne anschreien,\n" +
+      "ohne blockieren, ohne Drama.\n\n" +
+      "Ich zeige dir, wie du Grenzen setzt und trotzdem respektvoll bleibst,\n" +
+      "damit Gespräche besser laufen."
+    );
+  }
+}
+
+startBtn.addEventListener("click", () => {
+  if (!selectedAvatar) return;
+  coachTalk.style.display = "block";
+  typeText(coachText, coachMessage(), 23);
+});
+
+// Quiz-Logik
+function fb(el, correctMsg, wrongMsg, correct) {
+  el.textContent = correct ? correctMsg : wrongMsg;
+  el.className = correct ? "feedback" : "feedback error";
+}
+
+document.querySelectorAll(".answer-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const q = btn.dataset.q;
+    const correct = btn.dataset.correct === "true";
+
+    if (q === "1") fb(fb1,
+      "Richtig: Ruhig bleiben und ehrlich erklären – das wirkt erwachsen.",
+      "Nicht ganz. Angriff oder Schweigen verschlimmern die Situation.",
+      correct
+    );
+    if (q === "2") fb(fb2,
+      "Top: Du gehst in die Lösung und nicht in den Streit.",
+      "Das ist eher Öl ins Feuer.",
+      correct
+    );
+    if (q === "3") fb(fb3,
+      "Sehr gut! Kritik annehmen heißt nicht, dass du schlecht bist.",
+      "So eskaliert es schnell – oder du lernst nichts aus dem Feedback.",
+      correct
+    );
+  });
+});
+
+// Info-Karten
+document.querySelectorAll(".info-card").forEach(card => {
+  const header = card.querySelector(".info-header");
+  const body = card.querySelector(".info-body");
+  header.addEventListener("click", () => {
+    const isOpen = card.classList.contains("open");
+    document.querySelectorAll(".info-card").forEach(other => {
+      if (other !== card) {
+        other.classList.remove("open");
+        other.querySelector(".info-body").style.display = "none";
+      }
+    });
+    if (isOpen) {
+      card.classList.remove("open");
+      body.style.display = "none";
+    } else {
+      card.classList.add("open");
+      body.style.display = "block";
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 6 – Arbeit & Rechte (Grundlagen)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 0.45rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: #38bdf8;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .avatar-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.4), rgba(15,23,42,0.98));
+      padding: 0.75rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .avatar-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+      border-color: #38bdf8;
+    }
+
+    .avatar-card.selected {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), rgba(15,23,42,0.98));
+    }
+
+    .avatar-icon { font-size: 1.6rem; }
+    .avatar-name { font-size: 0.9rem; font-weight: 700; }
+    .avatar-role { font-size: 0.76rem; color: #cbd5f5; }
+
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon {
+      font-size: 1.1rem;
+    }
+
+    .info-title {
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+
+    .info-card.open .info-arrow {
+      transform: rotate(90deg);
+    }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .typing-indicator {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      font-style: italic;
+      margin-bottom: 0.25rem;
+      display: none;
+    }
+
+    .coach-name {
+      font-weight: 700;
+    }
+
+    .info-text {
+      min-height: 1.1rem;
+      white-space: pre-line;
+    }
+
+    .question-card { margin-top: 0.9rem; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+
+    .next-block { margin-top: 0.7rem; }
+
+    .popup-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(127, 29, 29, 0.96);
+      color: #fee2e2;
+      padding: 0.8rem 1.3rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.65);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+      z-index: 9999;
+    }
+
+    .popup-box.show {
+      opacity: 1;
+      animation: shake 0.35s ease-in-out 0s 2;
+    }
+
+    @keyframes shake {
+      0%   { transform: translate(-50%, 0); }
+      25%  { transform: translate(calc(-50% - 4px), 0); }
+      50%  { transform: translate(calc(-50% + 4px), 0); }
+      75%  { transform: translate(calc(-50% - 4px), 0); }
+      100% { transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">💼</span>Kapitel 6 – Arbeit &amp; Rechte</h1>
+        <p>
+          Teil 1: Grundlagen. Du lernst, was in einem Arbeits- oder Ausbildungsvertrag steht
+          und welche Rechte &amp; Pflichten du z.B. als Azubi hast.
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="app.html">← Zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <p class="step-label">Schritt 1 von 3 · Grundlagen → Rechte-Check → dann Übungen</p>
+
+    <main class="layout">
+      <!-- Linke Spalte -->
+      <section>
+        <div class="card" id="coachCard">
+          <div class="card-header">
+            <div class="card-header-icon">🙂</div>
+            <div class="card-header-title">Wähle deinen Job-Coach</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Erster Job? Ausbildung? Das ist ein großer Schritt. Such dir jemanden aus,
+              der dich kurz durch die wichtigsten Punkte führt.
+            </p>
+            <div class="avatar-grid">
+              <div class="avatar-card" data-avatar="Tom">
+                <div class="avatar-icon">🧑‍💼</div>
+                <div class="avatar-name">Tom</div>
+                <div class="avatar-role">erklärt ruhig deine Rechte &amp; Pflichten</div>
+              </div>
+              <div class="avatar-card" data-avatar="Mia">
+                <div class="avatar-icon">👩‍💼</div>
+                <div class="avatar-name">Mia</div>
+                <div class="avatar-role">direkt, warnt vor unfairen Situationen</div>
+              </div>
+            </div>
+            <button class="btn-primary" id="coachStartBtn" disabled>Coach starten ▶</button>
+          </div>
+        </div>
+
+        <div class="card" id="coachTalk" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon" id="coachIcon">🧑‍💼</div>
+            <div class="card-header-title" id="coachTitle">Dein Job-Coach</div>
+          </div>
+          <div class="card-body" id="coachText"></div>
+        </div>
+
+        <!-- Frage 1 -->
+        <div class="card question-card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Check: Wozu ist ein Arbeits-/Ausbildungsvertrag da?</div>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom:0.4rem;">
+              Welche Aussage passt am besten?
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅰️</span>
+                <span>Damit der Chef jederzeit alles mit dir machen darf.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="true">
+                <span>🅱️</span>
+                <span>Er hält schriftlich fest, welche Rechte &amp; Pflichten beide Seiten haben (z.B. Aufgaben, Zeiten, Geld).</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅾️</span>
+                <span>Nur damit die Unterschrift „gut aussieht“.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Vertrag, Rechte &amp; Pflichten – in kurz erklärt</div>
+          </div>
+          <div class="card-body">
+            <div class="info-list">
+              <!-- Karte 1 -->
+              <div class="info-card" data-card="vertrag">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">📄</div>
+                    <div class="info-title">Dein Arbeits- oder Ausbildungsvertrag</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    <div class="typing-indicator" data-typing="vertrag">
+                      <span class="coach-name">Tom</span> tippt …
+                    </div>
+                    <div class="info-text" data-full-text="vertrag"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 2 -->
+              <div class="info-card" data-card="rechte">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">✅</div>
+                    <div class="info-title">Rechte in der Ausbildung / im Job</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    <div class="typing-indicator" data-typing="rechte">
+                      <span class="coach-name">Tom</span> tippt …
+                    </div>
+                    <div class="info-text" data-full-text="rechte"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 3 -->
+              <div class="info-card" data-card="pflichten">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">⚙️</div>
+                    <div class="info-title">Pflichten in der Ausbildung / im Job</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    <div class="typing-indicator" data-typing="pflichten">
+                      <span class="coach-name">Tom</span> tippt …
+                    </div>
+                    <div class="info-text" data-full-text="pflichten"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="small" style="margin-top:0.8rem;">
+              Viele Details stehen im Arbeitsrecht oder im Jugendarbeitsschutzgesetz.
+              Hier bekommst du einen Überblick – genaue Regeln (z.B. Stunden/Tag)
+              sollte man aktuell nachschlagen.
+            </p>
+          </div>
+        </div>
+
+        <!-- Frage 2 + Gate -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧠</div>
+            <div class="card-header-title">Check: Ausbildung – Arbeiten oder Lernen?</div>
+          </div>
+          <div class="card-body">
+            <div class="question-card">
+              <p style="font-weight:600; margin-bottom:0.25rem;">
+                Welche Aussage passt am besten zur Ausbildung?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="2" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Du sollst arbeiten <em>und</em lernen – der Betrieb muss dir zeigen, wie der Beruf funktioniert.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Du bist nur billige Arbeitskraft und musst alles ohne Anleitung machen.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Ausbildung ist wie Schule: Du musst nie etwas im Betrieb machen.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback2"></div>
+
+              <div class="next-block">
+                <p class="small" id="gateHintWork">
+                  🔒 Du kannst erst weiter, wenn du beide Fragen oben richtig beantwortet hast.
+                </p>
+                <button class="btn-secondary" id="toWorkToolBtn">
+                  Weiter zum Rechte-Check ▶
+                </button>
+                <p class="small">
+                  Im Rechte-Check kannst du dann auswählen, ob du z.B. Schülerjob, Azubi
+                  oder Berufseinsteiger bist – und siehst eine Übersicht zu Rechten &amp; Pflichten.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="popupBox" class="popup-box"></div>
+
+  <script>
+    let selectedAvatar = null;
+    let question1Correct = false;
+    let question2Correct = false;
+    let gateOpenWork = false;
+    let currentCoachName = 'Tom';
+
+    const infoTexts = {
+      vertrag: `Ein Arbeits- oder Ausbildungsvertrag hält schriftlich fest,
+was ihr miteinander vereinbart habt.
+
+Typische Punkte:
+• Wer arbeitet für wen? (Name des Betriebs, deine Daten)
+• Ab wann? (Beginn, Probezeit)
+• Was machst du? (Tätigkeiten/Berufsbild)
+• Wie lange? (Arbeitszeit, Urlaub)
+• Wieviel Geld? (Vergütung/Lohn)
+• Sonstiges: Hinweise auf Tarifverträge, Regeln im Betrieb
+
+Wichtig:
+• Du solltest den Vertrag lesen (am besten mit jemandem zusammen).
+• Unterschreib nichts, was du gar nicht verstehst.
+• Mündliche Zusagen („kriegst du schon…“) sind ohne Schrift oft schwer beweisbar.`,
+      rechte: `Du hast nicht nur Pflichten – du hast auch Rechte.
+
+Ein paar Beispiele:
+• Du hast Anspruch darauf, dass dir dein Beruf wirklich beigebracht wird
+  (nicht nur Aufräumen und Putzen).
+• Du hast feste Pausen und maximale Arbeitszeiten, vor allem wenn du noch nicht 18 bist.
+• Du hast Anspruch auf dein vereinbartes Geld (Vergütung/Lohn).
+• Kein Chef darf dich anschreien, beleidigen oder mobben.
+• In vielen Betrieben gibt es eine Interessenvertretung (z.B. Betriebsrat, JAV),
+  an die du dich wenden kannst.
+
+Wichtig: Rechte sind kein „Bonus“, sondern Teil des Deals.`,
+      pflichten: `Damit das Ganze funktioniert, hast du natürlich auch Pflichten.
+
+Zum Beispiel:
+• Du kommst pünktlich und meldest dich krank, wenn du fehlst.
+• Du arbeitest mit und bemühst dich, wirklich etwas zu lernen.
+• Du hältst Sicherheitsregeln ein (z.B. Schutzkleidung, Maschinen).
+• Du behandelst Kolleg:innen und Kunden respektvoll.
+• In der Ausbildung: Berichtsheft führen (wo es vorgeschrieben ist).
+
+Kurz:
+Du verkaufst deine Zeit und Mitarbeit – dafür bekommst du Geld, Wissen
+und eine Qualifikation. Beide Seiten müssen ihren Teil ernst nehmen.`
+    };
+
+    const coachStartBtn = document.getElementById('coachStartBtn');
+    const coachTalk = document.getElementById('coachTalk');
+    const coachIcon = document.getElementById('coachIcon');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachText = document.getElementById('coachText');
+    const feedback1 = document.getElementById('feedback1');
+    const feedback2 = document.getElementById('feedback2');
+    const toWorkToolBtn = document.getElementById('toWorkToolBtn');
+
+    function showPopup(message) {
+      const box = document.getElementById('popupBox');
+      box.textContent = message;
+      box.classList.add('show');
+      setTimeout(() => {
+        box.classList.remove('show');
+      }, 2200);
+    }
+
+    function updateGateHintWork() {
+      const hint = document.getElementById('gateHintWork');
+      if (question1Correct && question2Correct) {
+        gateOpenWork = true;
+        hint.textContent = '✅ Super! Du hast beide Fragen richtig beantwortet – du kannst jetzt zum Rechte-Check weitergehen.';
+      } else {
+        gateOpenWork = false;
+        hint.textContent = '🔒 Du kannst erst weiter, wenn du beide Fragen oben richtig beantwortet hast.';
+      }
+    }
+
+    // Avatar-Auswahl
+    document.querySelectorAll('.avatar-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedAvatar = card.getAttribute('data-avatar');
+        currentCoachName = (selectedAvatar === 'Mia') ? 'Mia' : 'Tom';
+        coachStartBtn.disabled = false;
+      });
+    });
+
+    function setCoachText() {
+      if (!selectedAvatar) return;
+      if (selectedAvatar === 'Tom') {
+        coachIcon.textContent = '🧑‍💼';
+        coachTitle.textContent = 'Tom, dein Job-Coach';
+        coachText.innerHTML = `
+          <p>
+            Hey, ich bin <strong>Tom</strong>. Ich helfe dir, den Überblick zu behalten:
+            Was steht im Vertrag, was darf der Chef – und was nicht?
+          </p>
+        `;
+      } else {
+        coachIcon.textContent = '👩‍💼';
+        coachTitle.textContent = 'Mia, deine Job-Coachin';
+        coachText.innerHTML = `
+          <p>
+            Hi, ich bin <strong>Mia</strong>. Ich möchte, dass du weißt:
+            Du bist nicht „billige Arbeitskraft“, sondern ein Mensch mit Rechten.
+          </p>
+        `;
+      }
+    }
+
+    coachStartBtn.addEventListener('click', () => {
+      setCoachText();
+      coachTalk.style.display = 'block';
+    });
+
+    // Typing-Logik
+    const typingState = {};
+
+    function startTyping(cardKey, textElement, indicatorElement) {
+      if (typingState[cardKey] && typingState[cardKey].timer) {
+        clearTimeout(typingState[cardKey].timer);
+      }
+
+      const fullText = infoTexts[cardKey] || '';
+      textElement.textContent = '';
+      indicatorElement.style.display = 'block';
+      indicatorElement.querySelector('.coach-name').textContent = currentCoachName;
+
+      const start = () => {
+        indicatorElement.style.display = 'none';
+        let index = 0;
+        const stepSize = 3;
+        const speed = 25;
+
+        function step() {
+          index += stepSize;
+          textElement.textContent = fullText.slice(0, index);
+          if (index < fullText.length) {
+            typingState[cardKey].timer = setTimeout(step, speed);
+          }
+        }
+        step();
+      };
+
+      typingState[cardKey] = { timer: null };
+      setTimeout(start, 600);
+    }
+
+    function stopTyping(cardKey) {
+      if (typingState[cardKey] && typingState[cardKey].timer) {
+        clearTimeout(typingState[cardKey].timer);
+      }
+    }
+
+    document.querySelectorAll('.info-card').forEach(card => {
+      const cardKey = card.getAttribute('data-card');
+      const header = card.querySelector('.info-header');
+      const body = card.querySelector('.info-body');
+      const indicator = card.querySelector('.typing-indicator');
+      const textElement = card.querySelector('.info-text');
+
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+
+        document.querySelectorAll('.info-card').forEach(other => {
+          if (other !== card) {
+            other.classList.remove('open');
+            const otherBody = other.querySelector('.info-body');
+            const otherIndicator = other.querySelector('.typing-indicator');
+            const otherText = other.querySelector('.info-text');
+            if (otherBody) otherBody.style.display = 'none';
+            if (otherIndicator) otherIndicator.style.display = 'none';
+            if (otherText) otherText.textContent = '';
+            const otherKey = other.getAttribute('data-card');
+            stopTyping(otherKey);
+          }
+        });
+
+        if (isOpen) {
+          card.classList.remove('open');
+          body.style.display = 'none';
+          indicator.style.display = 'none';
+          textElement.textContent = '';
+          stopTyping(cardKey);
+        } else {
+          card.classList.add('open');
+          body.style.display = 'block';
+          startTyping(cardKey, textElement, indicator);
+        }
+      });
+    });
+
+    // Fragen
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.getAttribute('data-q');
+        const correct = btn.getAttribute('data-correct') === 'true';
+
+        if (q === '1') {
+          if (correct) {
+            feedback1.textContent = 'Richtig: Im Vertrag stehen Rechte und Pflichten für beide Seiten.';
+            feedback1.className = 'feedback';
+            question1Correct = true;
+          } else {
+            feedback1.textContent = 'Nicht ganz. Es geht nicht darum, dass der Chef „alles machen darf“, sondern um klare Regeln.';
+            feedback1.className = 'feedback error';
+            question1Correct = false;
+          }
+        }
+
+        if (q === '2') {
+          if (correct) {
+            feedback2.textContent = 'Genau: Ausbildung bedeutet arbeiten UND lernen – der Betrieb muss dir etwas beibringen.';
+            feedback2.className = 'feedback';
+            question2Correct = true;
+          } else {
+            feedback2.textContent = 'Nicht richtig. Du bist in der Ausbildung nicht nur billige Arbeitskraft.';
+            feedback2.className = 'feedback error';
+            question2Correct = false;
+          }
+        }
+
+        updateGateHintWork();
+      });
+    });
+
+    toWorkToolBtn.addEventListener('click', () => {
+      if (!gateOpenWork) {
+        showPopup('🔒 Bitte beantworte zuerst beide Fragen richtig, bevor du zum Rechte-Check gehst.');
+        return;
+      }
+      window.location.href = 'arbeit.html';
+    });
+  </script>
+</body>
+</html>

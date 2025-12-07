@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Life Skills – Selbstfürsorge & Gesundheit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      margin-bottom: 1rem;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.3rem 0 1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1f2937;
+      padding: 1rem;
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+      margin-bottom: 0.8rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.4rem;
+    }
+
+    /* Felder */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-top: 0.5rem;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.8rem;
+    }
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .field select,
+    .field input[type="number"] {
+      padding: 0.32rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.82rem;
+      width: 100%;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+    .pill {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .btn-primary {
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.55);
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    .result-box {
+      margin-top: 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #020617;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.8rem;
+      white-space: pre-line;
+    }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.45rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+
+    /* Info-Liste */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .info-item-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .info-item-text {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    .note-box {
+      margin-top: 0.6rem;
+      border-radius: 12px;
+      border: 1px dashed #64748b;
+      background: #020617;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="lifeskills_intro.html" class="back-link">← zurück zu Life Skills</a>
+
+    <header>
+      <h1><span>❤️</span>Selbstfürsorge &amp; Gesundheit</h1>
+      <p>
+        Dein Körper und dein Kopf sind kein Akku, den man einfach immer wieder komplett leer machen kann.
+        Hier geht es darum, deine Energie besser im Blick zu haben und früh zu merken, wenn es zu viel wird.
+      </p>
+    </header>
+
+    <p class="step-label">Level 11 · Bereich 4 · Schlaf, Energie, Stress &amp; Gefühle.</p>
+
+    <main class="layout">
+      <!-- LINKE SPALTE -->
+      <section>
+        <!-- Energie-Check -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🔋</div>
+            <div class="card-header-title">Energie-Check für deinen Tag</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Mach einen groben Check, wie dein Alltag gerade aussieht. Das ersetzt keine Diagnose,
+              hilft aber, über Gewohnheiten nachzudenken.
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label><span>Schlaf pro Nacht (Stunden)</span></label>
+                <input id="sleep" type="number" min="0" max="15" step="0.5" value="7" />
+              </div>
+              <div class="field">
+                <label><span>Bewegung pro Tag (Minuten)</span></label>
+                <input id="move" type="number" min="0" max="300" step="5" value="20" />
+              </div>
+              <div class="field">
+                <label><span>Bildschirmzeit außerhalb Schule (Stunden)</span></label>
+                <input id="screen" type="number" min="0" max="16" step="0.5" value="4" />
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <div class="pill">Tipp: 7–9h Schlaf sind für viele Jugendliche sinnvoll.</div>
+              <div class="pill">Etwas Bewegung pro Tag hilft dem Kopf.</div>
+            </div>
+
+            <button class="btn-primary" id="energyBtn">Energie-Einschätzung ▶</button>
+
+            <div class="result-box" id="energyResult" style="display:none;"></div>
+
+            <p class="small">
+              Hinweis: Das ist nur eine grobe Einschätzung. Wenn es dir länger schlecht geht,
+              sind Ärzt:innen oder Beratungsstellen wichtig.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stress-Ampel -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🚦</div>
+            <div class="card-header-title">Stress-Ampel</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Wie fühlt sich dein Kopf aktuell an?
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label><span>Wie würdest du dich gerade einordnen?</span></label>
+                <select id="stressLevel">
+                  <option value="gruen">Grün – alles okay, normaler Alltag</option>
+                  <option value="gelb">Gelb – viel los, aber noch machbar</option>
+                  <option value="rot">Rot – Dauerstress, kaum Pause / Schlaf</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="stressBtn">Ampel auswerten ▶</button>
+
+            <div class="result-box" id="stressResult" style="display:none;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <!-- Bausteine -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Drei Bausteine für Selbstfürsorge</div>
+          </div>
+          <div class="card-body">
+            <div class="info-list">
+              <div>
+                <div class="info-item-title">1. Schlaf &amp; Rhythmus</div>
+                <div class="info-item-text">
+                  • Versuche möglichst ähnliche Schlafzeiten (z.B. 23–7 Uhr).  
+                  • Spät in der Nacht noch lange am Handy sein macht Einschlafen schwer.  
+                  • Auch 1–2 Nächte mehr Schlaf nach Stressphasen helfen, wieder aufzutanken.
+                </div>
+              </div>
+
+              <div>
+                <div class="info-item-title">2. Körper in Bewegung &amp; Pausen</div>
+                <div class="info-item-text">
+                  • Kleine Bewegungspausen (Spaziergang, Treppe, Dehnen) helfen dem Kopf mehr als dauernd sitzen.  
+                  • Lernphasen in Blöcken (z.B. 25 Minuten fokussiert, 5 Minuten Pause).  
+                  • Pausen sind kein „Zeitverlust“, sondern machen Lernen oft effektiver.
+                </div>
+              </div>
+
+              <div>
+                <div class="info-item-title">3. Gefühle ernst nehmen &amp; reden</div>
+                <div class="info-item-text">
+                  • Traurigkeit, Wut oder Angst sind Signale, keine „Fehler“.  
+                  • Mit jemandem zu reden (Freunde, Familie, Schulsozialarbeit, Beratung) ist ein aktiver Schritt, kein Versagen.  
+                  • Wenn du merkst, dass Gedanken sehr dunkel werden: nicht allein bleiben, Hilfe holen.
+                </div>
+              </div>
+            </div>
+
+            <div class="note-box">
+              ⚠️ Wichtig: Diese App ersetzt keine medizinische oder psychologische Behandlung.
+              Sie soll dir helfen, über dich nachzudenken und einen ersten Schritt zu machen.
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini-Notfall-Plan -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧭</div>
+            <div class="card-header-title">Mini-Notfall-Plan bei Überforderung</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Stell dir vor, du bist kurz vorm Ausrasten oder völlig überfordert.
+              Welche drei Schritte könnten dir helfen?
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label><span>1. Sofort (nächste 5 Minuten)</span></label>
+                <input id="step1" type="text" placeholder="z.B. aus dem Raum gehen, tief durchatmen" />
+              </div>
+              <div class="field">
+                <label><span>2. Heute noch</span></label>
+                <input id="step2" type="text" placeholder="z.B. mit einer Person reden, die ich vertraue" />
+              </div>
+              <div class="field">
+                <label><span>3. In den nächsten Tagen</span></label>
+                <input id="step3" type="text" placeholder="z.B. Termin bei Beratungsstelle / Ärzt:in überlegen" />
+              </div>
+            </div>
+
+            <button class="btn-primary" id="planBtn">Plan als Merksatz anzeigen ▶</button>
+
+            <div class="result-box" id="planResult" style="display:none;"></div>
+
+            <p class="small">
+              Im Unterricht könnt ihr anonym Ideen sammeln und daraus einen Klassen-Notfall-Plan machen
+              (z.B. „Was hilft mir bei Stress in der Schule?“).
+            </p>
+          </div>
+        </div>
+
+        <!-- kleines Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Check: Was passt zu Selbstfürsorge?</div>
+          </div>
+          <div class="card-body">
+            <p>Welche Aussage passt am besten?</p>
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>Auch wenn viel los ist, darf ich Pausen einplanen und Hilfe holen, bevor ich komplett zusammenklappe.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>Ich muss alles allein schaffen, sonst bin ich schwach.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Solange ich funktioniere, ist egal, wie es mir geht.</span>
+              </button>
+            </div>
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Energie-Check
+    const energyBtn = document.getElementById("energyBtn");
+    const energyResult = document.getElementById("energyResult");
+
+    energyBtn.addEventListener("click", () => {
+      const sleep = parseFloat(document.getElementById("sleep").value.replace(",", ".")) || 0;
+      const move = parseFloat(document.getElementById("move").value.replace(",", ".")) || 0;
+      const screen = parseFloat(document.getElementById("screen").value.replace(",", ".")) || 0;
+
+      let text = "Deine Angaben:\n";
+      text += "• Schlaf: " + sleep + " Stunden\n";
+      text += "• Bewegung: " + move + " Minuten\n";
+      text += "• Bildschirmzeit: " + screen + " Stunden\n\n";
+
+      // einfache Einschätzung
+      if (sleep < 6) {
+        text += "Du schläfst eher wenig. Viele Jugendliche brauchen 7–9 Stunden, um fit zu sein.\n";
+      } else if (sleep >= 6 && sleep <= 9) {
+        text += "Dein Schlaf wirkt auf den ersten Blick im Rahmen.\n";
+      } else {
+        text += "Du schläfst ziemlich viel – das kann okay sein, aber beobachte, ob du trotzdem sehr müde bist.\n";
+      }
+
+      if (move < 20) {
+        text += "Sehr wenig Bewegung – schon 20–30 Minuten pro Tag können deinem Kopf helfen.\n";
+      } else {
+        text += "Etwas Bewegung ist da – gut für Körper und Kopf.\n";
+      }
+
+      if (screen > 6) {
+        text += "Viele Stunden Bildschirmzeit neben Schule – vielleicht lohnt es sich, abends etwas zu reduzieren.\n";
+      } else {
+        text += "Deine zusätzliche Bildschirmzeit wirkt nicht extrem hoch.\n";
+      }
+
+      text += "\nWichtig: Das ist nur eine grobe Einschätzung. Wenn es dir länger schlecht geht, such dir Hilfe.";
+      energyResult.textContent = text;
+      energyResult.style.display = "block";
+    });
+
+    // Stress-Ampel
+    const stressBtn = document.getElementById("stressBtn");
+    const stressResult = document.getElementById("stressResult");
+
+    stressBtn.addEventListener("click", () => {
+      const level = document.getElementById("stressLevel").value;
+      let text = "";
+
+      if (level === "gruen") {
+        text =
+          "Grün: Dein Gefühl ist aktuell eher stabil.\n" +
+          "Trotzdem: Bau dir Routinen auf (Schlaf, Pausen, Bewegung), damit es so bleibt.";
+      } else if (level === "gelb") {
+        text =
+          "Gelb: Viel los, aber du kommst noch klar.\n" +
+          "Tipp: Kleine Pausen ernst nehmen, Aufgaben sortieren und mit jemandem reden, bevor es rot wird.";
+      } else {
+        text =
+          "Rot: Dauerstress oder kaum Pause.\n" +
+          "Das ist ein Warnsignal. Es ist wichtig, mit einer erwachsenen Vertrauensperson zu reden\n" +
+          "(z.B. Eltern, Lehrkraft, Schulsozialarbeit, Beratungsstelle) und dir Unterstützung zu holen.";
+      }
+
+      stressResult.textContent = text;
+      stressResult.style.display = "block";
+    });
+
+    // Mini-Notfall-Plan
+    const planBtn = document.getElementById("planBtn");
+    const planResult = document.getElementById("planResult");
+
+    planBtn.addEventListener("click", () => {
+      const s1 = document.getElementById("step1").value.trim();
+      const s2 = document.getElementById("step2").value.trim();
+      const s3 = document.getElementById("step3").value.trim();
+
+      let steps = [];
+      if (s1) steps.push("1. " + s1);
+      if (s2) steps.push("2. " + s2);
+      if (s3) steps.push("3. " + s3);
+
+      if (steps.length === 0) {
+        planResult.textContent =
+          "Überleg dir drei Schritte für dich.\n" +
+          "Schon ein aufgeschriebener Plan kann im Stress helfen.";
+      } else {
+        planResult.textContent =
+          "Dein persönlicher Mini-Notfall-Plan:\n" +
+          steps.join("\n") +
+          "\n\nDu kannst ihn dir abschreiben oder fotografieren, damit du ihn griffbereit hast.";
+      }
+      planResult.style.display = "block";
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent =
+            "Genau: Pausen und Hilfe holen sind Teil von Selbstfürsorge – nicht ein Zeichen von Schwäche.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent =
+            "Nicht richtig. Niemand muss alles allein schaffen. Selbstfürsorge heißt auch, Unterstützung zu holen.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Börse – Risiko &amp; Sicherheit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #38bdf8;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      margin-bottom: 1.2rem;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.3rem 0 1.1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.25rem; }
+    .card-header-title { font-size: 0.96rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small { font-size: 0.78rem; color: #cbd5f5; margin-top: 0.4rem; }
+
+    /* Aufklappbare Karten */
+    .info-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      margin-bottom: 0.6rem;
+      background: #020617;
+    }
+    .info-header {
+      padding: 0.6rem 0.7rem;
+      background: #0f172a;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .info-header div { font-size: 0.86rem; font-weight: 600; }
+    .info-arrow { transition: 0.2s; }
+    .info-body { display: none; padding: 0.6rem 0.75rem; font-size: 0.82rem; }
+    .info-card.open .info-body { display: block; }
+    .info-card.open .info-arrow { transform: rotate(90deg); }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+    .pill {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    /* ASCII-Grafiken */
+    .chart-box {
+      margin-top: 0.4rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #020617;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      white-space: pre;
+    }
+
+    /* Button */
+    .btn-primary {
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      display: inline-flex;
+      gap: 0.4rem;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+      text-decoration: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .answer-btn {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      color: #e5e7eb;
+    }
+    .answer-btn span { color:#e5e7eb; }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="boerse_etf.html" class="back-link">← zurück zu ETFs</a>
+
+    <header>
+      <h1><span>⚖️</span>Risiko &amp; Sicherheit verstehen</h1>
+      <p>
+        An der Börse gibt es immer Schwankungen und Verlustrisiken. Hier geht es darum,
+        wie man das besser einschätzen kann: Zeit, Streuung, Fehler vermeiden.
+      </p>
+    </header>
+
+    <p class="step-label">Kapitel 12 · Teil 5 · Schwankung, Diversifikation &amp; typische Fehler</p>
+
+    <main class="layout">
+      <!-- LINKE SPALTE -->
+      <section>
+        <!-- Was ist Risiko? -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧠</div>
+            <div class="card-header-title">Was bedeutet „Risiko“ an der Börse?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Risiko heißt nicht „böse“ – es heißt: <strong>Der Wert kann sich ändern.</strong>
+              Nach oben und nach unten.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Schwankung (Volatilität)</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Schwankung bedeutet, dass Kurse sich bewegen – manchmal langsam, manchmal heftig.
+                <ul>
+                  <li>+3 % an einem Tag, −2 % am nächsten, +1 % danach …</li>
+                  <li>Auf längere Sicht kann es trotzdem insgesamt nach oben gehen.</li>
+                </ul>
+                Problem: Viele schauen nur auf die kurzen Bewegungen und bekommen Angst.
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Verlustrisiko vs. Ausfallrisiko</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li><strong>Verlustrisiko:</strong> Dein Depot kann vorübergehend im Minus sein.</li>
+                  <li><strong>Ausfallrisiko:</strong> Eine Firma geht pleite – die Aktie kann wertlos werden.</li>
+                </ul>
+                Durch Streuung (z.B. ETFs) kann man das Ausfallrisiko einzelner Firmen abmildern,
+                aber nie komplett wegzaubern.
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <div class="pill">Risiko = Schwankung</div>
+              <div class="pill">Keine Garantie</div>
+              <div class="pill">Wissen hilft gegen Panik</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zeitfaktor -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📆</div>
+            <div class="card-header-title">Zeit: Warum der Anlagehorizont wichtig ist</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Je länger Geld an der Börse bleiben kann, desto mehr Zeit hat es,
+              sich von Zwischen-Tiefs zu erholen (historisch gesehen).
+            </p>
+
+            <div class="chart-box">
+Kurzfristig (1 Jahr):
+Kurs
+│   ╭─╮   ╭╮
+│ ╭─╯ ╰─╮│╰─╮
+└────────────── Zeit
+
+Langfristig (10+ Jahre, vereinfacht):
+Kurs
+│  ╭───────────
+│ ╭╯
+└────────────── Zeit
+            </div>
+
+            <p class="small">
+              Wichtig: Es gibt keine Garantie, dass es immer so läuft.
+              Aber viele Märkte sind über sehr lange Zeiträume trotz Krisen gewachsen.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <!-- Diversifikation -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧩</div>
+            <div class="card-header-title">Diversifikation: nicht alle Eier in einen Korb</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Diversifikation heißt: Geld auf viele Anlagen verteilen statt alles in eine einzige Wette.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Vergleich: ein Korb vs. viele Körbe</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Stell dir vor, du legst alle Eier in <strong>einen</strong> Korb.
+                Fällt der runter → alle Eier kaputt.  
+                Verteilst du sie auf viele Körbe → ein Sturz ist weniger schlimm.
+                <ul>
+                  <li>Eine einzelne Aktie = ein Korb.</li>
+                  <li>Ein ETF mit vielen Firmen = viele Körbe.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="chart-box">
+Eine Aktie:
+[ Firma A ]
+
+ETF mit vielen Firmen:
+[ A ][ B ][ C ][ D ][ E ][ ... ]
+            </div>
+
+            <p class="small">
+              Diversifikation senkt das Risiko einzelner Firmen, aber es bleibt Marktrisiko
+              (z.B. weltweite Krisen, Kriege, Pandemien).
+            </p>
+          </div>
+        </div>
+
+        <!-- Typische Fehler -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🚨</div>
+            <div class="card-header-title">Typische Fehler von Anleger:innen</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Viele Probleme an der Börse entstehen nicht durch Produkte – sondern durch Verhalten.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Panikverkauf</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Kurs fällt → Panik → „Ich verkaufe alles, bevor es noch schlimmer wird!“  
+                Problem: Man verkauft oft am Tief und verpasst später eine Erholung.
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>FOMO („Fear of Missing Out“)</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Alle reden von einer Aktie / einem Hype-Thema.
+                Gefühl: „Ich muss SOFORT rein, sonst verpasse ich was.“  
+                Problem: Man kauft manchmal genau dann, wenn der Hype schon fast vorbei ist.
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Kein Plan, nur Zocken</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Ohne Ziel, ohne Zeitplan, ohne Notgroschen erst anlegen → sehr stressig.  
+                Besser: Erst Grundwissen, dann Plan, dann langsam starten.
+              </div>
+            </div>
+
+            <p class="small">
+              Für Schüler:innen gilt: Erst die Basics verstehen, dann später als Erwachsene
+              in Ruhe entscheiden, ob Börse zu ihnen passt oder nicht.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Mini-Quiz: Risiko richtig einschätzen</div>
+          </div>
+          <div class="card-body">
+            <p>Welche Aussage ist am sinnvollsten?</p>
+
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>Wer an der Börse anlegt, muss mit Schwankungen und möglichen Verlusten rechnen – Streuung und ein langer Zeitraum können helfen, das Risiko abzufedern.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>Mit Aktien und ETFs mache ich immer Gewinn, wenn ich nur den richtigen Tipp bekomme.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Wenn der Kurs fällt, sollte ich sofort alles verkaufen – Verluste darf man nie aushalten.</span>
+              </button>
+            </div>
+
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+
+        <!-- Zurück zur Übersicht -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🏁</div>
+            <div class="card-header-title">Kapitel Börse abschließen</div>
+          </div>
+          <div class="card-body">
+            <p class="small">
+              Du hast jetzt die wichtigsten Begriffe kennengelernt:
+              Börse, Aktie, ETF, Sparformen, Risiko &amp; Diversifikation.
+              Mehr braucht es für die Schule erstmal nicht – später kannst du dich als Erwachsene:r
+              weiter einarbeiten.
+            </p>
+
+            <a href="boerse_intro.html" class="btn-primary">
+              📊 Zurück zur Börse-Übersicht
+            </a>
+            <br /><br />
+            <a href="app.html" class="btn-primary">
+              🏠 Zurück zum Lebensplanung-Dashboard
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Aufklappbare Infokarten
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.querySelector('.info-header').addEventListener('click', () => {
+        card.classList.toggle('open');
+      });
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent =
+            "Genau: Schwankungen gehören dazu. Streuung und ein langer Zeitraum können helfen – aber eine Garantie gibt es nie.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent =
+            "Nicht richtig. Börse ohne Risiko gibt es nicht – und Panik oder blindes Hinterherrennen sind meist keine gute Idee.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

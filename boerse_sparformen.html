@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Börse – Sparformen im Vergleich</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #38bdf8;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      margin-bottom: 1.2rem;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.3rem 0 1.1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.25rem; }
+    .card-header-title { font-size: 0.96rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small { font-size: 0.78rem; color: #cbd5f5; margin-top: 0.4rem; }
+
+    /* Vergleichstabelle (als einfache Karte) */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+    .compare-card {
+      border-radius: 14px;
+      border: 1px solid #334155;
+      background: #020617;
+      padding: 0.6rem 0.7rem;
+      font-size: 0.8rem;
+    }
+    .compare-title {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.05rem 0.35rem;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      color: #e5e7eb;
+    }
+    .badge-safe { border-color:#22c55e; }
+    .badge-risk { border-color:#f97316; }
+
+    ul.comp-list { padding-left: 1rem; margin: 0.2rem 0; }
+
+    /* Auswahl-Tool */
+    .field {
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .field select {
+      padding: 0.32rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.82rem;
+    }
+
+    .btn-primary {
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      display: inline-flex;
+      gap: 0.4rem;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+      text-decoration: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    .result-box {
+      margin-top: 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #020617;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.8rem;
+      white-space: pre-line;
+    }
+
+    /* Risikoskala */
+    .risk-bar {
+      display: flex;
+      gap: 0.2rem;
+      margin-top: 0.4rem;
+    }
+    .risk-step {
+      flex: 1;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: #1f2937;
+    }
+    .risk-step.active-safe { background:#22c55e; }
+    .risk-step.active-mid { background:#facc15; }
+    .risk-step.active-risk { background:#f97316; }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .answer-btn {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      color: #e5e7eb;
+    }
+    .answer-btn span { color:#e5e7eb; }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="boerse_grundlagen.html" class="back-link">← zurück zu Börse-Grundlagen</a>
+
+    <header>
+      <h1><span>💶</span>Sparformen im Vergleich</h1>
+      <p>
+        Girokonto, Tagesgeld, Festgeld, Depot – alles sind „Orte“, an denen Geld liegen kann.
+        Aber sie sind nicht gleich sicher, nicht gleich flexibel und zahlen unterschiedliche Zinsen.
+      </p>
+    </header>
+
+    <p class="step-label">Kapitel 12 · Teil 2 · Wo passt welches Geld am besten hin?</p>
+
+    <main class="layout">
+      <!-- LINKE SPALTE -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🏦</div>
+            <div class="card-header-title">Kontoarten – wofür sind sie gut?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Viele haben mehrere Konten, ohne genau zu wissen, wofür welches gedacht ist.
+              Hier eine vereinfachte Übersicht:
+            </p>
+
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-title">
+                  <span>Girokonto</span>
+                  <span class="badge">Alltag</span>
+                </div>
+                <ul class="comp-list">
+                  <li>Gehalt / Taschengeld kommt hier an</li>
+                  <li>Karte, Überweisungen, Lastschrift</li>
+                  <li>Meist kaum oder keine Zinsen</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-title">
+                  <span>Tagesgeld</span>
+                  <span class="badge badge-safe">sicher &amp; flexibel</span>
+                </div>
+                <ul class="comp-list">
+                  <li>Geld ist täglich verfügbar</li>
+                  <li>Zinssatz meist höher als Giro</li>
+                  <li>gut für Notgroschen / Rücklagen</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-title">
+                  <span>Festgeld</span>
+                  <span class="badge">gebunden</span>
+                </div>
+                <ul class="comp-list">
+                  <li>Geld ist für eine feste Zeit gesperrt</li>
+                  <li>Zins oft etwas höher als Tagesgeld</li>
+                  <li>nur sinnvoll, wenn du es in der Zeit nicht brauchst</li>
+                </ul>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-title">
+                  <span>Depot (Aktien/ETFs)</span>
+                  <span class="badge badge-risk">Schwankung</span>
+                </div>
+                <ul class="comp-list">
+                  <li>Geld wird in Wertpapiere investiert</li>
+                  <li>Chance auf mehr Rendite – aber Kursschwankungen</li>
+                  <li>eher für langfristige Ziele (Jahre)</li>
+                </ul>
+              </div>
+            </div>
+
+            <p class="small">
+              Vereinfachung: In der Realität gibt es noch mehr Produkte und Details.
+              Wichtig ist erstmal die grobe Richtung: Alltagskonto, Rücklagenkonto, langfristige Anlage.
+            </p>
+          </div>
+        </div>
+
+        <!-- Auswahl nach Sparziel -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🎯</div>
+            <div class="card-header-title">Welches Konto passt zu welchem Ziel?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Wähle dein Sparziel – die App zeigt dir eine grobe Empfehlung.
+              (Das ersetzt keine Beratung, hilft aber beim Denken.)
+            </p>
+
+            <div class="field">
+              <label for="zielSelect">Mein aktuelles Ziel:</label>
+              <select id="zielSelect">
+                <option value="notgroschen">Notgroschen (z.B. 3–6 Monatskosten)</option>
+                <option value="anschaffung">Anschaffung in 1–3 Jahren (z.B. Roller, PC)</option>
+                <option value="langfristig">Langfristig &gt; 5 Jahre (z.B. Rente, große Rücklage)</option>
+                <option value="alltag">Geld für den normalen Alltag / Monat</option>
+              </select>
+            </div>
+
+            <button class="btn-primary" id="zielBtn">Empfehlung anzeigen ▶</button>
+
+            <div class="result-box" id="zielResult" style="display:none;"></div>
+
+            <p class="small">
+              Die Empfehlungen sind vereinfacht. Zinsen, Inflation und persönliche Situation
+              spielen in der Realität eine große Rolle.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <!-- Risiko-Skala -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">⚖️</div>
+            <div class="card-header-title">Sicherheit vs. Rendite (sehr grob)</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Je mehr Renditechance, desto mehr Schwankung musst du aushalten können.
+              Hier eine vereinfachte Skala:
+            </p>
+
+            <p class="small">1 = sehr sicher, 4 = mehr Schwankung</p>
+
+            <div class="small" style="margin-top:0.3rem;">1. Tagesgeld / Festgeld</div>
+            <div class="risk-bar">
+              <div class="risk-step active-safe"></div>
+              <div class="risk-step"></div>
+              <div class="risk-step"></div>
+              <div class="risk-step"></div>
+            </div>
+
+            <div class="small" style="margin-top:0.5rem;">2. breit gestreute ETFs</div>
+            <div class="risk-bar">
+              <div class="risk-step active-safe"></div>
+              <div class="risk-step active-mid"></div>
+              <div class="risk-step active-mid"></div>
+              <div class="risk-step"></div>
+            </div>
+
+            <div class="small" style="margin-top:0.5rem;">3. einzelne Aktien</div>
+            <div class="risk-bar">
+              <div class="risk-step active-safe"></div>
+              <div class="risk-step active-mid"></div>
+              <div class="risk-step active-risk"></div>
+              <div class="risk-step active-risk"></div>
+            </div>
+
+            <p class="small">
+              Die Skala ist nur ein Gefühl – keine exakte Wissenschaft.
+              Später im Kapitel „Risiko &amp; Sicherheit“ gehen wir genauer darauf ein.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Mini-Quiz: Wohin mit dem Geld?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Du hast Geld, das du in 2 Wochen sicher brauchst (z.B. Klassenfahrt).  
+              Wo sollte es eher liegen?
+            </p>
+
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>Auf einem Konto, das sehr sicher und jederzeit verfügbar ist (z.B. Giro oder Tagesgeld).</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>In einem ETF-Depot – vielleicht steigt der Kurs ja noch schnell.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Festgeld für 3 Jahre – Sicher ist sicher.</span>
+              </button>
+            </div>
+
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+
+        <!-- Weiterführende Links -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">➡️</div>
+            <div class="card-header-title">Nächste Themen in diesem Kapitel</div>
+          </div>
+          <div class="card-body">
+            <p class="small">
+              Wenn du die Unterschiede zwischen den Konten verstanden hast, kannst du tiefer einsteigen:
+            </p>
+
+            <a href="boerse_aktien.html" class="btn-primary">📈 Weiter mit: Aktien verstehen</a>
+            <br /><br />
+            <a href="boerse_etf.html" class="btn-primary">🧺 Oder: ETFs – viele Firmen auf einmal</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Auswahl-Empfehlung
+    const zielBtn = document.getElementById("zielBtn");
+    const zielSelect = document.getElementById("zielSelect");
+    const zielResult = document.getElementById("zielResult");
+
+    zielBtn.addEventListener("click", () => {
+      const value = zielSelect.value;
+      let text = "";
+
+      if (value === "notgroschen") {
+        text =
+          "Notgroschen:\n" +
+          "• Ziel: Geld für unerwartete Ausgaben (z.B. Waschmaschine kaputt, Jobverlust in der Familie).\n" +
+          "• Grobe Idee: 3–6 Monatskosten als Richtwert (für Erwachsene).\n" +
+          "• Geeignet: vor allem Tagesgeld (sicher + schnell verfügbar).\n\n" +
+          "Wichtig: Nicht in Aktien/ETFs, weil du im Notfall sofort an das Geld musst.";
+      } else if (value === "anschaffung") {
+        text =
+          "Anschaffung in 1–3 Jahren:\n" +
+          "• Ziel: Roller, PC, Führerschein, größere Reise.\n" +
+          "• Du brauchst das Geld zu einem bestimmten Zeitpunkt.\n" +
+          "• Geeignet: Tagesgeld, evtl. kurzes Festgeld.\n\n" +
+          "Börse ist hier riskant, weil ein Crash genau vor deinem Ziel kommen könnte.";
+      } else if (value === "langfristig") {
+        text =
+          "Langfristig (&gt; 5 Jahre):\n" +
+          "• Ziel: sehr große Rücklage, Altersvorsorge, Vermögensaufbau.\n" +
+          "• Du brauchst das Geld voraussichtlich viele Jahre nicht.\n" +
+          "• Hier kommen neben Tages-/Festgeld auch ETFs/Aktien in Frage.\n\n" +
+          "Dazu brauchst du aber Wissen über Risiko, Streuung und Kosten – das behandeln wir in den nächsten Seiten.";
+      } else if (value === "alltag") {
+        text =
+          "Geld für den normalen Alltag:\n" +
+          "• Ziel: Miete, Essen, Handyvertrag, ÖPNV, Hobbys.\n" +
+          "• Du brauchst dieses Geld jeden Monat.\n" +
+          "• Geeignet: Girokonto (direkter Zugriff), kleiner Puffer auf Tagesgeld.\n\n" +
+          "Nicht geeignet: Festgeld oder Depot – weil du sonst nicht spontan zahlen kannst.";
+      }
+
+      zielResult.textContent = text;
+      zielResult.style.display = "block";
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent =
+            "Genau: Wenn du Geld in 2 Wochen sicher brauchst, zählt vor allem Sicherheit und schnelle Verfügbarkeit.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent =
+            "Nicht ideal. Für sehr kurze Zeiträume ist Börse oder langes Festgeld zu riskant bzw. zu unflexibel.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

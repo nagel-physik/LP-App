@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Börse – Aktien verstehen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #38bdf8;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      margin-bottom: 1.2rem;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.3rem 0 1.1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.25rem; }
+    .card-header-title { font-size: 0.96rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small { font-size: 0.78rem; color: #cbd5f5; margin-top: 0.4rem; }
+
+    /* Aufklappbare Karten */
+    .info-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      margin-bottom: 0.6rem;
+      background: #020617;
+    }
+    .info-header {
+      padding: 0.6rem 0.7rem;
+      background: #0f172a;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .info-header div { font-size: 0.86rem; font-weight: 600; }
+    .info-arrow { transition: 0.2s; }
+    .info-body { display: none; padding: 0.6rem 0.75rem; font-size: 0.82rem; }
+    .info-card.open .info-body { display: block; }
+    .info-card.open .info-arrow { transform: rotate(90deg); }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+    .pill {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    /* ASCII-Chart */
+    .chart-box {
+      margin-top: 0.4rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #020617;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      white-space: pre;
+    }
+
+    /* Button */
+    .btn-primary {
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      display: inline-flex;
+      gap: 0.4rem;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+      text-decoration: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .answer-btn {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      color: #e5e7eb;
+    }
+    .answer-btn span { color:#e5e7eb; }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="boerse_sparformen.html" class="back-link">← zurück zu Sparformen</a>
+
+    <header>
+      <h1><span>📈</span>Aktien verstehen</h1>
+      <p>
+        Hier geht es nur um Aktien: kleine Teile von Firmen, die an der Börse gehandelt werden.
+        Wir schauen uns an, wie eine Aktie aufgebaut ist, warum Kurse steigen oder fallen
+        und was „Dividende“ bedeutet.
+      </p>
+    </header>
+
+    <p class="step-label">Kapitel 12 · Teil 3 · Firmenanteile, Kurs, Dividende &amp; Nachrichten</p>
+
+    <main class="layout">
+      <!-- LINKE SPALTE -->
+      <section>
+        <!-- Was ist eine Aktie? -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🏛️</div>
+            <div class="card-header-title">Was ist eine Aktie wirklich?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Kurz gesagt: <strong>Eine Aktie ist ein kleiner Anteil an einer Firma</strong>.
+              Große Unternehmen teilen sich in Millionen Stücke auf – jedes Stück ist eine Aktie.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Warum gibt eine Firma überhaupt Aktien aus?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Firmen brauchen Geld, um zu wachsen (z.B. neue Fabriken, Mitarbeiter, Forschung).
+                Sie können:
+                <ul>
+                  <li>einen Kredit bei der Bank aufnehmen oder</li>
+                  <li>Anteile an der Firma verkaufen = Aktien.</li>
+                </ul>
+                Die Käufer stellen Geld zur Verfügung – und hoffen, dass die Firma erfolgreicher wird.
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Was habe ich davon, wenn ich eine Aktie halte?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li>Wenn die Firma auf Dauer wächst, kann der Aktienkurs steigen.</li>
+                  <li>Manche Firmen zahlen regelmäßig Dividende (ein Teil des Gewinns).</li>
+                  <li>Du hast ein Stimmrecht auf der Hauptversammlung (theoretisch, bei vielen Brokern sehr indirekt).</li>
+                </ul>
+                Aber: <strong>Garantie gibt es keine.</strong> Kurse können auch fallen.
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <div class="pill">Aktien = Firmenanteile</div>
+              <div class="pill">Gewinne möglich, Verluste auch</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dividende -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">💸</div>
+            <div class="card-header-title">Dividende – „Taschengeld“ von der Firma</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Manche Firmen zahlen einmal im Jahr (oder öfter) einen Teil ihres Gewinns an Aktionäre aus.
+              Das nennt man <strong>Dividende</strong>.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Beispiel (stark vereinfacht)</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Firma X macht Gewinn und beschließt:  
+                „Wir zahlen 2 € Dividende pro Aktie.“  
+                Wenn du 10 Aktien hast → 20 € Dividende (vor Steuern).  
+
+                Wichtig: Die Firma muss keine Dividende zahlen.
+                Viele Wachstumsfirmen behalten Gewinne lieber für neue Projekte.
+              </div>
+            </div>
+
+            <p class="small">
+              Dividenden sind cool, aber nicht alles. Viele achten stärker auf den langfristigen Kursverlauf
+              und das Geschäftsmodell der Firma.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <!-- Kursverlauf -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📉</div>
+            <div class="card-header-title">Warum springen Aktienkurse hin und her?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Der Kurs einer Aktie zeigt, was die Leute <em>gerade</em> bereit sind zu bezahlen.
+              Er bewegt sich ständig – wie bei Angeboten auf einem Flohmarkt.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Beispiele für Kursbewegungen</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li>Gute Nachrichten → viele wollen kaufen → Kurs steigt.</li>
+                  <li>Schlechte Nachrichten → viele wollen verkaufen → Kurs fällt.</li>
+                  <li>Manchmal übertreiben alle in beide Richtungen (Hype oder Panik).</li>
+                </ul>
+              </div>
+            </div>
+
+         <div class="chart-box">
+Zeit →
+│
+│        ╭───╮
+│    ╭──╯   │   ╭───
+│  ╭─╯      ╰──╯
+└─────────────────────
+   Tief      Hoch
+</div>
+
+<p class="small">
+  Beispiel: Eine Aktie schwankt hoch und runter. Wichtig ist oft der Verlauf über viele Jahre,
+  nicht einzelne Tage.
+</p>
+            <p class="small">
+              In Nachrichten werden oft Tagesbewegungen gezeigt („+3 % heute“).
+              Für langfristiges Sparen sind aber vor allem mehrere Jahre spannend.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Mini-Quiz: Was stimmt?</div>
+          </div>
+          <div class="card-body">
+            <p>Welche Aussage passt am besten zu Aktien?</p>
+
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>Aktien sind Anteile an Firmen. Ihr Kurs kann steigen oder fallen – es gibt keine Garantie.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>Aktien sind wie ein Sparbuch mit garantiertem Zins.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Der Kurs einer Aktie ist immer stabil – er ändert sich nie.</span>
+              </button>
+            </div>
+
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+
+        <!-- Weiter zu ETFs / Risiko -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">➡️</div>
+            <div class="card-header-title">Nächste Schritte</div>
+          </div>
+          <div class="card-body">
+            <p class="small">
+              Einzelne Aktien können stark schwanken. Viele Menschen nutzen deshalb
+              lieber Produkte, die viele Firmen auf einmal enthalten.
+            </p>
+
+            <a href="boerse_etf.html" class="btn-primary">🧺 Weiter mit: ETFs – viele Firmen auf einmal</a>
+            <br /><br />
+            <a href="boerse_risiko.html" class="btn-primary">⚖️ Oder: Risiko &amp; Sicherheit verstehen</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Aufklappbare Infokarten
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.querySelector('.info-header').addEventListener('click', () => {
+        card.classList.toggle('open');
+      });
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent =
+            "Genau: Aktien sind Firmenanteile. Es gibt Chancen – aber auch Verlustrisiken.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent =
+            "Nicht richtig. Aktien sind keine Garantie-Anlage – Kurse schwanken.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

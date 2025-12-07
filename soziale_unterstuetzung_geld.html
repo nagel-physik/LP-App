@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 10 – Soziale Unterstützung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+
+    .back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body { font-size: 0.86rem; line-height: 1.5; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+    /* Avatar */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .avatar-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.95);
+      padding: 0.75rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: 0.2s;
+    }
+
+    .avatar-card.selected {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.3);
+    }
+
+    .avatar-icon { font-size: 1.6rem; }
+    .avatar-name { font-size: 0.9rem; font-weight: 700; }
+    .avatar-role { font-size: 0.76rem; color: #cbd5f5; }
+
+    /* Typing */
+    .typing { border-right: 2px solid #a5f3fc; white-space: pre-line; min-height: 3.2rem; }
+
+    /* Info Cards */
+    .info-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%; padding: 0.6rem 0.7rem;
+      display: flex; justify-content: space-between; cursor: pointer;
+    }
+
+    .info-arrow { transition: transform 0.2s ease-out; }
+    .info-card.open .info-arrow { transform: rotate(90deg); }
+
+    .info-body { display: none; padding: 0 0.75rem 0.65rem; }
+    .info-body-inner { font-size: 0.8rem; white-space: pre-line; }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="app.html" class="back-link">← zurück zur Übersicht</a>
+
+  <header class="top-bar-left">
+    <h1><span class="icon">🤝</span>Soziale Unterstützung</h1>
+    <p>
+      Wenn Geld, Familie oder Alltag schwer werden: Hier lernst du, an wen du dich wenden kannst –
+      und dass du nicht alles alleine schaffen musst.
+    </p>
+  </header>
+
+  <p class="step-label">Kapitel 10 · Einführung</p>
+
+  <main class="layout">
+
+    <!-- Linke Spalte -->
+    <section>
+
+      <!-- Coach Auswahl -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🧭</div>
+          <div class="card-header-title">Wähle eine Unterstützungs-Person</div>
+        </div>
+
+        <div class="card-body">
+          <p>Wähle jemanden, der dir erklärt, wie du Hilfe bekommen kannst.</p>
+
+          <div class="avatar-grid">
+            <div class="avatar-card" data-avatar="Sara">
+              <div class="avatar-icon">👩‍🏫</div>
+              <div class="avatar-name">Sara</div>
+              <div class="avatar-role">Schulsozialarbeit</div>
+            </div>
+
+            <div class="avatar-card" data-avatar="Emre">
+              <div class="avatar-icon">🧑‍🎧</div>
+              <div class="avatar-name">Emre</div>
+              <div class="avatar-role">Jugendtreff</div>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="coachStart" disabled>Coach starten ▶</button>
+        </div>
+      </div>
+
+      <!-- Coach Tipp Effekt -->
+      <div class="card" id="coachTalk" style="display:none;">
+        <div class="card-header">
+          <div class="card-header-icon" id="coachIcon">👩‍🏫</div>
+          <div class="card-header-title" id="coachTitle">Coach</div>
+        </div>
+
+        <div class="card-body">
+          <div id="coachText" class="typing"></div>
+        </div>
+      </div>
+
+      <!-- Quiz 1 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">❓</div>
+          <div class="card-header-title">Check: Was ist ein guter erster Schritt?</div>
+        </div>
+
+        <div class="card-body">
+          <p>Wenn zu Hause oder mit Geld alles schwierig wird, was ist sinnvoll?</p>
+
+          <button class="answer-btn" data-q="1" data-correct="true">🅰️ Mit einer erwachsenen Vertrauensperson sprechen</button>
+          <button class="answer-btn" data-q="1" data-correct="false">🅱️ Alles verschweigen</button>
+
+          <div id="feedback1"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Rechte Spalte -->
+    <section>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📘</div>
+          <div class="card-header-title">Wo bekommst du Unterstützung?</div>
+        </div>
+
+        <div class="card-body">
+
+          <div class="info-list">
+
+            <!-- Karte 1 -->
+            <div class="info-card">
+              <div class="info-header">
+                <span>🧑‍🤝‍🧑 Erste Anlaufstellen</span>
+                <span class="info-arrow">▶</span>
+              </div>
+              <div class="info-body"><div class="info-body-inner">
+                • Schulsozialarbeit  
+                • Vertrauenslehrer  
+                • Jugendtreff  
+                • Beratungsstellen (online / anonym)
+              </div></div>
+            </div>
+
+            <!-- Karte 2 -->
+            <div class="info-card">
+              <div class="info-header">
+                <span>💶 Wenn das Geld knapp ist</span>
+                <span class="info-arrow">▶</span>
+              </div>
+              <div class="info-body"><div class="info-body-inner">
+                • Kindergeld / Kinderzuschlag  
+                • Bürgergeld (Jobcenter)  
+                • Wohngeld  
+                • BAföG (grobe Einführung)
+              </div></div>
+            </div>
+
+            <!-- Karte 3 -->
+            <div class="info-card">
+              <div class="info-header">
+                <span>🧠 Psychische Belastung</span>
+                <span class="info-arrow">▶</span>
+              </div>
+              <div class="info-body"><div class="info-body-inner">
+                • schulpsychologische Beratung  
+                • ärztliche Hilfe  
+                • Krisendienste  
+                • Notruf bei Gefahr
+              </div></div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Buttons zu Unterseiten -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">➡️</div>
+          <div class="card-header-title">Weiterführende Themen</div>
+        </div>
+
+        <div class="card-body">
+          <button class="btn-primary" onclick="window.location.href='soziale_unterstuetzung_geld.html'">
+            Geld-Leistungen im Überblick
+          </button>
+
+          <button class="btn-primary" onclick="window.location.href='soziale_unterstuetzung_beratungen.html'">
+            Beratungsstellen & Notfallkontakte
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<script>
+  let selectedAvatar = null;
+  const coachStart = document.getElementById("coachStart");
+  const coachTalk = document.getElementById("coachTalk");
+  const coachIcon = document.getElementById("coachIcon");
+  const coachTitle = document.getElementById("coachTitle");
+  const coachText = document.getElementById("coachText");
+
+  document.querySelectorAll(".avatar-card").forEach(card => {
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".avatar-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      selectedAvatar = card.dataset.avatar;
+      coachStart.disabled = false;
+    });
+  });
+
+  function type(text) {
+    coachText.textContent = "";
+    let i = 0;
+    const interval = setInterval(() => {
+      coachText.textContent = text.slice(0, i);
+      i++;
+      if (i > text.length) clearInterval(interval);
+    }, 25);
+  }
+
+  coachStart.addEventListener("click", () => {
+    coachTalk.style.display = "block";
+
+    if (selectedAvatar === "Sara") {
+      coachIcon.textContent = "👩‍🏫";
+      coachTitle.textContent = "Sara – Schulsozialarbeit";
+      type("Ich bin für dich da, wenn es zu Hause, in der Klasse oder im Kopf schwer wird. Niemand muss alles allein schaffen.\n\nWir finden gemeinsam heraus, welche Unterstützung es geben könnte.");
+    }
+
+    if (selectedAvatar === "Emre") {
+      coachIcon.textContent = "🧑‍🎧";
+      coachTitle.textContent = "Emre – Jugendtreff";
+      type("Im Jugendtreff gibt es immer jemanden zum Reden. Wir kennen viele Stellen in der Stadt, die bei Geld, Stress oder Familie helfen können.\n\nDu bist nicht allein.");
+    }
+  });
+
+  document.querySelectorAll(".info-card").forEach(card => {
+    card.querySelector(".info-header").addEventListener("click", () => {
+      const body = card.querySelector(".info-body");
+      const open = card.classList.contains("open");
+
+      document.querySelectorAll(".info-card").forEach(c => {
+        c.classList.remove("open");
+        c.querySelector(".info-body").style.display = "none";
+      });
+
+      if (!open) {
+        card.classList.add("open");
+        body.style.display = "block";
+      }
+    });
+  });
+
+  document.querySelectorAll(".answer-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const q = btn.dataset.q;
+      const correct = btn.dataset.correct === "true";
+
+      const fb = document.getElementById("feedback" + q);
+      if (correct) fb.textContent = "Richtig – über Probleme reden ist ein guter erster Schritt.";
+      else fb.textContent = "Nicht ganz – alles verschweigen hilft dir nicht weiter.";
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz – Finanzen &amp; Budget</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #38bdf8;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+    header p {
+      margin: 0.3rem 0 0.9rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: #cbd5f5;
+      margin-bottom: 1rem;
+    }
+
+    .hint strong { color: #a5b4fc; }
+
+    .questions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .question-card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    .q-header {
+      padding: 0.6rem 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      background: #020617;
+    }
+
+    .q-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .q-badge {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      color: #cbd5f5;
+    }
+
+    .q-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+
+    .question-card.open .q-arrow {
+      transform: rotate(90deg);
+    }
+
+    .q-body {
+      display: none;
+      padding: 0.75rem 0.85rem 0.8rem;
+      font-size: 0.86rem;
+    }
+
+    .q-body p {
+      margin: 0 0 0.5rem;
+    }
+
+    .answers {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.3rem;
+    }
+
+    .answer-btn {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      color: #e5e7eb;
+    }
+    .answer-btn span { color: #e5e7eb; }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .answer-btn.correct {
+      border-color: #22c55e;
+      background: rgba(22,163,74,0.16);
+    }
+
+    .answer-btn.wrong {
+      border-color: #f97316;
+      background: rgba(248,113,113,0.08);
+    }
+
+    .feedback {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+
+    .score-box {
+      margin-top: 1.2rem;
+      padding: 0.75rem 0.85rem;
+      border-radius: 14px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      font-size: 0.85rem;
+    }
+
+    .score-highlight {
+      font-weight: 700;
+      color: #a5b4fc;
+    }
+
+    .btn-score {
+      margin-top: 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #38bdf8;
+      background: #0f172a;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #e5e7eb;
+    }
+    .btn-score:hover { background: #020617; }
+/* Quiz-Bereich auf großen Bildschirmen schmaler machen */
+@media (min-width: 900px) {
+  .questions,
+  .score-box {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="back-row">
+      <a href="quiz_intro.html" class="back-link">← Zurück zur Quiz-Übersicht</a>
+      <a href="finanzen_intro.html" class="back-link">💶 Zur Theorie „Finanzen &amp; Budget“</a>
+    </div>
+
+    <header>
+      <h1><span>💰</span>Quiz – Finanzen &amp; Budget</h1>
+      <p>
+        15 Fragen rund um Einnahmen, Ausgaben, Fixkosten, Budgetplanung &amp; Rücklagen.
+        Nicht zu leicht – hier wird dein Finanz-Grundwissen wirklich getestet.
+      </p>
+    </header>
+
+    <p class="hint">
+      <strong>Hinweis:</strong> Jede Frage hat eine beste Antwort. Nach dem Klick siehst du,
+      ob es stimmt – und warum. Am Ende kannst du dir deine Punktzahl anzeigen lassen.
+    </p>
+
+    <div class="questions" id="questionList">
+      <!-- Frage 1 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 1: Was beschreibt ein persönliches Budget am besten?</div>
+          <div class="q-badge">Grundlagen</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Was ist mit „Budget“ im privaten Bereich gemeint?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Ein Budget ist ein geplanter Überblick, wie viel Geld du in einem Zeitraum für verschiedene Bereiche ausgeben willst. Es verbindet Einnahmen und Ausgaben.">
+              <span>🅰️</span>
+              <span>Ein geplanter Überblick, wie viel Geld du wofür in einem Zeitraum ausgeben willst.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Nur zu wissen, wie viel Einkommen reinkommt, reicht nicht. Ohne Ausgabenseite ist es kein Budget.">
+              <span>🅱️</span>
+              <span>Nur die Summe deiner Einnahmen im Monat.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Ein Budget ist keine spontane Liste von Wünschen, sondern eine strukturierte Planung von Einnahmen und Ausgaben.">
+              <span>🅾️</span>
+              <span>Eine Liste mit Dingen, die du dir irgendwann kaufen möchtest.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 2 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 2: Fixkosten vs. variable Kosten</div>
+          <div class="q-badge">Grundlagen</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Welche Ausgabe ist typischerweise eine <strong>Fixkosten</strong>?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Miete ist in der Regel jeden Monat gleich und gehört zu den typischen Fixkosten.">
+              <span>🅰️</span>
+              <span>Die monatliche Miete für deine Wohnung.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Essen schwankt normalerweise – je nachdem, wie und wo du einkaufst.">
+              <span>🅱️</span>
+              <span>Lebensmittel, die du im Supermarkt einkaufst.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Kinobesuche sind freiwillige, gelegentliche Ausgaben – also eher variable Kosten.">
+              <span>🅾️</span>
+              <span>Ein Kinobesuch mit Freunden.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 3 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 3: Einnahmen richtig einordnen</div>
+          <div class="q-badge">Einnahmen</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Was zählt NICHT als regelmäßige Einnahme?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="false" data-expl="Gehalt ist eine typische regelmäßige Einnahme, meist monatlich.">
+              <span>🅰️</span>
+              <span>Das Gehalt aus deinem Ausbildungsbetrieb.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Regelmäßiges Taschengeld (z.B. jeden Monat) zählt als regelmäßige Einnahme.">
+              <span>🅱️</span>
+              <span>Monatliches Taschengeld von deinen Eltern.</span>
+            </button>
+            <button class="answer-btn" data-correct="true" data-expl="Ein einmaliger Geldgewinn ist eher eine Sonderzahlung und keine regelmäßige Einnahme.">
+              <span>🅾️</span>
+              <span>Ein einmaliger Geldgewinn bei einem Gewinnspiel.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 4 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 4: Prioritäten setzen</div>
+          <div class="q-badge">Planung</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>
+            Du stellst fest, dass deine geplanten Ausgaben höher sind als deine Einnahmen.
+            Was ist der sinnvollste erste Schritt?
+          </p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Zuerst solltest du schauen, wo du freiwillige Ausgaben reduzieren kannst – also z.B. Streaming, Snacks, Hobbys.">
+              <span>🅰️</span>
+              <span>Variable, nicht unbedingt nötige Ausgaben überprüfen und kürzen.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Spontan Schulden zu machen verschiebt das Problem nur nach hinten und macht es größer.">
+              <span>🅱️</span>
+              <span>Mehr mit Karte zahlen und Schulden machen, damit es erstmal passt.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Alles ignorieren führt meistens in echte Geldprobleme.">
+              <span>🅾️</span>
+              <span>Die Zahlen ausblenden und hoffen, dass es schon irgendwie klappt.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 5 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 5: Notgroschen</div>
+          <div class="q-badge">Rücklagen</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Welche Aussage zum Notgroschen ist am sinnvollsten?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Ein Notgroschen ist Geld für unerwartete Ausgaben – es sollte sicher und schnell verfügbar sein, z.B. auf einem Tagesgeldkonto.">
+              <span>🅰️</span>
+              <span>Er sollte sicher und schnell erreichbar sein, z.B. auf einem Tagesgeldkonto.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Wenn du den Notgroschen zum Zocken nutzt, ist es kein Notgroschen mehr.">
+              <span>🅱️</span>
+              <span>Man sollte den Notgroschen in sehr riskante Anlagen stecken, um schnell zu wachsen.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Nur Bargeld im Schrank ist nicht unbedingt sicher (Diebstahl, Brand, Verlust).">
+              <span>🅾️</span>
+              <span>Am besten als Bargeld im Schrank, damit ihn niemand bemerkt.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 6 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 6: Dispo / Kontoüberziehung</div>
+          <div class="q-badge">Risiko</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Warum ist ein dauerhaft überzogenes Konto problematisch?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Dispo-Zinsen sind oft sehr hoch. Dauerhaft im Minus zu sein, wird dadurch teuer und kann zu Schuldenproblemen führen.">
+              <span>🅰️</span>
+              <span>Weil dafür oft hohe Zinsen fällig werden und man sich an das „Minus“ gewöhnt.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Es geht nicht um „cool“, sondern um Kosten und Kontrolle.">
+              <span>🅱️</span>
+              <span>Weil die Bank dich dann nicht mehr cool findet.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Der Dispo ist eher ein Kredit – nicht das Gegenteil von Schulden.">
+              <span>🅾️</span>
+              <span>Weil man dann automatisch keine Schulden mehr machen kann.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 7 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 7: „Buy now, pay later“</div>
+          <div class="q-badge">Konsum</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Was ist kritisch an „Später zahlen“-Angeboten im Online-Shop?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Man kauft schneller Dinge, die man sich im Moment eigentlich nicht leisten kann – und verliert leicht den Überblick über offene Beträge.">
+              <span>🅰️</span>
+              <span>Sie verleiten dazu, mehr zu bestellen, als man sich gerade leisten kann.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Gratis ist es meist nicht – bei verspäteter Zahlung können Gebühren und Zinsen anfallen.">
+              <span>🅱️</span>
+              <span>Es ist immer komplett kostenlos, egal wann man zahlt.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Viele kleine „später zahlen“-Beträge können zusammen zu ernsten Schulden werden.">
+              <span>🅾️</span>
+              <span>Es kann nie zu Schulden führen, weil der Betrag ja so klein ist.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 8 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 8: Sparziele</div>
+          <div class="q-badge">Planung</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Welche Formulierung ist als Sparziel am sinnvollsten?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="false" data-expl="„Reich sein“ ist sehr unkonkret – als Ziel schwer planbar.">
+              <span>🅰️</span>
+              <span>„Ich will irgendwann reich sein.“</span>
+            </button>
+            <button class="answer-btn" data-correct="true" data-expl="Konkretes Ziel + Betrag + Zeitraum → gut planbar und kontrollierbar.">
+              <span>🅱️</span>
+              <span>„Ich spare in den nächsten 18 Monaten 1.500 € für den Führerschein.“</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Ohne Zeitangabe und Betrag ist es eher ein Wunsch als ein Sparziel.">
+              <span>🅾️</span>
+              <span>„Ich sollte vielleicht mal sparen.“</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 9 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 9: Kostenfresser erkennen</div>
+          <div class="q-badge">Analyse</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Was ist eine sinnvolle Methode, um „Geldfresser“ im Alltag zu entdecken?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Ein Ausgabenprotokoll zeigt, wofür konkret Geld weggeht – oft erkennt man erst dann, wie viel Kleinkram sich summiert.">
+              <span>🅰️</span>
+              <span>Ein oder zwei Monate lang alle Ausgaben notieren und sortieren.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Nur aufs Konto zu schauen, zeigt nicht genau, wofür das Geld weg ist.">
+              <span>🅱️</span>
+              <span>Nur den Kontostand ansehen, ohne Details anzuschauen.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Wenn du alles mit Karte zahlst, brauchst du erst recht einen Überblick – sonst geht der Überblick verloren.">
+              <span>🅾️</span>
+              <span>Alles mit Karte zahlen, dann muss man sich nicht kümmern.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 10 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 10: Streaming & Abos</div>
+          <div class="q-badge">Abo-Kosten</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Warum können viele kleine Abos gefährlich fürs Budget werden?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Viele kleine Beträge fallen einzeln kaum auf, summieren sich aber zu einem großen Betrag im Monat.">
+              <span>🅰️</span>
+              <span>Weil sie sich summieren und man sie leicht vergisst.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="„Gratis“ sind Abos selten – die Kosten stehen oft nur im Kleingedruckten.">
+              <span>🅱️</span>
+              <span>Weil Abos grundsätzlich immer kostenlos sind.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Netflix kündigt eher nicht für dich – du musst selbst den Überblick behalten.">
+              <span>🅾️</span>
+              <span>Weil Streamingdienste nach einem Jahr automatisch kündigen.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 11 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 11: Tagesgeld vs. Girokonto</div>
+          <div class="q-badge">Konten</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Welcher Satz trifft die Aufteilung von Geld sinnvoll?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Girokonto für laufende Zahlungen, Tagesgeld für Rücklagen – das ist eine sinnvolle Grundstruktur.">
+              <span>🅰️</span>
+              <span>Girokonto für laufende Zahlungen, Tagesgeldkonto für Rücklagen/Notgroschen.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Alles auf dem Giro zu lassen, ist bequem, aber du nutzt mögliche Zinsen nicht und verlierst die Trennung.">
+              <span>🅱️</span>
+              <span>Alles Geld immer nur auf dem Girokonto lassen – egal, wofür.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Bargeld im Schuhkarton ist weder sicher noch besonders praktisch.">
+              <span>🅾️</span>
+              <span>Niemals ein Konto nutzen – nur mit Bargeld arbeiten.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 12 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 12: Realistische Monatsplanung</div>
+          <div class="q-badge">Planung</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Was gehört sinnvollerweise NICHT in die Kategorie „Fixkosten“?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="false" data-expl="Miete ist eine klassische Fixkosten-Position.">
+              <span>🅰️</span>
+              <span>Miete / Zimmermiete.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Handyvertrag ist meist monatlich gleich – also Fixkosten.">
+              <span>🅱️</span>
+              <span>Monatlicher Handyvertrag.</span>
+            </button>
+            <button class="answer-btn" data-correct="true" data-expl="Spontane Bestellungen schwanken stark und sind eher variable / Freizeit-Kosten.">
+              <span>🅾️</span>
+              <span>Spontane Online-Bestellungen von Kleidung.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 13 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 13: Puffer einplanen</div>
+          <div class="q-badge">Rücklagen</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Warum ist ein kleiner Puffer im Monatsbudget sinnvoll?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Es gibt fast immer unerwartete Ausgaben – ein Puffer verhindert, dass du sofort ins Minus rutschst.">
+              <span>🅰️</span>
+              <span>Weil unerwartete Ausgaben fast immer vorkommen und sonst direkt ein Minus entsteht.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Puffer heißt nicht „Geld, das man sinnlos raushaut“, sondern Sicherheit.">
+              <span>🅱️</span>
+              <span>Damit man einen Grund hat, alles am Monatsende schnell auszugeben.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="„Perfekte Planung“ gibt es im echten Leben selten – Puffer ist realistischer.">
+              <span>🅾️</span>
+              <span>Weil es sonst verboten ist, Geld zu sparen.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 14 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 14: Umgang mit unerwartetem Extra-Geld</div>
+          <div class="q-badge">Sparen</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Du bekommst unerwartet 300 € geschenkt. Was ist eine sinnvolle Grundidee?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Ein Teil Spaß ist okay, ein Teil Rücklagen ist klug – gute Mischung aus Leben im Jetzt und Zukunft.">
+              <span>🅰️</span>
+              <span>Einen Teil für Spaß nutzen, einen Teil gezielt sparen / in Rücklagen packen.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Alles auf einmal zu verballern ist kurzfristig nett, langfristig aber oft schade.">
+              <span>🅱️</span>
+              <span>Alles sofort für Konsum ausgeben, sonst „lohnt es sich nicht“.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Geld jahrelang unverwendet im Portemonnaie liegen zu lassen, ist weder sicher noch sinnvoll.">
+              <span>🅾️</span>
+              <span>Das Geld jahrelang in der Geldbörse tragen, ohne Plan.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Frage 15 -->
+      <div class="question-card">
+        <div class="q-header">
+          <div class="q-title">Frage 15: Überblick behalten</div>
+          <div class="q-badge">Kontrolle</div>
+          <div class="q-arrow">▶</div>
+        </div>
+        <div class="q-body">
+          <p>Was hilft am meisten, um langfristig die Kontrolle über die eigenen Finanzen zu behalten?</p>
+          <div class="answers">
+            <button class="answer-btn" data-correct="true" data-expl="Regelmäßig auf Einnahmen, Ausgaben und Ziele schauen – das ist der Kern von Finanzkompetenz.">
+              <span>🅰️</span>
+              <span>Regelmäßig Budget und Kontobewegungen überprüfen und anpassen.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Konto nie zu checken führt eher zu Überraschungen – selten zu positiven.">
+              <span>🅱️</span>
+              <span>Das Konto nie anschauen, dann macht man sich weniger Stress.</span>
+            </button>
+            <button class="answer-btn" data-correct="false" data-expl="Nur auf „Glück“ beim Geld zu vertrauen ist kein Plan.">
+              <span>🅾️</span>
+              <span>Alle Entscheidungen dem Zufall überlassen.</span>
+            </button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-box">
+      <div>
+        Deine Punktzahl: <span class="score-highlight" id="scoreText">Noch nicht berechnet</span>
+      </div>
+      <button class="btn-score" id="scoreBtn">Punktzahl berechnen (richtige Antworten zählen)</button>
+      <p class="small">
+        Tipp: Du kannst Fragen jederzeit nochmal öffnen und die Erklärungen lesen –
+        das Quiz ist zum Lernen da, nicht zum „Abprüfen“.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Auf- / Zuklappen der Fragen
+    document.querySelectorAll('.question-card').forEach(card => {
+      const header = card.querySelector('.q-header');
+      const body = card.querySelector('.q-body');
+
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+        if (isOpen) {
+          card.classList.remove('open');
+          body.style.display = 'none';
+        } else {
+          card.classList.add('open');
+          body.style.display = 'block';
+        }
+      });
+    });
+
+    // Antwort-Logik
+    const questionCards = document.querySelectorAll('.question-card');
+
+    questionCards.forEach(card => {
+      const buttons = card.querySelectorAll('.answer-btn');
+      const feedback = card.querySelector('.feedback');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const isCorrect = btn.getAttribute('data-correct') === 'true';
+          const expl = btn.getAttribute('data-expl') || '';
+
+          // vorherige Markierung entfernen
+          buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+
+          // neue Markierung setzen
+          if (isCorrect) {
+            btn.classList.add('correct');
+            feedback.textContent = 'Richtig: ' + expl;
+            feedback.className = 'feedback';
+          } else {
+            btn.classList.add('wrong');
+            feedback.textContent = 'Nicht ganz: ' + expl;
+            feedback.className = 'feedback error';
+          }
+        });
+      });
+    });
+
+    // Punktzahl berechnen
+    const scoreBtn = document.getElementById('scoreBtn');
+    const scoreText = document.getElementById('scoreText');
+
+    scoreBtn.addEventListener('click', () => {
+      let correctCount = 0;
+      let total = questionCards.length;
+
+      questionCards.forEach(card => {
+        const correctBtn = card.querySelector('.answer-btn[data-correct="true"]');
+        if (correctBtn && correctBtn.classList.contains('correct')) {
+          correctCount += 1;
+        }
+      });
+
+      scoreText.textContent = correctCount + ' von ' + total + ' Fragen richtig beantwortet';
+    });
+  </script>
+</body>
+</html>

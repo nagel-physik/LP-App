@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Life Skills – Haushalts-Skills</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.2rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+    .back-link:hover {
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span.icon { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    /* Formular / Felder */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-top: 0.6rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.8rem;
+    }
+
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .field span.name {
+      font-weight: 500;
+    }
+
+    .field select,
+    .field input[type="number"] {
+      width: 100%;
+      padding: 0.3rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.82rem;
+    }
+
+    .result-box {
+      margin-top: 0.7rem;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.95);
+      padding: 0.6rem 0.7rem;
+      font-size: 0.8rem;
+      white-space: pre-line;
+    }
+
+    .result-title {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .result-highlight {
+      color: #bbf7d0;
+    }
+
+    .warning {
+      color: #fecaca;
+      font-size: 0.78rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+
+    /* Info-Karten */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon { font-size: 1.1rem; }
+    .info-title { font-weight: 600; text-align: left; }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+    .info-card.open .info-arrow {
+      transform: rotate(90deg);
+    }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="lifeskills_intro.html" class="back-link">← zurück zu Life Skills</a>
+
+    <header>
+      <h1><span class="icon">🏠</span>Haushalts-Skills</h1>
+      <p>
+        Erste eigene Wohnung? Alleine zu Hause? Spätestens dann brauchst du Basic-Skills:
+        Wäsche waschen, einkaufen, Küche &amp; Wohnung halbwegs im Griff haben – ohne dass alles im Chaos endet.
+      </p>
+    </header>
+
+    <p class="step-label">Level 11 · Bereich 3 · Wäsche, Einkaufen, Ordnung.</p>
+
+    <main class="layout">
+      <!-- LINKE SPALTE -->
+      <section>
+        <!-- Wäsche-Check -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧺</div>
+            <div class="card-header-title">Wäsche-Check: Wie wasche ich das?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Wähle aus, was du waschen willst. Der Wäsche-Check gibt dir eine einfache Empfehlung.
+              Wichtig: Immer auch das Etikett im Kleidungsstück beachten!
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label>
+                  <span class="name">Art der Wäsche</span>
+                </label>
+                <select id="laundryType">
+                  <option value="dunkel">Dunkle Baumwolle (z.B. schwarze Shirts, Jeans)</option>
+                  <option value="bunt">Bunte Baumwolle (T-Shirts, Pullover)</option>
+                  <option value="hell">Helle / weiße Wäsche (z.B. Handtücher, Bettwäsche)</option>
+                  <option value="sport">Sportkleidung / Funktionsstoff</option>
+                  <option value="fein">Feinwäsche / Wolle</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>
+                  <span class="name">Wie schmutzig?</span>
+                </label>
+                <select id="dirtLevel">
+                  <option value="leicht">leicht (nur getragen)</option>
+                  <option value="normal" selected>normal</option>
+                  <option value="stark">stark (sehr dreckig / verschwitzt)</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="washBtn">Wasch-Empfehlung anzeigen ▶</button>
+
+            <div class="result-box" id="washResult" style="display:none;">
+              <div class="result-title">Empfehlung:</div>
+              <div id="washText"></div>
+              <div class="warning">
+                ⚠️ Hinweis: Immer Pflegeetikett im Kleidungsstück beachten.
+                Wenn dort etwas anderes steht, gilt das Etikett.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Einkaufs-Planer -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🛒</div>
+            <div class="card-header-title">Mini-Einkaufs-Planer</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Wie viel Geld hast du pro Woche für Essen &amp; Haushalt?
+              Der Rechner zeigt dir ungefähr, wie viel das pro Tag und pro Person ist.
+            </p>
+
+            <div class="field-group">
+              <div class="field">
+                <label>
+                  <span class="name">Anzahl Personen im Haushalt</span>
+                </label>
+                <input type="number" id="persons" min="1" step="1" value="1" />
+              </div>
+
+              <div class="field">
+                <label>
+                  <span class="name">Geld für Essen &amp; Haushalt pro Woche (€)</span>
+                </label>
+                <input type="number" id="budget" min="0" step="1" value="70" />
+              </div>
+            </div>
+
+            <button class="btn-primary" id="shopBtn">Budget ausrechnen ▶</button>
+
+            <div class="result-box" id="shopResult" style="display:none;">
+              <div class="result-title">Dein Wochenbudget:</div>
+              <div id="shopText"></div>
+            </div>
+
+            <p class="small">
+              Viele schaffen als groben Richtwert zwischen ca. 5–10 € pro Tag und Person,
+              je nach Preisen, Angeboten und ob man viel Fertigessen kauft oder selbst kocht.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quiz-Szene -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Szenario: Du ziehst in eine WG</div>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom:0.4rem;">
+              Du ziehst mit einer Freundin / einem Freund in eine WG. Was ist ein sinnvoller erster Schritt?
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-q="1" data-correct="true">
+                <span>🅰️</span>
+                <span>Ihr macht eine Liste: Wer bringt was mit (Küche), wie teilt ihr Putzaufgaben &amp; Einkäufe?</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅱️</span>
+                <span>Ihr zieht einfach ein und schaut später, wer wann putzt – wird schon.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅾️</span>
+                <span>Du gehst davon aus, dass die andere Person das alles schon machen wird.</span>
+              </button>
+            </div>
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Haushalt ohne Drama – drei Bausteine</div>
+          </div>
+          <div class="card-body">
+            <div class="info-list">
+              <!-- Karte 1: Küche -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🍳</div>
+                    <div class="info-title">1. Küche: einfache Grundausstattung</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Du brauchst nicht sofort eine Profi-Küche.
+
+                    Sinnvolle Basics:
+                    • 1–2 Töpfe, 1 Pfanne
+                    • Schneidebrett, scharfes Messer
+                    • Teller, Schüsseln, Besteck, Gläser
+                    • Kochlöffel, Pfannenwender
+                    • Sieb, Dose / Boxen für Reste
+
+                    Einfache Gerichte:
+                    • Nudeln + Soße
+                    • Reis + Gemüsepfanne
+                    • Aufläufe aus dem Ofen
+
+                    Merksatz:
+                    Besser 5 einfache Gerichte gut können,
+                    als 20 Rezepte halb zu wissen.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 2: Putzroutine -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🧽</div>
+                    <div class="info-title">2. Putz-Routine, die realistisch ist</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Statt einmal im Monat Großputz (Stress!) lieber kleine Routinen:
+
+                    Beispiel:
+                    • Täglich: kurz Küche abwischen, Müll checken
+                    • 1x pro Woche: Bad, Staubsaugen, Wischen (je nach Wohnung)
+                    • 1x pro Woche: Bettwäsche oder Handtücher wechseln
+
+                    Tipp:
+                    • Schreib dir einen simplen Putzplan (z.B. für WG: wer macht was?)
+                    • Lieber „okay sauber“ als „perfekt, aber nie“.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 3: Müll & Ordnung -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🗑️</div>
+                    <div class="info-title">3. Müll &amp; Ordnung im Griff</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Viele Wohnungen nutzen getrennte Müllbehälter, z.B.:
+
+                    • Restmüll
+                    • Papier
+                    • Verpackungen (Plastik / Dosen – je nach System „Gelber Sack“)
+                    • Glas (oft extra Container draußen)
+
+                    Ordnung:
+                    • Ein fester Platz für wichtige Briefe / Dokumente
+                    • Ein Ort für Putzmittel
+                    • Ein Korb/Kiste für „Kram“
+
+                    Merksatz:
+                    Ein bisschen Struktur spart dir später viel Stress.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="small">
+              Im Unterricht könnt ihr z.B. gemeinsam eine „erste Wohnung planen“:
+              Welche Dinge brauche ich wirklich, was kosten sie ungefähr, wie teilen wir Aufgaben auf?
+            </p>
+
+            <button class="btn-primary" onclick="window.location.href='lifeskills_intro.html'">
+              Zurück zur Life-Skills-Übersicht
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Wäsche-Check
+    const washBtn = document.getElementById("washBtn");
+    const washResult = document.getElementById("washResult");
+    const washText = document.getElementById("washText");
+
+    washBtn.addEventListener("click", () => {
+      const type = document.getElementById("laundryType").value;
+      const dirt = document.getElementById("dirtLevel").value;
+
+      let text = "";
+      if (type === "dunkel") {
+        text += "• Programm: Pflegeleicht / Buntwäsche\n";
+        text += "• Temperatur: 30–40 °C\n";
+        text += "• Waschmittel: Colorwaschmittel\n";
+        text += "• Tipp: Dunkles von Hellem trennen.\n";
+      } else if (type === "bunt") {
+        text += "• Programm: Buntwäsche\n";
+        text += "• Temperatur: 30–40 °C\n";
+        text += "• Waschmittel: Colorwaschmittel\n";
+      } else if (type === "hell") {
+        text += "• Programm: Koch-/Buntwäsche\n";
+        text += "• Temperatur: 40–60 °C (Handtücher/Bettwäsche eher 60 °C)\n";
+        text += "• Waschmittel: Vollwaschmittel\n";
+      } else if (type === "sport") {
+        text += "• Programm: Sport/Funktionswäsche oder Feinwäsche\n";
+        text += "• Temperatur: meist 30 °C\n";
+        text += "• Waschmittel: Feinwaschmittel\n";
+        text += "• Tipp: Kein Weichspüler (schadet oft Funktionsstoffen).\n";
+      } else if (type === "fein") {
+        text += "• Programm: Feinwäsche / Wollprogramm\n";
+        text += "• Temperatur: 20–30 °C\n";
+        text += "• Waschmittel: Fein- oder Wollwaschmittel\n";
+        text += "• Tipp: Nicht zu stark schleudern.\n";
+      }
+
+      if (dirt === "stark") {
+        text += "\nZusatz: Stark verschmutzt – vorher groben Schmutz entfernen,\nFlecken evtl. mit Fleckenmittel vorbehandeln.";
+      } else if (dirt === "leicht") {
+        text += "\nZusatz: Nur leicht getragen – oft reicht ein kürzeres Programm.";
+      }
+
+      washText.textContent = text;
+      washResult.style.display = "block";
+    });
+
+    // Einkaufs-Planer
+    const shopBtn = document.getElementById("shopBtn");
+    const shopResult = document.getElementById("shopResult");
+    const shopText = document.getElementById("shopText");
+
+    shopBtn.addEventListener("click", () => {
+      const persons = parseInt(document.getElementById("persons").value, 10);
+      const budget = parseFloat(document.getElementById("budget").value.replace(",", "."));
+
+      if (!persons || persons <= 0 || isNaN(budget) || budget < 0) {
+        shopText.textContent = "Bitte gib eine sinnvolle Personenzahl und ein Budget ein.";
+        shopResult.style.display = "block";
+        return;
+      }
+
+      const perPersonWeek = budget / persons;
+      const perPersonDay = perPersonWeek / 7;
+
+      let text =
+        "• Gesamtbudget pro Woche: " + budget.toFixed(2).replace(".", ",") + " €\n" +
+        "• Das sind pro Person und Woche: " + perPersonWeek.toFixed(2).replace(".", ",") + " €\n" +
+        "• Das sind pro Person und Tag: " + perPersonDay.toFixed(2).replace(".", ",") + " €";
+
+      if (perPersonDay < 4) {
+        text += "\n\nEinschätzung: Sehr knapp – da muss man gut planen, Angebote nutzen und viel selbst kochen.";
+      } else if (perPersonDay <= 8) {
+        text += "\n\nEinschätzung: Realistisch, wenn man kocht, Reste nutzt und nicht nur Fertigessen kauft.";
+      } else {
+        text += "\n\nEinschätzung: Relativ entspannt – wenn du willst, kannst du ausprobieren,\nob du mit weniger auch klarkommst und etwas sparst.";
+      }
+
+      shopText.textContent = text;
+      shopResult.style.display = "block";
+    });
+
+    // Quiz-Logik
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent = "Genau: Klare Absprachen zu Aufgaben, Küche und Einkäufen verhindern Streit von Anfang an.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent = "Nicht ideal. Ohne Absprachen gibt es in WGs oft Streit über Putzen, Einkaufen und Geld.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+
+    // Info-Karten auf/zu
+    document.querySelectorAll(".info-card").forEach(card => {
+      const header = card.querySelector(".info-header");
+      const body = card.querySelector(".info-body");
+
+      header.addEventListener("click", () => {
+        const isOpen = card.classList.contains("open");
+        document.querySelectorAll(".info-card").forEach(other => {
+          if (other !== card) {
+            other.classList.remove("open");
+            const otherBody = other.querySelector(".info-body");
+            if (otherBody) otherBody.style.display = "none";
+          }
+        });
+
+        if (isOpen) {
+          card.classList.remove("open");
+          body.style.display = "none";
+        } else {
+          card.classList.add("open");
+          body.style.display = "block";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

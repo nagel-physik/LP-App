@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Soziale Unterstützung – Beratungsstellen &amp; Notfallkontakte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+
+    .back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body { font-size: 0.86rem; line-height: 1.5; }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+    /* Info-Karten */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon { font-size: 1.1rem; }
+    .info-title { font-weight: 600; text-align: left; }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+
+    .info-card.open .info-arrow { transform: rotate(90deg); }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    /* Fragen */
+    .question-card { margin-top: 0.9rem; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error { color: #fecaca; }
+
+    .warn-box {
+      background: rgba(127,29,29,0.85);
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: #fee2e2;
+      margin-top: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="soziale_unterstuetzung_intro.html" class="back-link">
+    ← zurück zu „Soziale Unterstützung“ (Einstieg)
+  </a>
+
+  <header class="top-bar-left">
+    <h1><span class="icon">📞</span>Beratungsstellen &amp; Notfallkontakte</h1>
+    <p>
+      Hier geht es darum, welche Arten von Stellen es gibt, wenn es ernst wird:
+      bei Geldsorgen, Stress zu Hause oder in echten Krisen.  
+      Die Beispiele sind allgemein – konkrete Adressen und Nummern suchst du immer aktuell.
+    </p>
+  </header>
+
+  <p class="step-label">
+    Kapitel 10 · Vertiefung · Wer hilft bei welchem Problem? (vereinfacht)
+  </p>
+
+  <main class="layout">
+
+    <!-- Linke Spalte -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🧑‍🤝‍🧑</div>
+          <div class="card-header-title">Beratung im Alltag</div>
+        </div>
+        <div class="card-body">
+          <p>
+            Es gibt viele Stellen, bei denen du über Probleme sprechen kannst,
+            ohne sofort „im Notfall“ zu sein. Das sind Anlaufstellen für den Alltag.
+          </p>
+
+          <div class="info-list">
+            <!-- Schulsozialarbeit / Schule -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🏫</div>
+                  <div class="info-title">Schule &amp; Schulsozialarbeit</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Wobei kann die Schule helfen?
+
+                  • Stress mit Mitschüler:innen oder Lehrkräften  
+                  • Mobbing, Ausgrenzung, Konflikte in der Klasse  
+                  • Sorgen zu Noten, Fehlzeiten, Schulangst  
+                  • Probleme zu Hause, die sich auf die Schule auswirken
+
+                  Mögliche Personen:
+                  • Schulsozialarbeit  
+                  • Klassenleitung / Vertrauenslehrer:in  
+                  • Schulpsychologischer Dienst (je nach Region)
+
+                  Wichtig:
+                  • Du kannst auch erst anonym fragen, wie etwas abläuft.
+                </div>
+              </div>
+            </div>
+
+            <!-- Jugendtreff / offene Jugendarbeit -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🎧</div>
+                  <div class="info-title">Jugendtreff &amp; offene Jugendarbeit</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Was gibt es dort?
+
+                  • Treffpunkt mit anderen Jugendlichen  
+                  • Freizeitangebote, Sport, Musik, Medien  
+                  • oft auch Einzelgespräche und Unterstützung
+
+                  Wobei können sie unterstützen?
+
+                  • Stress mit Eltern oder Freunden  
+                  • Langeweile, fehlende Freizeit-Angebote  
+                  • erste Infos zu Ausbildung, Geld oder Wohnen  
+                  • Kontakt zu anderen Beratungsstellen herstellen
+                </div>
+              </div>
+            </div>
+
+            <!-- Beratungsstellen für Familie / Schulden / Sucht etc. -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🧾</div>
+                  <div class="info-title">Beratung für Familie, Geld &amp; Alltag</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Es gibt spezialisierte Beratungsstellen, zum Beispiel:
+
+                  • Familienberatung (Streit, Trennung, Erziehung, Überforderung)  
+                  • Schuldnerberatung (Schulden, Mahnungen, Rechnungen)  
+                  • Suchtberatung (z.B. Alkohol, Drogen, Medien)  
+                  • Sozialberatung (Fragen zu Bürgergeld, Wohngeld, Leistungen)
+
+                  Wie findet man sie?
+
+                  • über Schule, Jugendtreff, Rathaus oder Internet-Suche  
+                  • viele Träger: Stadt, Wohlfahrtsverbände, Kirchen, Vereine
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Frage 1 -->
+          <div class="card question-card" style="margin-top:0.8rem;">
+            <div class="card-header">
+              <div class="card-header-icon">❓</div>
+              <div class="card-header-title">Check: Wer passt wozu?</div>
+            </div>
+            <div class="card-body">
+              <p style="margin-bottom:0.4rem;">
+                Du wirst in der Klasse gemobbt und hast Angst vor der Schule.
+                Welche Stelle passt als erste Anlaufstelle am ehesten?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="1" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Schulsozialarbeit oder eine Vertrauenslehrkraft.</span>
+                </button>
+                <button class="answer-btn" data-q="1" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Eine reine Schuldnerberatung für Erwachsene.</span>
+                </button>
+                <button class="answer-btn" data-q="1" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Gar niemand – ich gehe einfach nicht mehr hin.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback1"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechte Spalte -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🚨</div>
+          <div class="card-header-title">Krisen &amp; Notfälle (allgemein)</div>
+        </div>
+        <div class="card-body">
+          <p>
+            Manchmal reicht normale Beratung nicht mehr.  
+            Wenn jemand in Gefahr ist – körperlich oder psychisch – ist das ein Notfall.
+          </p>
+
+          <div class="info-list">
+            <!-- Ärztliche Hilfe / Psychische Krise -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🧠</div>
+                  <div class="info-title">Wenn es dir psychisch sehr schlecht geht</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Beispiele:
+
+                  • starke, anhaltende Traurigkeit oder Hoffnungslosigkeit  
+                  • starke Angstzustände oder Panikattacken  
+                  • Gedanken daran, sich selbst etwas anzutun  
+                  • du kannst kaum noch schlafen, essen oder den Alltag schaffen
+
+                  Mögliche Hilfe:
+
+                  • Ärztin / Arzt oder Kinder- und Jugendpsychiatrie  
+                  • psychotherapeutische Praxen  
+                  • Krisendienste / Krisenambulanzen (je nach Region)  
+                  • telefonische oder Online-Beratungsangebote
+
+                  Wichtig:
+                  • Du darfst als Jugendliche:r sagen, wenn es dir psychisch nicht gut geht.  
+                  • Hilfe holen ist ein Zeichen von Stärke.
+                </div>
+              </div>
+            </div>
+
+            <!-- Körperliche Gefahr / Gewalt -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🛑</div>
+                  <div class="info-title">Bei körperlicher Gewalt oder akuter Gefahr</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Beispiele:
+
+                  • du wirst geschlagen oder bedroht  
+                  • jemand zu Hause oder in der Schule ist in akuter Gefahr  
+                  • du beobachtest einen Unfall oder eine gefährliche Situation
+
+                  In so einem Fall:
+
+                  • wende dich sofort an erwachsene Bezugspersonen  
+                  • nutze den Notruf oder regionale Notfallnummern, wenn jemand direkt in Gefahr ist  
+                  • später können Beratungsstellen, Jugendamt oder Polizei weiterhelfen
+
+                  Wichtig:
+                  • Bei unmittelbarer Gefahr ist Sicherheit das Wichtigste – für dich und andere.
+                </div>
+              </div>
+            </div>
+
+            <!-- Anonyme Hilfen / Online -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🌐</div>
+                  <div class="info-title">Anonyme Hilfe &amp; Online-Beratung</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Viele Organisationen bieten anonyme Unterstützung:
+
+                  • telefonische Beratungsangebote nur für Kinder &amp; Jugendliche  
+                  • Chat- oder Mailberatung  
+                  • Info-Seiten zu Themen wie Mobbing, Sucht, Gewalt, Depression
+
+                  Wichtig:
+
+                  • Konkrete Angebote sind je nach Land/Region verschieden.  
+                  • Suchbegriffe wie „Online-Beratung Jugendliche anonym“ können helfen.  
+                  • Schulsozialarbeit oder Jugendtreff kennen oft gute Seiten.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Frage 2 -->
+          <div class="card question-card" style="margin-top:0.8rem;">
+            <div class="card-header">
+              <div class="card-header-icon">🧠</div>
+              <div class="card-header-title">Check: Alltag oder Notfall?</div>
+            </div>
+            <div class="card-body">
+              <p style="margin-bottom:0.4rem;">
+                Welche Situation ist am ehesten ein Notfall, bei dem schnell Hilfe gebraucht wird?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="2" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Jemand droht, sich oder anderen direkt etwas anzutun – oder wurde gerade verletzt.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Du hast eine Mathearbeit nicht verstanden.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Du weißt noch nicht, welchen Beruf du später machen willst.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback2"></div>
+
+              <p class="warn-box">
+                ⚠️ Hinweis (allgemein):
+                Diese Seite nennt nur Beispiele für Arten von Hilfe.
+                Konkrete Adressen, Telefonnummern und Zuständigkeiten sind je nach Land, Bundesland
+                und Region unterschiedlich und ändern sich mit der Zeit.
+                Im Ernstfall immer aktuelle Informationen prüfen und
+                erwachsene Vertrauenspersonen oder Notdienste einbeziehen.
+              </p>
+
+              <p class="small">
+                Idee für den Unterricht:
+                • Gemeinsam recherchieren, welche Beratungsangebote es in eurer Stadt / Region gibt  
+                • z.B. Schulsozialarbeit, Jugendamt, Jugendtreffs, Online-Beratungen
+              </p>
+
+              <button class="btn-primary" onclick="window.location.href='soziale_unterstuetzung_intro.html'">
+                Zurück zur Übersicht „Soziale Unterstützung“
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const feedback1 = document.getElementById('feedback1');
+  const feedback2 = document.getElementById('feedback2');
+
+  // Info-Karten auf/zu
+  document.querySelectorAll('.info-card').forEach(card => {
+    const header = card.querySelector('.info-header');
+    const body = card.querySelector('.info-body');
+
+    header.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+
+      document.querySelectorAll('.info-card').forEach(other => {
+        if (other !== card) {
+          other.classList.remove('open');
+          const otherBody = other.querySelector('.info-body');
+          if (otherBody) otherBody.style.display = 'none';
+        }
+      });
+
+      if (isOpen) {
+        card.classList.remove('open');
+        body.style.display = 'none';
+      } else {
+        card.classList.add('open');
+        body.style.display = 'block';
+      }
+    });
+  });
+
+  // Quiz-Logik
+  document.querySelectorAll('.answer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.getAttribute('data-q');
+      const correct = btn.getAttribute('data-correct') === 'true';
+
+      if (q === '1') {
+        if (correct) {
+          feedback1.textContent = 'Richtig: Bei Mobbing in der Schule sind Schulsozialarbeit oder Vertrauenslehrkräfte eine gute erste Anlaufstelle.';
+          feedback1.className = 'feedback';
+        } else {
+          feedback1.textContent = 'Nicht ganz. Eine Schuldnerberatung ist eher für Geld-Themen zuständig – und gar niemanden zu wählen hilft dir nicht.';
+          feedback1.className = 'feedback error';
+        }
+      }
+
+      if (q === '2') {
+        if (correct) {
+          feedback2.textContent = 'Genau: Wenn jemand direkt in Gefahr ist, braucht es schnell Hilfe – das ist mehr als ein normales Alltagsproblem.';
+          feedback2.className = 'feedback';
+        } else {
+          feedback2.textContent = 'Nicht richtig. Schulprobleme und Berufswahl sind wichtig, aber normalerweise kein akuter Notfall.';
+          feedback2.className = 'feedback error';
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

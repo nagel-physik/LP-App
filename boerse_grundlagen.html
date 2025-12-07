@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Börse – Grundlagen erklärt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #38bdf8;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      margin-bottom: 1.2rem;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.3rem 0 1.1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: start;
+    }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.25rem; }
+    .card-header-title { font-size: 0.96rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    /* Aufklappbare Info-Karten */
+    .info-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      margin-bottom: 0.6rem;
+      background: #020617;
+    }
+    .info-header {
+      padding: 0.6rem 0.7rem;
+      background: #0f172a;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .info-header div { font-size: 0.86rem; font-weight: 600; }
+    .info-arrow { transition: 0.2s; }
+    .info-body { display: none; padding: 0.6rem 0.75rem; font-size: 0.82rem; }
+    .info-card.open .info-body { display: block; }
+    .info-card.open .info-arrow { transform: rotate(90deg); }
+
+    /* Buttons */
+    .btn-primary {
+      margin-top: 0.7rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      display: inline-flex;
+      gap: 0.4rem;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+      text-decoration: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .answer-btn {
+  background: #020617;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  color: #e5e7eb;           /* <- NEU */
+}
+
+.answer-btn span {          /* <- NEU */
+  color: #e5e7eb;
+}
+
+.answer-btn:hover {
+  border-color: #38bdf8;
+}
+    .feedback.error { color: #fecaca; }
+
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <a href="boerse_intro.html" class="back-link">← zurück zum Börse-Hinweis</a>
+
+    <header>
+      <h1><span>📊</span>Börse – Grundlagen</h1>
+      <p>
+        Wir starten bei Null: Was ist eine Börse? Was wird dort verkauft? Warum schwanken Kurse?
+        Und was bedeutet „Risiko“? Alles Schritt für Schritt – ohne Fachchinesisch.
+      </p>
+    </header>
+
+    <p class="step-label">Kapitel 12 · Teil 1 · Der einfache Einstieg in die Welt der Märkte</p>
+
+    <main class="layout">
+
+      <!-- LINKE SPALTE -->
+      <section>
+
+        <!-- 1. Was ist eine Börse? -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🏛️</div>
+            <div class="card-header-title">Was ist eine Börse?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Eine Börse ist ein Ort, an dem Käufer und Verkäufer sich treffen.
+              Früher war das ein Gebäude, heute passiert fast alles digital.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Wie ein riesiger Marktplatz</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Stell dir vor, du bist auf einem Flohmarkt.  
+                Viele Menschen kaufen und verkaufen Dinge – und der Preis ändert sich,
+                je nachdem, wie viele etwas wollen.  
+                Genau so funktioniert Börse – nur mit Firmenanteilen, Rohstoffen oder ETFs.
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Wer bestimmt die Preise?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Der Preis entsteht aus Angebot und Nachfrage:  
+                <ul>
+                  <li>Viele wollen kaufen → Preis steigt.</li>
+                  <li>Viele wollen verkaufen → Preis fällt.</li>
+                </ul>
+                Das passiert ständig – deshalb sieht man Kurven, die hoch und runter springen.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Was ist eine Aktie? -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📈</div>
+            <div class="card-header-title">Was ist eine Aktie?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Eine Aktie ist ein <strong>kleiner Anteil an einer Firma</strong>.
+              Wenn du eine Aktie besitzt, gehörst du mini-mini-mäßig an dieser Firma mit.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Warum kaufen Menschen Aktien?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li>Die Firma wächst → Aktie wird wertvoller.</li>
+                  <li>Manche Firmen zahlen Dividenden (Geldausschüttung).</li>
+                  <li>Langfristig haben viele Aktienmärkte gute Renditen erzielt.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Warum fallen Aktien manchmal?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li>Schlechte Nachrichten zur Firma</li>
+                  <li>Wirtschaftliche Krisen</li>
+                  <li>Politische Ereignisse</li>
+                  <li>Viele Menschen wollen verkaufen → Preis fällt</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <!-- Depot -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">💼</div>
+            <div class="card-header-title">Was ist ein Depot?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Ein Depot ist wie ein digitales „Aktien-Konto“.
+              Dort liegen deine Aktien oder ETFs – ähnlich wie Geld auf dem Bankkonto liegt.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Filialbank vs. Neobroker</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <strong>Filialbank:</strong> persönliche Beratung, oft höhere Gebühren  
+                <strong>Neobroker:</strong> alles per App, oft günstiger, modern  
+                Wichtig: Niemand MUSS investieren – man muss verstehen, was man tut!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risiko -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">⚖️</div>
+            <div class="card-header-title">Risiko verstehen</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Riskant heißt nicht automatisch schlecht – es heißt nur:
+              „Es kann hoch gehen, es kann runter gehen.“
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Was beeinflusst Risiko?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li>Zeit (je länger, desto sicherer wurden viele Anlagen historisch)</li>
+                  <li>Wie viele verschiedene Firmen man hat (Diversifikation)</li>
+                  <li>Marktlage</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Diversifikation (Risiko verteilen)</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Stell dir vor, du hast nur 1 Aktie.  
+                Wenn diese fällt, fällt dein Depot.  
+                Hast du 500 Aktien über einen ETF → Risiko verteilt.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- kleines Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Mini-Quiz: Was stimmt?</div>
+          </div>
+          <div class="card-body">
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>Eine Aktie ist ein kleiner Anteil an einer Firma.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>Aktien bedeuten garantiertes Geld – man kann nicht verlieren.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Börse ist wie Glücksspiel – komplett zufällig.</span>
+              </button>
+            </div>
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+
+        <!-- Button zu nächsten Unterseiten -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">➡️</div>
+            <div class="card-header-title">Wie geht es weiter?</div>
+          </div>
+          <div class="card-body">
+            <a href="boerse_sparformen.html" class="btn-primary">
+              💶 Sparformen vergleichen (Tagesgeld, Festgeld, Depot)
+            </a>
+            <a href="boerse_aktien.html" class="btn-primary">
+              📈 Aktien verstehen
+            </a>
+            <a href="boerse_etf.html" class="btn-primary">
+              🧺 ETFs – viele Firmen auf einmal
+            </a>
+            <a href="boerse_risiko.html" class="btn-primary">
+              ⚖️ Risiko &amp; Sicherheit
+            </a>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Aufklappbare Infokarten
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.querySelector('.info-header').addEventListener('click', () => {
+        card.classList.toggle('open');
+      });
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent = "Richtig! Eine Aktie ist ein Firmenanteil.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent = "Nicht ganz – Risiko gehört dazu, aber es ist nicht Zufall.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

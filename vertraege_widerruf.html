@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verträge – Widerruf &amp; Kündigung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+
+    .back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .warn-box {
+      background: rgba(127,29,29,0.85);
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: #fee2e2;
+      margin-top: 0.8rem;
+    }
+
+    /* Info-Karten */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon {
+      font-size: 1.1rem;
+    }
+
+    .info-title {
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+
+    .info-card.open .info-arrow {
+      transform: rotate(90deg);
+    }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    /* Fragen */
+    .question-card { margin-top: 0.9rem; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="vertraege_intro.html" class="back-link">← zurück zu „Verträge verstehen“ (Grundlagen)</a>
+
+  <header class="top-bar-left">
+    <h1><span class="icon">↩️</span>Widerruf &amp; Kündigung (grob erklärt)</h1>
+    <p>
+      Hast du einen Vertrag abgeschlossen und merkst: „Mist, das war keine gute Idee“?
+      Hier lernst du den Unterschied zwischen Widerruf und Kündigung – in einfacher Form.
+    </p>
+  </header>
+
+  <p class="step-label">Kapitel 9 · Vertiefung · Wie komme ich aus Verträgen wieder raus? (vereinfacht)</p>
+
+  <main class="layout">
+    <!-- Linke Spalte -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🧠</div>
+          <div class="card-header-title">Grundidee: Widerruf vs. Kündigung</div>
+        </div>
+        <div class="card-body">
+          <div class="info-list">
+            <!-- Karte 1: Was ist Widerruf? -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">↩️</div>
+                  <div class="info-title">Widerruf – was ist das?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Stark vereinfacht:
+
+                  • Widerruf bedeutet: Du machst einen frischen Vertrag
+                    innerhalb einer bestimmten Frist wieder rückgängig.
+                  • Typisch: Online-Shop, Telefonvertrag, Abo an der Haustür.
+
+                  Beispiel:
+                  • Du bestellst online Schuhe.
+                  • Innerhalb von z.B. 14 Tagen kannst du sie zurückschicken
+                    und vom Vertrag zurücktreten (wenn Regeln erfüllt sind).
+
+                  Wichtig:
+                  • Es gibt Bedingungen und Ausnahmen.
+                  • Die Frist beginnt meist, wenn du die Ware/Unterlagen bekommen hast.
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 2: Was ist Kündigung? -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">✂️</div>
+                  <div class="info-title">Kündigung – was ist das?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Kündigung bedeutet:
+
+                  • Du beendest einen laufenden Vertrag für die Zukunft.
+                  • Bis zum Ende der Laufzeit musst du ihn aber meist noch zahlen.
+
+                  Beispiel:
+                  • Handyvertrag mit 24 Monaten Laufzeit.
+                  • Du kündigst zum Ende der Laufzeit, damit er sich nicht verlängert.
+                  • Bis dahin zahlst du weiter – aber danach ist Schluss.
+
+                  Merke:
+                  • Kündigung = „ab jetzt nicht mehr weiter“.
+                  • Widerruf = „so tun, als wäre der Vertrag nie zustande gekommen“ (vereinfacht).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Frage 1 -->
+          <div class="card question-card" style="margin-top:0.8rem;">
+            <div class="card-header">
+              <div class="card-header-icon">❓</div>
+              <div class="card-header-title">Check: Widerruf oder Kündigung?</div>
+            </div>
+            <div class="card-body">
+              <p style="margin-bottom:0.4rem;">
+                Du hast vor 3 Tagen einen Streaming-Dienst online gebucht und gemerkt,
+                dass du ihn doch nicht willst. Was passt besser?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="1" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Ich prüfe, ob ich ein Widerrufsrecht habe und widerrufe rechtzeitig schriftlich.</span>
+                </button>
+                <button class="answer-btn" data-q="1" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Ich ignoriere alles – vielleicht vergessen sie mich.</span>
+                </button>
+                <button class="answer-btn" data-q="1" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Ich kündige erst in 3 Jahren, wenn ich wieder dran denke.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback1"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechte Spalte -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📬</div>
+          <div class="card-header-title">Fristen, Formen &amp; typische Situationen</div>
+        </div>
+        <div class="card-body">
+          <div class="info-list">
+            <!-- Karte 3: Wo gibt es typischerweise Widerrufsrecht? -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🌐</div>
+                  <div class="info-title">Wo gibt es häufig ein Widerrufsrecht? (vereinfacht)</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Typische Beispiele (vereinfacht):
+
+                  • Online-Kauf (z.B. Kleidung aus dem Internet)
+                  • Verträge per Telefon oder Internet
+                  • Haustürgeschäfte (wenn dir jemand etwas „aufschwatzt“)
+
+                  Oft:
+                  • Widerrufsfrist ca. 14 Tage (abhängig vom Vertrag).
+                  • Du musst aktiv sagen, dass du widerrufst.
+
+                  Achtung:
+                  • Es gibt Ausnahmen, z.B. bei:
+                    – maßgeschneiderten Produkten
+                    – bereits komplett genutzten digitalen Inhalten
+                    – manchen Dienstleistungen, wenn sie schon erbracht sind
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 4: Wo gibt es meist KEIN Widerrufsrecht? -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🏪</div>
+                  <div class="info-title">Wo hast du meist KEIN Widerrufsrecht?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Vereinfachte Faustregel:
+
+                  • Im normalen Laden vor Ort (z.B. Klamotten im Geschäft)
+                    gibt es meistens kein gesetzliches Widerrufsrecht.
+                  • Wenn der Laden trotzdem Rückgabe/Umtausch zulässt,
+                    ist das eine freiwillige Regelung des Geschäfts.
+
+                  Merke:
+                  • „Kein Umtausch“ im Laden bedeutet nicht automatisch „illegal“.
+                  • Es gibt Unterschiede zwischen Online-Handel und Ladenkauf.
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 5: Wie kündigt man sinnvoll? -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">📆</div>
+                  <div class="info-title">Kündigung: Wie und wann?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  In vielen Verträgen steht:
+
+                  • Wie du kündigen musst (z.B. schriftlich, online-Portal, per Mail)
+                  • Bis wann du kündigen musst (z.B. 1 Monat vor Ablauf)
+
+                  Tipps:
+                  • Kündigungsfrist im Vertrag markieren.
+                  • Frühzeitig Erinnerung einstellen (Kalender, Handy).
+                  • Kündigung so formulieren, dass klar ist:
+                    – Was wird gekündigt?
+                    – Zu welchem Datum?
+
+                  Wichtig:
+                  • Viele Verträge verlängern sich automatisch,
+                    wenn du nicht rechtzeitig kündigst.
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 6: Hilfe holen -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🆘</div>
+                  <div class="info-title">Wo bekommst du Hilfe?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Wenn du mit Verträgen überfordert bist:
+
+                  • Eltern, Vertrauenspersonen, Lehrkräfte fragen
+                  • Verbraucherzentrale (Beratung zu Verbraucherrechten)
+                  • Bei großen Problemen: Rechtsanwalt / Rechtsanwältin
+
+                  Wichtig:
+                  • Nicht ignorieren, wenn Mahnungen oder Rechnungen kommen.
+                  • Je früher du reagierst, desto besser lassen sich Probleme klären.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Frage 2 -->
+          <div class="card question-card" style="margin-top:0.8rem;">
+            <div class="card-header">
+              <div class="card-header-icon">🧠</div>
+              <div class="card-header-title">Check: Ladenkauf &amp; Umtausch</div>
+            </div>
+            <div class="card-body">
+              <p style="margin-bottom:0.4rem;">
+                Du kaufst ein T-Shirt im Laden und zu Hause gefällt es dir nicht mehr.
+                Was stimmt (vereinfacht)?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="2" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Es gibt nicht automatisch ein gesetzliches Widerrufsrecht – Umtausch ist oft Kulanz des Geschäfts.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Im Laden kann ich jedes Produkt immer wieder zurückgeben, egal warum.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Umtausch im Laden ist immer verboten.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback2"></div>
+
+              <p class="warn-box">
+                ⚠️ Hinweis (stark vereinfacht):
+                Die Regeln zu Widerruf und Kündigung stehen in Gesetzen und Verträgen
+                und können sich ändern. Diese Seite soll dir ein Grundverständnis geben,
+                ersetzt aber keine Rechtsberatung. Im Zweifel immer aktuelle Infos prüfen
+                und Erwachsene / Beratungsstellen fragen.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const feedback1 = document.getElementById('feedback1');
+  const feedback2 = document.getElementById('feedback2');
+
+  // Info-Karten (auf/zu)
+  document.querySelectorAll('.info-card').forEach(card => {
+    const header = card.querySelector('.info-header');
+    const body = card.querySelector('.info-body');
+
+    header.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+
+      document.querySelectorAll('.info-card').forEach(other => {
+        if (other !== card) {
+          other.classList.remove('open');
+          const otherBody = other.querySelector('.info-body');
+          if (otherBody) otherBody.style.display = 'none';
+        }
+      });
+
+      if (isOpen) {
+        card.classList.remove('open');
+        body.style.display = 'none';
+      } else {
+        card.classList.add('open');
+        body.style.display = 'block';
+      }
+    });
+  });
+
+  // Fragen-Logik
+  document.querySelectorAll('.answer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.getAttribute('data-q');
+      const correct = btn.getAttribute('data-correct') === 'true';
+
+      if (q === '1') {
+        if (correct) {
+          feedback1.textContent = 'Genau: Wenn es ein Widerrufsrecht gibt, musst du es aktiv und rechtzeitig nutzen – einfach ignorieren hilft nicht.';
+          feedback1.className = 'feedback';
+        } else {
+          feedback1.textContent = 'Nicht ganz. „Ignorieren“ oder „irgendwann kündigen“ ist keine gute Idee bei frischen Verträgen.';
+          feedback1.className = 'feedback error';
+        }
+      }
+
+      if (q === '2') {
+        if (correct) {
+          feedback2.textContent = 'Richtig: Im Laden vor Ort ist Umtausch oft freiwillig vom Geschäft – nicht automatisch ein Recht.';
+          feedback2.className = 'feedback';
+        } else {
+          feedback2.textContent = 'Nicht richtig. Es gibt nicht immer ein Recht auf Umtausch – aber verboten ist es natürlich auch nicht.';
+          feedback2.className = 'feedback error';
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

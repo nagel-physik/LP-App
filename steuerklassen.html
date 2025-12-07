@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Steuerklassen verstehen – Teil 3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+
+    .back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 1rem; font-weight: 700; }
+
+    select {
+      width: 100%;
+      padding: 0.55rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.84rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .info-box {
+      background: rgba(15,23,42,0.95);
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 0.8rem;
+      line-height: 1.45;
+      font-size: 0.85rem;
+    }
+
+    .warn-box {
+      background: rgba(127,29,29,0.8);
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.75rem;
+      font-size: 0.82rem;
+      color: #fee2e2;
+      margin-top: 0.8rem;
+    }
+
+    .steuer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.7rem;
+    }
+
+    .steuer-card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 14px;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .steuer-card:hover {
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    .steuer-card strong {
+      font-size: 1rem;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="lohnzettel.html" class="back-link">← zurück zum Lohnzettel</a>
+
+  <header class="top-bar-left">
+    <h1><span class="icon">🧾</span>Steuerklassen – klar & verständlich</h1>
+    <p>
+      Die Steuerklasse bestimmt, wie viel **Lohnsteuer du jeden Monat vorab** zahlst.
+      Sie entscheidet aber **nicht**, wie viel Steuer du am Ende des Jahres wirklich
+      schuldest – das regelt erst die Steuererklärung.
+    </p>
+  </header>
+
+  <!-- Karte 1: Situationen -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">🎯</div>
+      <div class="card-header-title">Lebenssituation auswählen</div>
+    </div>
+    <div class="card-body">
+      <select id="situationSelect">
+        <option value="" disabled selected>Bitte auswählen…</option>
+        <option value="klasse1">Ich bin ledig, keine Kinder → (Steuerklasse I)</option>
+        <option value="klasse2">Ich bin alleinerziehend → (Steuerklasse II)</option>
+        <option value="klasse4">Ich bin verheiratet, beide verdienen ähnlich → (Steuerklasse IV)</option>
+        <option value="klasse35">Ich bin verheiratet, ein Partner verdient viel mehr → (Kombi III / V)</option>
+        <option value="klasse6">Ich habe einen 2. Job (nicht Minijob) → (Steuerklasse VI)</option>
+      </select>
+
+      <div id="situationInfo" class="info-box">
+        Wähle eine Situation aus, um zu sehen, welche Steuerklasse dazu passt.
+      </div>
+
+      <div class="warn-box">
+        <strong>Wichtig:</strong><br>
+        Die Steuerklasse bestimmt nur **monatliche Vorauszahlungen**.  
+        Am Ende des Jahres zählt die **Steuererklärung** – da wird alles
+        korrigiert, zurückgezahlt oder nachgefordert.
+      </div>
+    </div>
+  </div>
+
+  <!-- Karte 2: Überblick über alle Klassen -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">📚</div>
+      <div class="card-header-title">Alle Steuerklassen im Überblick</div>
+    </div>
+
+    <div class="card-body">
+      <div class="steuer-grid">
+        <div class="steuer-card">
+          <strong>Klasse I</strong>
+          Ledig, keine Kinder. Standard-Klasse für viele Menschen unter 30.
+        </div>
+
+        <div class="steuer-card">
+          <strong>Klasse II</strong>
+          Alleinerziehende mit mindestens einem Kind. Hat einen zusätzlichen Entlastungsbetrag.
+        </div>
+
+        <div class="steuer-card">
+          <strong>Klasse III</strong>
+          Verheiratet. Wird gewählt, wenn der andere Partner deutlich weniger verdient (Kombi III/V).
+        </div>
+
+        <div class="steuer-card">
+          <strong>Klasse IV</strong>
+          Verheiratet. Beide verdienen ungefähr gleich viel (Standard bei Ehepaaren).
+        </div>
+
+        <div class="steuer-card">
+          <strong>Klasse V</strong>
+          Gegenstück zu Klasse III. Höhere monatliche Abzüge, aber am Jahresende wird es in der Steuererklärung ausgeglichen.
+        </div>
+
+        <div class="steuer-card">
+          <strong>Klasse VI</strong>
+          Für 2. oder 3. Job (nicht Minijob!). Hat die höchsten Abzüge, weil kaum Freibeträge berücksichtigt werden.
+        </div>
+      </div>
+
+      <p class="warn-box" style="margin-top:1rem;">
+        💡 **Merke:** Egal welche Klasse du hast – die Steuererklärung kann später alles ändern.
+        Die Klasse bestimmt nur, wie viel du VORAB zahlst, nicht wie viel du wirklich schuldest.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const sitSelect = document.getElementById('situationSelect');
+  const infoBox = document.getElementById('situationInfo');
+
+  const texts = {
+    klasse1: `📌 **Steuerklasse I**
+
+Für:
+• Ledig  
+• Keine Kinder  
+• Nicht verheiratet  
+• Kein 2. Job  
+
+Merkmale:
+• Standardklasse für viele Berufseinsteiger  
+• Monatliche Abzüge: „normal“  
+• Jahressteuer kann später höher oder niedriger sein`,
+    
+    klasse2: `📌 **Steuerklasse II**
+
+Für:
+• Alleinerziehende mit mindestens einem Kind  
+
+Vorteil:
+• Extra Entlastungsbetrag → etwas weniger Lohnsteuer  
+
+Merke:
+• Wird nur anerkannt, wenn das Kind bei dir gemeldet ist`,
+    
+    klasse4: `📌 **Steuerklasse IV**
+
+Für:
+• Verheiratete, die ungefähr gleich viel verdienen  
+
+Merkmale:
+• Fair verteilt  
+• Beide zahlen ungefähr gleiche Anteile  
+• Sehr häufig genutzt`,
+    
+    klasse35: `📌 **Kombination III/V**
+
+Für:
+• Verheiratete  
+• Ein Partner verdient deutlich mehr  
+
+Merkmale:
+• Klasse III = weniger Abzüge  
+• Klasse V = mehr Abzüge  
+• Jahressteuererklärung ist hier quasi Pflicht`,
+    
+    klasse6: `📌 **Steuerklasse VI**
+
+Für:
+• 2. oder 3. Job (nur wenn nicht Minijob!)  
+
+Merkmale:
+• Höchste Abzüge  
+• Keine Freibeträge  
+• Jahreserklärung wichtig, oft gibt es Geld zurück`
+  };
+
+  sitSelect.addEventListener("change", () => {
+    const value = sitSelect.value;
+    infoBox.innerHTML = texts[value] || "Bitte wähle eine Situation aus.";
+  });
+</script>
+
+</body>
+</html>

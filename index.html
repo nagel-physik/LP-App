@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lebensplanung – Bist du bereit fürs echte Leben?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1.25rem;
+    }
+
+    .hero-shell {
+      max-width: 960px;
+      width: 100%;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.25), rgba(15,23,42,0.96));
+      border-radius: 28px;
+      padding: 1.8rem 1.9rem 1.9rem;
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 28px 70px rgba(15,23,42,0.95);
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .hero-left h1 {
+      margin: 0 0 0.45rem;
+      font-size: clamp(1.8rem, 2.6vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hero-left h1 span.icon {
+      font-size: 1.9rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      color: #cbd5f5;
+      margin-bottom: 1rem;
+      max-width: 32rem;
+      line-height: 1.5;
+    }
+
+    .hero-text {
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      line-height: 1.55;
+      max-width: 34rem;
+    }
+
+    .hero-text strong {
+      color: #bbf7d0;
+    }
+
+    .hero-actions {
+      margin-top: 1.3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.7rem 1.7rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 14px 40px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .hero-note {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      opacity: 0.9;
+    }
+
+    .hero-right {
+      position: relative;
+      min-height: 210px;
+    }
+
+    .hero-badge {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.5rem;
+      background: rgba(15,23,42,0.78);
+      border-radius: 999px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid rgba(148,163,184,0.75);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-badge span.icon { font-size: 1rem; }
+
+    .hero-card-stack {
+      position: absolute;
+      inset: 1.8rem 0.5rem 0.3rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .hero-card {
+      width: 220px;
+      height: 140px;
+      border-radius: 22px;
+      border: 1px solid rgba(148,163,184,0.85);
+      box-shadow: 0 20px 50px rgba(15,23,42,0.9);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.35), rgba(15,23,42,1));
+      padding: 1rem 1.05rem;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform: rotate(-6deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0.6rem -1.2rem -0.8rem 1.5rem;
+      border-radius: 24px;
+      border: 1px solid rgba(31,41,55,0.9);
+      background: radial-gradient(circle at bottom, rgba(15,23,42,0.98), transparent 60%);
+      transform: rotate(5deg);
+      z-index: -1;
+    }
+
+    .hero-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .hero-card-pill {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(45,212,191,0.8);
+      color: #a5f3fc;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .hero-card-main {
+      margin-top: 0.5rem;
+      font-size: 0.76rem;
+      color: #cbd5f5;
+      line-height: 1.35;
+    }
+
+    .hero-card-main strong { color: #facc15; }
+
+    .hero-card-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-top: 0.4rem;
+    }
+
+    .hero-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.4rem;
+    }
+
+    .hero-chip {
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 0.7rem;
+      color: #e2e8f0;
+      background: rgba(15,23,42,0.9);
+    }
+
+    @media (max-width: 880px) {
+      body {
+        padding: 1.2rem;
+        align-items: flex-start;
+      }
+      .hero-shell {
+        grid-template-columns: minmax(0, 1fr);
+        border-radius: 22px;
+      }
+      .hero-right {
+        order: -1;
+        min-height: 190px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-shell {
+        padding: 1.4rem 1.3rem 1.5rem;
+      }
+      .hero-left h1 {
+        font-size: 1.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="hero-shell">
+    <section class="hero-left">
+      <h1><span class="icon">🚀</span>Bist du bereit fürs echte Leben?</h1>
+      <p class="hero-subtitle">
+        Geld, Wohnung, Job, Steuern, Versicherungen – hier geht es um alles,
+        was nach der Schule wirklich wichtig wird.
+      </p>
+      <div class="hero-text">
+        <p>
+          Du wirst erwachsen. Entscheidungen haben plötzlich Folgen:
+          <strong>Verträge, Schulden, erste eigene Wohnung, erstes Gehalt.</strong>
+        </p>
+        <p>
+          In dieser App kannst du alles in Ruhe durchspielen:
+          Wie bleibe ich am Monatsende im Plus? Welche Versicherungen brauche ich wirklich?
+          Was kostet eine Wohnung? Wie funktionieren Steuern?
+        </p>
+        <p>
+          <strong>Kurz: Wissen, das dich schützt – damit du nicht über den Tisch gezogen wirst.</strong>
+        </p>
+      </div>
+      <div class="hero-actions">
+        <a href="app.html" class="btn-primary">
+          <span>Starte deinen Weg</span>
+          <span>▶</span>
+        </a>
+        <div class="hero-note">
+          Danach kannst du dir im Dashboard selbst aussuchen, über welches Thema du mehr wissen willst.
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-right" aria-hidden="true">
+      <div class="hero-badge">
+        <span class="icon">🎯</span>
+        <span>Nur echte Alltagssituationen – ohne Schulbuch-Blabla</span>
+      </div>
+      <div class="hero-card-stack">
+        <div class="hero-card">
+          <div class="hero-card-top">
+            <div class="hero-card-title">Lebensplanung – Vorschau</div>
+            <div class="hero-card-pill">Dein Leben · Deine Entscheidungen</div>
+          </div>
+          <div class="hero-card-main">
+            <p style="margin:0 0 0.15rem;">
+              <strong>Beispiel:</strong> Du verdienst 950 € im Monat, suchst eine Wohnung
+              und willst trotzdem noch leben.
+            </p>
+            <p style="margin:0;">
+              Reicht dein Geld für Miete, Handy, Essen und Freizeit – oder landest du im Minus?
+            </p>
+            <div class="hero-chip-row">
+              <span class="hero-chip">💸 Finanzen</span>
+              <span class="hero-chip">🏠 Wohnen</span>
+              <span class="hero-chip">🧾 Verträge</span>
+              <span class="hero-chip">📈 Sparen</span>
+            </div>
+          </div>
+          <div class="hero-card-footer">
+            <span>Spiele Szenen durch &amp; lerne nebenbei.</span>
+            <span>Kein Risiko. Nur Wissen.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

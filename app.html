@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lebensplanung – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    h1 span { font-size: 1.8rem; }
+    p.intro {
+      font-size: 0.9rem;
+      max-width: 40rem;
+      color: #cbd5e1;
+      margin-bottom: 1.4rem;
+    }
+
+    /* Dashboard */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      display: block;
+      text-decoration: none;
+      background: #1e293b;
+      padding: 1rem;
+      border-radius: 14px;
+      border: 1px solid #334155;
+      color: inherit;
+      transition: 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #38bdf8;
+    }
+    .icon { font-size: 1.6rem; }
+    .title { font-weight: 700; margin-top: 0.3rem; }
+    .text { font-size: 0.85rem; color: #cbd5e1; margin: 0.4rem 0; }
+    .tag { font-size: 0.75rem; color: #93c5fd; }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <h1><span>🎯</span> Lebensplanung – Alle Kapitel</h1>
+    <p class="intro">
+      Wähle ein Thema. Jede Kachel öffnet ein eigenes Modul.
+    </p>
+
+    <div class="grid">
+      <a href="finanzen_intro.html" class="card">
+        <div class="icon">💶</div>
+        <div class="title">Finanzen & Budget</div>
+        <div class="text">Einnahmen, Ausgaben, Budget-Rechner.</div>
+        <div class="tag">Level 1</div>
+      </a>
+
+      <a href="schulden_intro.html" class="card">
+        <div class="icon">⚠️</div>
+        <div class="title">Schulden & Konsum</div>
+        <div class="text">Ratenkauf, Dispo, Fallen vermeiden.</div>
+        <div class="tag">Level 2</div>
+      </a>
+
+      <a href="sparen_intro.html" class="card">
+        <div class="icon">📈</div>
+        <div class="title">Sparen & Zukunft</div>
+        <div class="text">ETF-Rechner & Zinseszins.</div>
+        <div class="tag">Level 3</div>
+      </a>
+
+      <a href="wohnen_intro.html" class="card">
+        <div class="icon">🏠</div>
+        <div class="title">Wohnen & Miete</div>
+        <div class="text">Nebenkosten & Wohnkosten-Rechner.</div>
+        <div class="tag">Level 4</div>
+      </a>
+
+      <a href="arbeit_intro.html" class="card">
+        <div class="icon">💼</div>
+        <div class="title">Arbeit & Rechte</div>
+        <div class="text">Ausbildung, Vertrag, Rechte.</div>
+        <div class="tag">Level 5</div>
+      </a>
+
+      <a href="steuern_intro.html" class="card">
+        <div class="icon">🧾</div>
+        <div class="title">Steuern & Lohnzettel</div>
+        <div class="text">Brutto/Netto, Abzüge, Steuerklassen.</div>
+        <div class="tag">Level 6</div>
+      </a>
+
+      <a href="gesundheit_intro.html" class="card">
+        <div class="icon">💊</div>
+        <div class="title">Gesundheit</div>
+        <div class="text">Krankenversicherung & AU.</div>
+        <div class="tag">Level 7</div>
+      </a>
+
+      <a href="versicherungen_intro.html" class="card">
+        <div class="icon">🛡️</div>
+        <div class="title">Versicherungen</div>
+        <div class="text">Welche sind wirklich wichtig?</div>
+        <div class="tag">Level 8</div>
+      </a>
+
+      <a href="vertraege_intro.html" class="card">
+        <div class="icon">📲</div>
+        <div class="title">Verträge</div>
+        <div class="text">Handy, Streaming, Kündigung.</div>
+        <div class="tag">Level 9</div>
+      </a>
+
+      <a href="soziale_unterstuetzung_intro.html" class="card">
+        <div class="icon">🤝</div>
+        <div class="title">Soziale Unterstützung</div>
+        <div class="text">Wo gibt es Hilfe?</div>
+        <div class="tag">Level 10</div>
+      </a>
+
+      <a href="lifeskills_intro.html" class="card">
+        <div class="icon">🧠</div>
+        <div class="title">Life Skills</div>
+        <div class="text">Alltag, Konflikte, Haushalt, Selfcare.</div>
+        <div class="tag">Level 11</div>
+      </a>
+<a href="boerse_intro.html" class="card">
+  <div class="icon">📊</div>
+  <div class="title">Börse &amp; Investieren</div>
+  <div class="text">
+    Was sind Aktien, ETFs &amp; Anleihen? Chancen, Risiken &amp; Sparformen im Vergleich.
+  </div>
+  <div class="tag">Level 12</div>
+</a>
+<a href="quiz_intro.html" class="card">
+  <div class="icon">📝</div>
+  <div class="title">Quiz – Teste dein Wissen</div>
+  <div class="text">
+    Alle Themen · je 15 Fragen · Sofort-Feedback · Erklärungen
+  </div>
+  <div class="tag">Level Q</div>
+</a>
+    </div>
+  </div>
+</body>
+</html>

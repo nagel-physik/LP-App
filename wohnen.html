@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 4 – Wohnkosten-Rechner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .top-bar-right {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .input-row input {
+      padding: 0.35rem 0.45rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.8rem;
+      width: 120px;
+    }
+
+    .input-row span {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .quick-btn {
+      font-size: 0.78rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .quick-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.4rem;
+    }
+
+    .result-highlight {
+      font-size: 1rem;
+      font-weight: 800;
+      margin: 0.4rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .ampel-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.7);
+      flex-shrink: 0;
+    }
+
+    .ampel-green {
+      background: #22c55e;
+      box-shadow: 0 0 18px rgba(34,197,94,0.9);
+    }
+
+    .ampel-yellow {
+      background: #facc15;
+      box-shadow: 0 0 18px rgba(250,204,21,0.9);
+    }
+
+    .ampel-red {
+      background: #ef4444;
+      box-shadow: 0 0 18px rgba(239,68,68,0.9);
+    }
+
+    .result-line {
+      font-size: 0.82rem;
+      margin: 0.15rem 0;
+    }
+
+    .chart {
+      margin-top: 0.6rem;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.95);
+      padding: 0.6rem 0.7rem;
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 0.78rem;
+    }
+
+    .chart-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .chart-label {
+      width: 70px;
+      flex-shrink: 0;
+    }
+
+    .chart-bar-wrapper {
+      flex: 1;
+      background: rgba(15,23,42,1);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(30,64,175,0.8);
+    }
+
+    .chart-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      width: 10%;
+      transition: width 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">🏠</span>Wohnkosten-Rechner – passt die Miete zu dir?</h1>
+        <p>
+          Hier kannst du testen, wie viel Prozent deiner Einnahmen für die Warmmiete draufgehen
+          – und ob das eher entspannt, kritisch oder gefährlich ist.
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="wohnen_intro.html">← zurück zu Kapitel 4 (Grundlagen)</a>
+        <a href="app.html">🏠 zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <p class="step-label">Kapitel 4 · Teil 2 von 3 · Interaktiver Wohnkosten-Rechner</p>
+
+    <main class="layout">
+      <!-- Linke Spalte: Eingaben -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">⚙️</div>
+            <div class="card-header-title">Deine Daten eingeben</div>
+          </div>
+          <div class="card-body">
+            <div class="input-row">
+              <div>
+                <label for="income">Monatliches Nettoeinkommen</label>
+                <input type="number" id="income" value="1500" min="0" />
+              </div>
+              <span>€ (Ausbildungsgehalt / Lohn / BAföG + Nebenjob)</span>
+            </div>
+
+            <div class="input-row">
+              <div>
+                <label for="coldRent">Kaltmiete</label>
+                <input type="number" id="coldRent" value="420" min="0" />
+              </div>
+              <span>€</span>
+            </div>
+
+            <div class="input-row">
+              <div>
+                <label for="extraCosts">Nebenkosten (Heizung, Wasser, Müll …)</label>
+                <input type="number" id="extraCosts" value="160" min="0" />
+              </div>
+              <span>€ (monatlich)</span>
+            </div>
+
+            <div class="quick-buttons">
+              <span style="font-size:0.78rem; color:#cbd5f5; margin-right:0.2rem;">Beispiele Einkommen:</span>
+              <button class="quick-btn" data-income="1200">1.200 €</button>
+              <button class="quick-btn" data-income="1500">1.500 €</button>
+              <button class="quick-btn" data-income="1800">1.800 €</button>
+              <button class="quick-btn" data-income="2200">2.200 €</button>
+            </div>
+
+            <div class="quick-buttons" style="margin-top:0.4rem;">
+              <span style="font-size:0.78rem; color:#cbd5f5; margin-right:0.2rem;">Beispiele Miete:</span>
+              <button class="quick-btn" data-rent="420|160">580 € (420 + 160)</button>
+              <button class="quick-btn" data-rent="550|200">750 € (550 + 200)</button>
+              <button class="quick-btn" data-rent="650|250">900 € (650 + 250)</button>
+            </div>
+
+            <button class="btn-primary" id="calcBtn">Berechnen ▶</button>
+
+            <p class="small">
+              Faustregel: Viele empfehlen, dass die <strong>Warmmiete ungefähr ein Drittel
+              deines Nettoeinkommens</strong> nicht deutlich überschreiten sollte.
+              Je höher der Anteil, desto weniger bleibt für alles andere übrig.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte: Ergebnis -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📊</div>
+            <div class="card-header-title">Ergebnis &amp; Einschätzung</div>
+          </div>
+          <div class="card-body">
+            <div class="result-highlight" id="resultHeadline">
+              Gib deine Werte ein und klick auf „Berechnen“.
+            </div>
+            <p class="result-line" id="resultWarm"></p>
+            <p class="result-line" id="resultPercent"></p>
+            <p class="result-line" id="resultText"></p>
+
+            <div class="chart" id="chartBox" style="display:none;">
+              <p style="margin:0 0 0.4rem; font-weight:600;">Wie verteilt sich dein Geld?</p>
+              <div class="chart-row">
+                <div class="chart-label">Miete</div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" id="barRent"></div>
+                </div>
+              </div>
+              <div class="chart-row">
+                <div class="chart-label">Rest</div>
+                <div class="chart-bar-wrapper">
+                  <div class="chart-bar" id="barRest" style="background:linear-gradient(90deg,#38bdf8,#a855f7);"></div>
+                </div>
+              </div>
+            </div>
+
+            <p class="small">
+              Achtung: Der Rechner ersetzt keine Beratung, aber er hilft dir,
+              ein Gefühl für „passt die Miete zu meinem Einkommen?“ zu bekommen.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function fmtEuro(value) {
+      return value.toLocaleString('de-DE', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }) + ' €';
+    }
+
+    function calcWohnkosten() {
+      const incomeInput = document.getElementById('income');
+      const coldInput = document.getElementById('coldRent');
+      const extraInput = document.getElementById('extraCosts');
+
+      const income = parseFloat(incomeInput.value) || 0;
+      const coldRent = parseFloat(coldInput.value) || 0;
+      const extraCosts = parseFloat(extraInput.value) || 0;
+
+      const resultHeadline = document.getElementById('resultHeadline');
+      const resultWarm = document.getElementById('resultWarm');
+      const resultPercent = document.getElementById('resultPercent');
+      const resultText = document.getElementById('resultText');
+      const chartBox = document.getElementById('chartBox');
+      const barRent = document.getElementById('barRent');
+      const barRest = document.getElementById('barRest');
+
+      if (income <= 0) {
+        resultHeadline.innerHTML = 'Bitte gib ein sinnvolles Nettoeinkommen ein.';
+        resultWarm.textContent = '';
+        resultPercent.textContent = '';
+        resultText.textContent = '';
+        chartBox.style.display = 'none';
+        return;
+      }
+
+      const warmRent = coldRent + extraCosts;
+      const percent = warmRent / income * 100;
+      const rest = Math.max(0, income - warmRent);
+
+      // Ampel bewerten
+      let ampelClass = 'ampel-green';
+      let ampelText = 'Entspannt – das sieht gut aus.';
+      if (percent > 40) {
+        ampelClass = 'ampel-red';
+        ampelText = 'Kritisch – sehr hoher Mietanteil, da bleibt kaum Spielraum.';
+      } else if (percent > 33) {
+        ampelClass = 'ampel-yellow';
+        ampelText = 'Grenzbereich – kann gehen, ist aber recht knapp.';
+      }
+
+      resultHeadline.innerHTML = '';
+      const dot = document.createElement('div');
+      dot.className = 'ampel-dot ' + ampelClass;
+      const textSpan = document.createElement('span');
+      textSpan.textContent = ampelText;
+      resultHeadline.appendChild(dot);
+      resultHeadline.appendChild(textSpan);
+
+      resultWarm.textContent = 'Deine Warmmiete: ' + fmtEuro(warmRent);
+      resultPercent.textContent = 'Anteil an deinem Nettoeinkommen: ' + percent.toFixed(1) + ' %';
+
+      if (rest > 0) {
+        resultText.textContent =
+          'Dir bleiben nach der Miete noch etwa ' + fmtEuro(rest) +
+          ' pro Monat für Essen, Verkehr, Freizeit, Rücklagen usw.';
+      } else {
+        resultText.textContent =
+          'Die Miete frisst dein komplettes Einkommen auf oder liegt sogar darüber – das ist auf Dauer kaum machbar.';
+      }
+
+      // Balken-Grafik
+      const rentRatio = Math.min(100, Math.max(0, percent));
+      const restRatio = Math.min(100, Math.max(0, 100 - rentRatio));
+
+      barRent.style.width = Math.max(5, rentRatio) + '%';
+      barRest.style.width = Math.max(5, restRatio) + '%';
+
+      chartBox.style.display = 'block';
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', calcWohnkosten);
+
+    // Quick-Buttons Einkommen
+    document.querySelectorAll('.quick-btn[data-income]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const income = btn.getAttribute('data-income');
+        document.getElementById('income').value = income;
+        calcWohnkosten();
+      });
+    });
+
+    // Quick-Buttons Miete (Kalt + Nebenkosten)
+    document.querySelectorAll('.quick-btn[data-rent]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parts = btn.getAttribute('data-rent').split('|');
+        document.getElementById('coldRent').value = parts[0];
+        document.getElementById('extraCosts').value = parts[1];
+        calcWohnkosten();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Börse – ETFs verstehen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.86rem;
+      color: #38bdf8;
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      margin-bottom: 1.2rem;
+    }
+    .back-link:hover { border-color: #38bdf8; }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    header h1 span { font-size: 1.7rem; }
+
+    header p {
+      margin: 0.3rem 0 1.1rem;
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      max-width: 40rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+    .card-header-icon { font-size: 1.25rem; }
+    .card-header-title { font-size: 0.96rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small { font-size: 0.78rem; color: #cbd5f5; margin-top: 0.4rem; }
+
+    /* Aufklappbare Karten */
+    .info-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      margin-bottom: 0.6rem;
+      background: #020617;
+    }
+    .info-header {
+      padding: 0.6rem 0.7rem;
+      background: #0f172a;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .info-header div { font-size: 0.86rem; font-weight: 600; }
+    .info-arrow { transition: 0.2s; }
+    .info-body { display: none; padding: 0.6rem 0.75rem; font-size: 0.82rem; }
+    .info-card.open .info-body { display: block; }
+    .info-card.open .info-arrow { transform: rotate(90deg); }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+    .pill {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    /* ASCII-Graph für Diversifikation */
+    .chart-box {
+      margin-top: 0.4rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #020617;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      white-space: pre;
+    }
+
+    /* Button */
+    .btn-primary {
+      margin-top: 0.6rem;
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg,#22c55e,#16a34a);
+      color: #022c22;
+      display: inline-flex;
+      gap: 0.4rem;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+      text-decoration: none;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    /* Quiz */
+    .answers {
+      display: grid;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .answer-btn {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      color: #e5e7eb;
+    }
+    .answer-btn span { color:#e5e7eb; }
+    .answer-btn:hover { border-color: #38bdf8; }
+
+    .feedback {
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: #bfdbfe;
+    }
+    .feedback.error { color: #fecaca; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <a href="boerse_aktien.html" class="back-link">← zurück zu Aktien</a>
+
+    <header>
+      <h1><span>🧺</span>ETFs verstehen</h1>
+      <p>
+        ETFs sind wie ein großer Korb voller Aktien oder anderer Wertpapiere.
+        Statt nur eine Firma zu besitzen, verteilt man sein Geld automatisch auf viele.
+      </p>
+    </header>
+
+    <p class="step-label">Kapitel 12 · Teil 4 · Ein Korb voller Firmen – einfach erklärt</p>
+
+    <main class="layout">
+      <!-- LINKE SPALTE -->
+      <section>
+        <!-- Was ist ein ETF? -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧺</div>
+            <div class="card-header-title">Was ist ein ETF?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              ETF steht für <strong>Exchange Traded Fund</strong> –
+              ein Fonds, der an der Börse gehandelt wird.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Wie ein Korb voller Aktien</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Stell dir vor, du hast einen Korb mit sehr vielen verschiedenen Firmen drin.
+                Wenn du den ETF kaufst, besitzt du einen kleinen Anteil an allen Firmen im Korb.
+                <ul>
+                  <li>Beispiel: Ein Welt-ETF kann Anteile an hunderten oder tausenden Firmen enthalten.</li>
+                  <li>Du musst nicht jede einzelne Aktie aussuchen.</li>
+                </ul>
+                Das verteilt das Risiko im Vergleich zu nur einer Aktie.
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Was bildet ein ETF ab?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Viele ETFs bilden einen <strong>Index</strong> nach.
+                Ein Index ist eine Sammlung von Aktien nach bestimmten Regeln, zum Beispiel:
+                <ul>
+                  <li>die größten Firmen eines Landes oder der Welt</li>
+                  <li>bestimmte Branchen (z.B. Technologie, Umwelt)</li>
+                </ul>
+                Der ETF versucht einfach, diesen Index möglichst genau nachzubilden.
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <div class="pill">Viele Firmen auf einmal</div>
+              <div class="pill">Kein Stock-Picking nötig</div>
+              <div class="pill">Trotzdem Börsenrisiko!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kosten & TER -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">💶</div>
+            <div class="card-header-title">Kosten: TER &amp; Gebühren (vereinfacht)</div>
+          </div>
+          <div class="card-body">
+            <p>
+              ETFs sind meist günstiger als aktiv gemanagte Fonds.
+              Trotzdem gibt es Kosten, die du kennen solltest.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>TER – laufende Jahreskosten</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                TER = „Total Expense Ratio“ (Gesamtkostenquote).  
+                Sie wird meist in Prozent pro Jahr angegeben (z.B. 0,2 % pro Jahr).
+                <ul>
+                  <li>Wird direkt im Fonds abgezogen (du siehst keine Extra-Rechnung).</li>
+                  <li>Niedrige TER = mehr von der Rendite bleibt bei dir.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Ordergebühren beim Broker</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                Je nach Bank/Broker zahlst du pro Kauf/Verkauf eine Gebühr.
+                <ul>
+                  <li>Filialbanken: oft höhere Gebühren, dafür Beratung vor Ort.</li>
+                  <li>Neobroker-Apps: meist niedrigere Gebühren, alles digital.</li>
+                </ul>
+                Für Schüler:innen ist wichtig: Erst Wissen aufbauen, dann irgendwann entscheiden –
+                hier in der App gibt es <strong>keine</strong> Anlageempfehlungen.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECHTE SPALTE -->
+      <section>
+        <!-- Diversifikation -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">🧩</div>
+            <div class="card-header-title">Warum viele Menschen ETFs mögen: Streuung</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Der wichtigste Vorteil von ETFs: Dein Geld wird automatisch verteilt.
+              Man sagt auch: <strong>diversifiziert</strong>.
+            </p>
+
+            <div class="chart-box">
+Einzelaktie:
+[ Firma A ]
+
+ETF:
+[ Firma A ][ Firma B ][ Firma C ][ Firma D ][ ... ]
+            </div>
+
+            <p class="small">
+              Wenn Firma A Probleme hat, können die anderen Firmen im ETF das teilweise ausgleichen.
+              Ganz ohne Risiko ist es trotzdem nicht – aber das Risiko verteilt sich.
+            </p>
+          </div>
+        </div>
+
+        <!-- Sparplan-Idee -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📆</div>
+            <div class="card-header-title">ETF-Sparplan (nur als Idee)</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Viele Erwachsene nutzen ETF-Sparpläne: Sie legen jeden Monat einen festen Betrag an
+              (z.B. 25 €, 50 €, 100 €), egal ob es gerade hoch oder runter geht.
+            </p>
+
+            <div class="info-card">
+              <div class="info-header">
+                <div>Warum machen Leute das?</div>
+                <div class="info-arrow">▶</div>
+              </div>
+              <div class="info-body">
+                <ul>
+                  <li>Sie müssen nicht den „perfekten Zeitpunkt“ suchen.</li>
+                  <li>Langfristig kann man von durchschnittlicher Marktentwicklung profitieren.</li>
+                  <li>Es hilft, regelmäßig zu sparen – wie ein Dauerauftrag an sich selbst.</li>
+                </ul>
+                Aber: Auch hier gilt – es gibt keine Garantie, Kurse können fallen.
+              </div>
+            </div>
+
+            <p class="small">
+              Wichtig: Ein ETF-Sparplan ist kein Muss und nicht für jede Person passend.
+              Es ist nur eine <strong>Möglichkeit</strong>, langfristig zu sparen.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Mini-Quiz: Was passt zu ETFs?</div>
+          </div>
+          <div class="card-body">
+            <p>Welche Aussage ist am treffendsten?</p>
+
+            <div class="answers">
+              <button class="answer-btn" data-correct="true">
+                <span>🅰️</span>
+                <span>Ein ETF verteilt mein Geld auf viele Wertpapiere und bildet meist einen Index nach – aber es bleibt Börsenrisiko.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅱️</span>
+                <span>Ein ETF ist wie ein Sparbuch mit garantiertem Zins und ohne Risiko.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Mit einem ETF kann ich nie Geld verlieren – die Kurse gehen immer nach oben.</span>
+              </button>
+            </div>
+
+            <div class="feedback" id="quizFb"></div>
+          </div>
+        </div>
+
+        <!-- Weiter zu Risiko -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">➡️</div>
+            <div class="card-header-title">Nächster Schritt</div>
+          </div>
+          <div class="card-body">
+            <p class="small">
+              Egal ob einzelne Aktien oder ETFs: Wer an der Börse anlegt, muss mit Schwankungen
+              und möglichen Verlusten rechnen. Das Thema <strong>Risiko</strong> ist extrem wichtig.
+            </p>
+
+            <a href="boerse_risiko.html" class="btn-primary">
+              ⚖️ Weiter mit: Risiko &amp; Sicherheit
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Aufklappbare Infokarten
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.querySelector('.info-header').addEventListener('click', () => {
+        card.classList.toggle('open');
+      });
+    });
+
+    // Quiz
+    const quizFb = document.getElementById("quizFb");
+    document.querySelectorAll(".answer-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.getAttribute("data-correct") === "true";
+        if (correct) {
+          quizFb.textContent =
+            "Richtig: ETFs verteilen das Geld, bilden oft einen Index nach – aber Börsenrisiko bleibt immer.";
+          quizFb.className = "feedback";
+        } else {
+          quizFb.textContent =
+            "Nicht richtig. ETFs sind keine Garantie-Anlagen – Kurse können steigen und fallen.";
+          quizFb.className = "feedback error";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Beispiel-Lohnzettel – Steuern &amp; Abzüge verstehen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .top-bar-back {
+      max-width: 1120px;
+      margin: 0 auto 0.75rem;
+      padding: 0.5rem 0.25rem 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .back-link:hover {
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.5rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.84rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    /* Lohnzettel-Karte */
+    .pay-card {
+      background: rgba(15,23,42,0.98);
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.8);
+      padding: 0.85rem 0.9rem 0.9rem;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+      margin-top: 0.3rem;
+    }
+
+    .pay-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.6rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .pay-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .pay-meta {
+      font-size: 0.76rem;
+      color: #cbd5f5;
+    }
+
+    .pay-rows {
+      margin-top: 0.5rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+    }
+
+    .pay-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) auto;
+      gap: 0.4rem;
+      align-items: center;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+      cursor: pointer;
+    }
+
+    .pay-row:last-child {
+      border-bottom: none;
+    }
+
+    .pay-label-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+    }
+
+    .pay-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #38bdf8;
+      flex-shrink: 0;
+    }
+
+    .pay-dot.tax { background: #f97316; }
+    .pay-dot.social { background: #22c55e; }
+    .pay-dot.net { background: #a855f7; }
+    .pay-dot.other { background: #e5e7eb; }
+
+    .pay-amount {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.84rem;
+      text-align: right;
+    }
+
+    .pay-amount.negative { color: #fecaca; }
+    .pay-amount.positive { color: #bbf7d0; }
+
+    .pay-info {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.15rem;
+      display: none;
+    }
+
+    .pay-row.open .pay-info {
+      display: block;
+      grid-column: 1 / -1;
+    }
+
+    .pay-summary {
+      margin-top: 0.55rem;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    .pay-bar-wrap {
+      margin-top: 0.6rem;
+    }
+
+    .pay-bar-bg {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(51,65,85,0.9);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .pay-bar-segment {
+      height: 100%;
+    }
+
+    .seg-tax { background: #f97316; }
+    .seg-social { background: #22c55e; }
+    .seg-net { background: #a855f7; }
+
+    .pay-bar-legend {
+      margin-top: 0.3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.76rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .legend-dot.tax { background: #f97316; }
+    .legend-dot.social { background: #22c55e; }
+    .legend-dot.net { background: #a855f7; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar-back">
+  <a href="steuern_intro.html" class="back-link">← zurück zu Steuern &amp; Lohnzettel (Grundlagen)</a>
+</div>
+
+<div class="shell">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <h1><span class="icon">💶</span>Beispiel-Lohnzettel</h1>
+      <p>
+        Wähle eine Situation und sieh dir an, wie ein Lohnzettel ungefähr aussehen könnte –
+        mit Brutto, Abzügen und deinem Netto.
+      </p>
+    </div>
+  </header>
+
+  <p class="step-label">Kapitel 7 · Teil 2 von 3 · Lohnzettel lesen &amp; verstehen</p>
+
+  <main class="layout">
+    <!-- Linke Spalte: Auswahl -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">⚙️</div>
+          <div class="card-header-title">Situation auswählen</div>
+        </div>
+        <div class="card-body">
+          <label for="scenarioSelect">Was passt am besten zu dir oder zu deinem Plan?</label>
+          <select id="scenarioSelect">
+            <option value="schuelerjob">Schülerjob / Minijob (ca. 520 €)</option>
+            <option value="azubi">Ausbildung (Beispiel: 1.000 € brutto)</option>
+            <option value="vollzeit">Vollzeitjob (Beispiel: 2.500 € brutto)</option>
+          </select>
+
+          <button class="btn-primary" id="showBtn">Beispiel-Lohnzettel anzeigen ▶</button>
+
+          <p class="small">
+            Die Zahlen sind gerundet und vereinfacht. In der Realität rechnen Programme
+            mit vielen Tabellen und Regeln. Hier geht es darum, das Prinzip zu verstehen:
+            Wo fließt das Geld hin?
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechte Spalte: Ergebnis -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📋</div>
+          <div class="card-header-title">Dein Beispiel-Lohnzettel</div>
+        </div>
+        <div class="card-body" id="resultBox">
+          Wähle links eine Situation und klicke auf „Beispiel-Lohnzettel anzeigen“.
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const scenarioSelect = document.getElementById('scenarioSelect');
+  const resultBox = document.getElementById('resultBox');
+  const showBtn = document.getElementById('showBtn');
+
+  // Vereinfachte Beispiel-Daten – grob, gerundet, nur zum Verstehen
+  const scenarios = {
+    schuelerjob: {
+      title: 'Schülerjob / Minijob',
+      meta: 'Beispiel: 520 € Minijob, einfache Variante',
+      brutto: 520,
+      steuerklasse: 'Minijob (besonders geregelt)',
+      info: 'Bei einfachen Minijobs übernimmt oft der Arbeitgeber Pauschalabgaben. Für dich kann es sich so anfühlen: „Brutto = Netto“.',
+      rows: [
+        {
+          key: 'brutto',
+          label: 'Bruttolohn',
+          type: 'other',
+          amount: 520,
+          info: 'Das ist der Lohn, der im Vertrag steht – vor allen Abzügen.'
+        },
+        {
+          key: 'lohnsteuer',
+          label: 'Lohnsteuer',
+          type: 'tax',
+          amount: 0,
+          info: 'In diesem vereinfachten Beispiel fällt bei diesem Minijob direkt für dich keine Lohnsteuer an. Der Arbeitgeber zahlt Pauschalen.'
+        },
+        {
+          key: 'sozial',
+          label: 'Sozialabgaben (für dich)',
+          type: 'social',
+          amount: 0,
+          info: 'Bei vielen Minijobs zahlt der Arbeitgeber Pauschalbeiträge zur Sozialversicherung. Für dich selbst werden hier im Beispiel keine Beiträge abgezogen.'
+        },
+        {
+          key: 'netto',
+          label: 'Netto (Auszahlung auf dein Konto)',
+          type: 'net',
+          amount: 520,
+          info: 'Das ist das Geld, das am Ende auf deinem Konto landet – hier im Beispiel so hoch wie der Bruttolohn.'
+        }
+      ]
+    },
+    azubi: {
+      title: 'Ausbildung',
+      meta: 'Beispiel: 1.000 € Ausbildungsvergütung, Steuerklasse I',
+      brutto: 1000,
+      steuerklasse: 'Steuerklasse I (ledig, keine Kinder)',
+      info: 'Ab der Ausbildung zahlst du meist schon Sozialabgaben. Lohnsteuer kann je nach Höhe und Freibeträgen dazukommen – hier ein Beispiel.',
+      rows: [
+        {
+          key: 'brutto',
+          label: 'Bruttolohn (Ausbildungsvergütung)',
+          type: 'other',
+          amount: 1000,
+          info: 'Deine vereinbarte Ausbildungsvergütung vor Abzügen.'
+        },
+        {
+          key: 'lohnsteuer',
+          label: 'Lohnsteuer (vereinfacht)',
+          type: 'tax',
+          amount: 80,
+          info: 'Vereinfacht angenommen: Ein Teil deines Bruttolohns geht als Lohnsteuer ans Finanzamt. Die echte Höhe hängt von vielen Faktoren ab.'
+        },
+        {
+          key: 'rente',
+          label: 'Rentenversicherung',
+          type: 'social',
+          amount: 90,
+          info: 'Damit du später im Alter eine Rente bekommst. Arbeitnehmer:in und Arbeitgeber zahlen jeweils einen Teil.'
+        },
+        {
+          key: 'kranken',
+          label: 'Krankenversicherung',
+          type: 'social',
+          amount: 80,
+          info: 'Damit Arztbesuche, Krankenhaus usw. mitfinanziert werden. Auch hier zahlen beide Seiten mit.'
+        },
+        {
+          key: 'pflege',
+          label: 'Pflegeversicherung',
+          type: 'social',
+          amount: 15,
+          info: 'Für den Fall, dass du später Hilfe im Alltag brauchst. Ein kleiner, aber wichtiger Beitrag.'
+        },
+        {
+          key: 'arbeitslos',
+          label: 'Arbeitslosenversicherung',
+          type: 'social',
+          amount: 15,
+          info: 'Falls du mal deinen Job verlierst, kann Arbeitslosengeld gezahlt werden. Dafür sind Beiträge nötig.'
+        },
+        {
+          key: 'netto',
+          label: 'Netto (Auszahlung auf dein Konto)',
+          type: 'net',
+          amount: 720,
+          info: 'Das ist das, was ungefähr übrig bleibt. Hier im Beispiel: 1.000 € brutto → ca. 720 € netto.'
+        }
+      ]
+    },
+    vollzeit: {
+      title: 'Vollzeitjob',
+      meta: 'Beispiel: 2.500 € brutto, Steuerklasse I',
+      brutto: 2500,
+      steuerklasse: 'Steuerklasse I (ledig, keine Kinder)',
+      info: 'Hier merkst du deutlicher, wie viel für Steuern und Sozialabgaben weggeht – aber auch, welche Sicherungssysteme du damit mitfinanzierst.',
+      rows: [
+        {
+          key: 'brutto',
+          label: 'Bruttolohn',
+          type: 'other',
+          amount: 2500,
+          info: 'Dein vereinbartes Gehalt vor allen Abzügen.'
+        },
+        {
+          key: 'lohnsteuer',
+          label: 'Lohnsteuer (vereinfacht)',
+          type: 'tax',
+          amount: 350,
+          info: 'Vereinfacht angenommener Betrag. In echt hängt die genaue Höhe von Steuerklasse, Freibeträgen, Kirchenzugehörigkeit und mehr ab.'
+        },
+        {
+          key: 'kirche',
+          label: 'Kirchensteuer (wenn du in der Kirche bist)',
+          type: 'tax',
+          amount: 30,
+          info: 'Nur, wenn du Mitglied einer Kirche bist, die Kirchensteuer erhebt. Sonst fällt dieser Posten weg.'
+        },
+        {
+          key: 'rente',
+          label: 'Rentenversicherung',
+          type: 'social',
+          amount: 230,
+          info: 'Beitrag zur gesetzlichen Rentenversicherung – für deine Altersvorsorge. Arbeitgeber:in zahlt auch seinen Teil.'
+        },
+        {
+          key: 'kranken',
+          label: 'Krankenversicherung',
+          type: 'social',
+          amount: 210,
+          info: 'Damit Gesundheitskosten abgesichert sind. Auch hier teilen sich Arbeitgeber:in und Arbeitnehmer:in die Beiträge.'
+        },
+        {
+          key: 'pflege',
+          label: 'Pflegeversicherung',
+          type: 'social',
+          amount: 40,
+          info: 'Für spätere Pflegebedürftigkeit. Die genauen Sätze hängen z.B. auch davon ab, ob du Kinder hast.'
+        },
+        {
+          key: 'arbeitslos',
+          label: 'Arbeitslosenversicherung',
+          type: 'social',
+          amount: 35,
+          info: 'Sichert dich ab, falls du arbeitslos wirst und unterstützt z.B. bei Weiterbildungen.'
+        },
+        {
+          key: 'netto',
+          label: 'Netto (Auszahlung auf dein Konto)',
+          type: 'net',
+          amount: 1605,
+          info: 'Das ist hier das Beispiel-Netto. Viele landen in ähnlichen Bereichen – je nach genauer Situation etwas höher oder niedriger.'
+        }
+      ]
+    }
+  };
+
+  function formatEuro(amount) {
+    return amount.toFixed(2).replace('.', ',') + ' €';
+  }
+
+  function renderScenario(key) {
+    const scenario = scenarios[key];
+    if (!scenario) return;
+
+    const brutto = scenario.brutto;
+
+    let taxSum = 0;
+    let socialSum = 0;
+    let netto = 0;
+
+    scenario.rows.forEach(row => {
+      if (row.type === 'tax') taxSum += row.amount;
+      if (row.type === 'social') socialSum += row.amount;
+      if (row.type === 'net') netto = row.amount;
+    });
+
+    const summaryText = `
+In diesem Beispiel siehst du:
+• Brutto: ${formatEuro(brutto)}
+• Abzüge für Steuern: ca. ${formatEuro(taxSum)}
+• Abzüge für Sozialabgaben: ca. ${formatEuro(socialSum)}
+• Netto (Auszahlung): ca. ${formatEuro(netto)}
+
+In echt können die Werte etwas anders sein – hier geht es darum,
+ein Gefühl dafür zu bekommen, wie sich Brutto und Netto unterscheiden.
+    `.trim();
+
+    const taxPercent = brutto > 0 ? (taxSum / brutto) * 100 : 0;
+    const socialPercent = brutto > 0 ? (socialSum / brutto) * 100 : 0;
+    const netPercent = brutto > 0 ? (netto / brutto) * 100 : 0;
+
+    const barTax = taxPercent > 2 ? taxPercent : (taxPercent > 0 ? 2 : 0);
+    const barSocial = socialPercent > 2 ? socialPercent : (socialPercent > 0 ? 2 : 0);
+    const barNet = netPercent > 2 ? netPercent : (netPercent > 0 ? 2 : 0);
+
+    let rowsHtml = '';
+    scenario.rows.forEach(row => {
+      const isNet = row.type === 'net';
+      const isBrutto = row.key === 'brutto';
+      const dotClass =
+        row.type === 'tax' ? 'tax' :
+        row.type === 'social' ? 'social' :
+        row.type === 'net' ? 'net' : 'other';
+
+      const amountClass =
+        isNet || isBrutto ? 'pay-amount positive' : 'pay-amount negative';
+
+      const sign = (isNet || isBrutto) ? '' : '− ';
+
+      rowsHtml += `
+        <div class="pay-row" data-row="${row.key}">
+          <div class="pay-label-wrap">
+            <div class="pay-dot ${dotClass}"></div>
+            <div>${row.label}</div>
+          </div>
+          <div class="${amountClass}">
+            ${sign}${formatEuro(row.amount)}
+          </div>
+          <div class="pay-info">
+            ${row.info}
+          </div>
+        </div>
+      `;
+    });
+
+    resultBox.innerHTML = `
+      <div class="pay-card">
+        <div class="pay-header-line">
+          <div class="pay-title">${scenario.title}</div>
+          <div class="pay-meta">${scenario.meta}</div>
+        </div>
+        <div class="pay-meta">
+          Steuerliche Einordnung: ${scenario.steuerklasse}<br/>
+          <span style="opacity:0.9;">Hinweis: Zahlen sind vereinfacht und gerundet (Beispiel, Stand etwa 2025).</span>
+        </div>
+
+        <p class="small" style="margin-top:0.5rem;">
+          💡 Tipp: Tippe auf die Zeilen mit den farbigen Punkten, um die Erklärungen zu den einzelnen Posten zu sehen.
+        </p>
+
+        <div class="pay-rows">
+          ${rowsHtml}
+        </div>
+
+        <div class="pay-summary">
+          ${scenario.info}
+        </div>
+
+        <div class="pay-bar-wrap">
+          <div class="pay-bar-bg">
+            <div class="pay-bar-segment seg-tax" style="width:${barTax}%;"></div>
+            <div class="pay-bar-segment seg-social" style="width:${barSocial}%;"></div>
+            <div class="pay-bar-segment seg-net" style="width:${barNet}%;"></div>
+          </div>
+          <div class="pay-bar-legend">
+            <div class="legend-item">
+              <span class="legend-dot tax"></span>
+              <span>Steuern (z.B. Lohnsteuer, evtl. Kirchensteuer)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot social"></span>
+              <span>Sozialabgaben (Kranken-, Renten-, Pflege-, Arbeitslosenversicherung)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot net"></span>
+              <span>Netto – das, was du ausgezahlt bekommst</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pay-summary" style="margin-top:0.6rem; white-space:pre-line;">
+${summaryText}
+        </div>
+
+        <p class="small">
+          💡 <strong>Merke:</strong> Die echten Zahlen hängen von vielen Details ab
+          (Steuerklasse, Bundesland, Krankenkasse, Kinder, Kirche usw.) – dieser Lohnzettel
+          soll dir das Prinzip zeigen, nicht jede Regel im Detail.
+        </p>
+
+        <div style="margin-top:0.8rem;">
+          <button class="btn-primary" onclick="window.location.href='steuererklaerung.html'">
+            Mehr zur Steuererklärung ▶
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Klick-Logik für Zeilen (Info ein-/ausblenden)
+    resultBox.querySelectorAll('.pay-row').forEach(rowEl => {
+      rowEl.addEventListener('click', () => {
+        rowEl.classList.toggle('open');
+      });
+    });
+  }
+
+  showBtn.addEventListener('click', () => {
+    const key = scenarioSelect.value;
+    renderScenario(key);
+  });
+</script>
+
+</body>
+</html>

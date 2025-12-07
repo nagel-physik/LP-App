@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 2 – Schulden-Spiel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    /* Top-Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 32rem;
+    }
+
+    .top-bar-right {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.45rem 0.6rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .answer-btn.disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.bad { color: #fecaca; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 0.45rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: #38bdf8;
+    }
+
+    .status-card {
+      font-size: 0.85rem;
+    }
+
+    .status-highlight {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: 0.3rem;
+    }
+
+    .status-ok { color: #bbf7d0; }
+    .status-warn { color: #fde68a; }
+    .status-bad { color: #fecaca; }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">🎮</span>Schulden-Spiel – Was passiert mit deinem Geld?</h1>
+        <p>
+          Triff Entscheidungen in drei Szenen. Du startest ohne Schulden.
+          Mal sehen, wie dein Schuldenstand am Ende aussieht.
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="schulden_intro.html">← zurück zu Kapitel 2 (Grundlagen)</a>
+        <a href="app.html">🏠 zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <p class="step-label">Kapitel 2 · Teil 2 von 3 · Interaktives Schulden-Spiel</p>
+
+    <main class="layout">
+      <!-- Linke Spalte: Szenen -->
+      <section>
+        <!-- Szene 1 -->
+        <div class="card" id="scene1">
+          <div class="card-header">
+            <div class="card-header-icon">📱</div>
+            <div class="card-header-title">Szene 1 – Das „1-€-Handy“</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Du willst ein neues Handy für <strong>900&nbsp;€</strong>.  
+              Dein Konto: <strong>0&nbsp;€ Rücklagen</strong>, aber du startest ohne Schulden.
+            </p>
+            <p>Im Shop gibt es drei Möglichkeiten:</p>
+
+            <div class="answers">
+              <button class="answer-btn" data-scene="1" data-effect="bad">
+                <span>🅰️</span>
+                <span>„Nur 1&nbsp;€ heute, dann 24 Raten à 39&nbsp;€“ – klingt entspannt, du nimmst das Angebot.</span>
+              </button>
+              <button class="answer-btn" data-scene="1" data-effect="ok">
+                <span>🅱️</span>
+                <span>Du suchst dir ein günstigeres Handy für 400&nbsp;€ und sparst erst ein paar Monate, bevor du kaufst.</span>
+              </button>
+              <button class="answer-btn" data-scene="1" data-effect="medium">
+                <span>🅾️</span>
+                <span>Du nimmst einen Ratenkauf mit 12 Raten und vergleichst vorher die Gesamtkosten.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+            <button class="btn-primary" id="next1" disabled>Weiter zu Szene 2 ▶</button>
+          </div>
+        </div>
+
+        <!-- Szene 2 -->
+        <div class="card" id="scene2" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon">🛍️</div>
+            <div class="card-header-title">Szene 2 – „Später zahlen“ beim Online-Shopping</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Du bestellst Kleidung und Schuhe für <strong>120&nbsp;€</strong> online.
+              Beim Bezahlen werden dir zwei Möglichkeiten angeboten:
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-scene="2" data-effect="medium">
+                <span>🅰️</span>
+                <span>„In 30 Tagen zahlen“ – du denkst: „Bis dahin wird schon Geld da sein.“</span>
+              </button>
+              <button class="answer-btn" data-scene="2" data-effect="ok">
+                <span>🅱️</span>
+                <span>Du zahlst direkt und kaufst nur das, was wirklich in dein Budget passt.</span>
+              </button>
+              <button class="answer-btn" data-scene="2" data-effect="bad">
+                <span>🅾️</span>
+                <span>Du bestellst für 200&nbsp;€ und wählst „In Raten zahlen“, ohne auf Zinsen und Gebühren zu achten.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback2"></div>
+            <button class="btn-primary" id="next2" disabled>Weiter zu Szene 3 ▶</button>
+          </div>
+        </div>
+
+        <!-- Szene 3 -->
+        <div class="card" id="scene3" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon">🏦</div>
+            <div class="card-header-title">Szene 3 – Dispo oder nicht?</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Am Monatsende kommt eine unerwartete Rechnung über <strong>150&nbsp;€</strong>.
+              Dein Konto ist fast leer.
+            </p>
+            <p>Was machst du?</p>
+            <div class="answers">
+              <button class="answer-btn" data-scene="3" data-effect="bad">
+                <span>🅰️</span>
+                <span>Du gehst in den Dispo und hoffst, dass „es nächsten Monat schon passt“.</span>
+              </button>
+              <button class="answer-btn" data-scene="3" data-effect="ok">
+                <span>🅱️</span>
+                <span>Du sprichst mit Familie / Freunden und suchst eine zinsfreie Lösung, z.B. kurzfristiges Leihen.</span>
+              </button>
+              <button class="answer-btn" data-scene="3" data-effect="medium">
+                <span>🅾️</span>
+                <span>Du vereinbarst mit dem Anbieter eine Ratenzahlung und achtest bewusst auf die Gesamtkosten.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback3"></div>
+            <button class="btn-primary" id="finishBtn" disabled>Auswertung anzeigen ▶</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte: Status & Auswertung -->
+      <section>
+        <div class="card status-card">
+          <div class="card-header">
+            <div class="card-header-icon">📊</div>
+            <div class="card-header-title">Dein Schuldenstand im Spiel</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Du startest mit <strong>0&nbsp;€ Schulden</strong>.  
+              Jede Szene kann deinen Schuldenstand erhöhen – oder helfen, ihn niedrig zu halten.
+            </p>
+            <p class="status-highlight" id="debtDisplay">Aktuelle Spiel-Schulden: 0&nbsp;€</p>
+            <p class="small">
+              Achtung: Das ist nur ein Lernspiel. In echt können Schulden sehr belastend
+              sein – deshalb ist es wichtig, schon jetzt zu verstehen, wie sie entstehen.
+            </p>
+          </div>
+        </div>
+
+        <div class="card" id="summaryCard" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon">✅</div>
+            <div class="card-header-title">Auswertung &amp; Tipps</div>
+          </div>
+          <div class="card-body">
+            <p id="summaryText"></p>
+            <ul id="tipList" style="margin:0.4rem 0 0.2rem 1rem; padding:0; font-size:0.82rem;"></ul>
+            <p class="small">
+              Wichtig ist nicht, dass du immer die „perfekte“ Entscheidung triffst,
+              sondern dass du weißt, <strong>welche Folgen</strong> deine Entscheidung haben kann.
+            </p>
+            <button class="btn-secondary" onclick="window.location.href='schulden_intro.html'">
+              Noch einmal von vorne starten ⟲
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let debt = 0; // Spiel-Schulden in Euro
+    const debtDisplay = document.getElementById('debtDisplay');
+
+    function updateDebtDisplay() {
+      debtDisplay.innerHTML = 'Aktuelle Spiel-Schulden: ' + debt.toLocaleString('de-DE') + '&nbsp;€';
+      if (debt <= 0) {
+        debtDisplay.className = 'status-highlight status-ok';
+      } else if (debt <= 500) {
+        debtDisplay.className = 'status-highlight status-warn';
+      } else {
+        debtDisplay.className = 'status-highlight status-bad';
+      }
+    }
+
+    updateDebtDisplay();
+
+    // Hilfsfunktion für Szenen
+    function handleScene(sceneNumber, effect) {
+      const feedbackEl = document.getElementById('feedback' + sceneNumber);
+      const nextBtn = document.getElementById(sceneNumber === 1 ? 'next1' : sceneNumber === 2 ? 'next2' : 'finishBtn');
+
+      // Mehrfachklick verhindern
+      if (nextBtn.disabled === false) return;
+
+      // Auswirkungen auf "debt" je nach Entscheidung
+      if (sceneNumber === 1) {
+        if (effect === 'bad') {
+          debt += 937; // kompletter Ratenpreis
+          feedbackEl.textContent = 'Du hast das Handy sofort, aber: Du hast jetzt 937 € Verpflichtung über 24 Monate.';
+          feedbackEl.className = 'feedback bad';
+        } else if (effect === 'medium') {
+          debt += 900;
+          feedbackEl.textContent = 'Du gehst eine überschaubare Ratenzahlung ein, aber hast trotzdem 900 € Schulden im Rücken.';
+          feedbackEl.className = 'feedback';
+        } else {
+          feedbackEl.textContent = 'Du verschiebst den Kauf und vermeidest Schulden. Stark – so behältst du die Kontrolle.';
+          feedbackEl.className = 'feedback';
+        }
+      }
+
+      if (sceneNumber === 2) {
+        if (effect === 'bad') {
+          debt += 220; // 200 + Gebühren
+          feedbackEl.textContent = 'Du kaufst mehr als geplant und zahlst später – mit Zinsen und Gebühren. Deine Schulden steigen deutlich.';
+          feedbackEl.className = 'feedback bad';
+        } else if (effect === 'medium') {
+          debt += 120;
+          feedbackEl.textContent = 'Du schiebst die Zahlung auf – wenn du nicht aufpasst, können Mahngebühren dazukommen.';
+          feedbackEl.className = 'feedback';
+        } else {
+          feedbackEl.textContent = 'Du zahlst direkt und bleibst im Budget. So entstehen gar nicht erst Schulden.';
+          feedbackEl.className = 'feedback';
+        }
+      }
+
+      if (sceneNumber === 3) {
+        if (effect === 'bad') {
+          debt += 150;
+          feedbackEl.textContent = 'Du gehst in den Dispo. Kurzfristig hilft es, aber durch hohe Zinsen werden daraus schnell mehr Schulden.';
+          feedbackEl.className = 'feedback bad';
+        } else if (effect === 'medium') {
+          debt += 150;
+          feedbackEl.textContent = 'Du vereinbarst Raten – okay, wenn du die Kosten kennst und wirklich zahlen kannst.';
+          feedbackEl.className = 'feedback';
+        } else {
+          feedbackEl.textContent = 'Du suchst eine Lösung ohne Zinsen. Gut – so verhinderst du, dass aus einem Problem große Schulden werden.';
+          feedbackEl.className = 'feedback';
+        }
+      }
+
+      updateDebtDisplay();
+      nextBtn.disabled = false;
+
+      // Buttons der Szene nach Auswahl "sperren"
+      document.querySelectorAll('.answer-btn[data-scene="' + sceneNumber + '"]').forEach(btn => {
+        btn.classList.add('disabled');
+      });
+    }
+
+    // Klick-Events für alle Antworten
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const scene = parseInt(btn.getAttribute('data-scene'), 10);
+        const effect = btn.getAttribute('data-effect');
+        handleScene(scene, effect);
+      });
+    });
+
+    // Szenen-Buttons
+    document.getElementById('next1').addEventListener('click', () => {
+      document.getElementById('scene1').style.display = 'none';
+      document.getElementById('scene2').style.display = 'block';
+    });
+
+    document.getElementById('next2').addEventListener('click', () => {
+      document.getElementById('scene2').style.display = 'none';
+      document.getElementById('scene3').style.display = 'block';
+    });
+
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      const summaryCard = document.getElementById('summaryCard');
+      const summaryText = document.getElementById('summaryText');
+      const tipList = document.getElementById('tipList');
+
+      summaryCard.style.display = 'block';
+      tipList.innerHTML = '';
+
+      if (debt <= 0) {
+        summaryText.textContent =
+          'Sehr stark! In diesem Spiel hast du es geschafft, ohne Schulden durch alle Szenen zu kommen.';
+        const tips = [
+          'Behalte diese Haltung bei: erst rechnen, dann entscheiden.',
+          'Lass dich nicht von Werbesprüchen wie „nur 1 € heute“ blenden.',
+          'Wenn du dir unsicher bist, rechne die Gesamtkosten einmal in Ruhe durch.'
+        ];
+        tips.forEach(t => {
+          const li = document.createElement('li');
+          li.textContent = t;
+          tipList.appendChild(li);
+        });
+      } else if (debt <= 500) {
+        summaryText.textContent =
+          'Du hast in diesem Spiel Schulden aufgebaut, aber im überschaubaren Bereich. Du siehst: Schulden entstehen sehr schnell – auch ohne „Riesenfehler“.';
+        const tips = [
+          'Überlege dir bei Ratenkäufen immer: Brauche ich das wirklich jetzt?',
+          'Versuche, einen kleinen Notfallpuffer aufzubauen, statt den Dispo zu nutzen.',
+          '„Später zahlen“ ist nur sinnvoll, wenn du wirklich weißt, dass du das Geld sicher hast.'
+        ];
+        tips.forEach(t => {
+          const li = document.createElement('li');
+          li.textContent = t;
+          tipList.appendChild(li);
+        });
+      } else {
+        summaryText.textContent =
+          'Uff – in diesem Spiel bist du deutlich im Minus gelandet. Genau so passiert es im echten Leben: mehrere Entscheidungen, die sich summieren.';
+        const tips = [
+          'Nimm Ratenkäufe nur, wenn es gar nicht anders geht und du die Gesamtkosten kennst.',
+          'Vermeide den Dispo so gut es geht – die Zinsen sind sehr hoch.',
+          'Wenn du merkst, dass du den Überblick verlierst, hol dir Hilfe (Familie, Schuldnerberatung).'
+        ];
+        tips.forEach(t => {
+          const li = document.createElement('li');
+          li.textContent = t;
+          tipList.appendChild(li);
+        });
+      }
+
+      // zur Auswertung scrollen (für Handy praktisch)
+      summaryCard.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

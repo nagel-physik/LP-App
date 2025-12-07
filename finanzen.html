@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 1 – Finanzen & Budget</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    /* Top-Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 32rem;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Cards & Buttons */
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon {
+      font-size: 1.3rem;
+    }
+
+    .card-header-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .card-body {
+      font-size: 0.86rem;
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 0.45rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: #38bdf8;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 0.75rem;
+      color: #e5e7eb;
+      background: rgba(15,23,42,0.85);
+    }
+
+    /* Avatar-Auswahl */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .avatar-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.4), rgba(15,23,42,0.98));
+      padding: 0.75rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .avatar-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+      border-color: #38bdf8;
+    }
+
+    .avatar-card.selected {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), rgba(15,23,42,0.98));
+    }
+
+    .avatar-icon {
+      font-size: 1.6rem;
+    }
+
+    .avatar-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .avatar-role {
+      font-size: 0.76rem;
+      color: #cbd5f5;
+    }
+
+    /* Theorie-Abschnitt */
+    .theory-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .theory-card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 14px;
+      padding: 0.6rem 0.7rem;
+      border: 1px solid rgba(148,163,184,0.75);
+    }
+
+    .theory-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .theory-text {
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
+    /* Frage-Buttons */
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+
+    /* Budget-Bereich */
+    .budget-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 820px) {
+      .budget-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    select {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.82rem;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
+    }
+
+    .field {
+      margin-bottom: 0.55rem;
+      font-size: 0.8rem;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 0.15rem;
+      color: #cbd5f5;
+    }
+
+    .hint {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      margin-top: 0.15rem;
+    }
+
+    .budget-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .budget-table th,
+    .budget-table td {
+      padding: 0.35rem 0.45rem;
+      border-bottom: 1px solid rgba(51,65,85,0.9);
+    }
+
+    .budget-table th {
+      text-align: left;
+      color: #cbd5f5;
+    }
+
+    .budget-table tr.total-row {
+      font-weight: 700;
+    }
+
+    .budget-ok {
+      color: #bbf7d0;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .budget-bad {
+      color: #fecaca;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">💸</span>Kapitel 1 – Finanzen &amp; Budget</h1>
+        <p>
+          Hier lernst du, wie du dein Geld im Griff behältst: Einnahmen, Fixkosten,
+          Freizeit – und ob am Ende des Monats noch etwas übrig bleibt.
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="app.html">← Zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- Linke Spalte: Coach & Schritte -->
+      <section>
+        <!-- Schritt 0: Avatar wählen -->
+        <div class="card" id="step0">
+          <div class="card-header">
+            <div class="card-header-icon">🙂</div>
+            <div class="card-header-title">Wähle deinen Finanz-Coach</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Such dir aus, wer dich durch dieses Kapitel begleitet. Du kannst später
+              jederzeit zu einem anderen Thema wechseln – aber hier starten wir zusammen
+              in deinen ersten eigenen „Geld-Monat“.
+            </p>
+            <div class="avatar-grid">
+              <div class="avatar-card" data-avatar="Tom">
+                <div class="avatar-icon">🧑‍💼</div>
+                <div class="avatar-name">Tom</div>
+                <div class="avatar-role">jung, ruhig, erklärt Zahlen Schritt für Schritt</div>
+              </div>
+              <div class="avatar-card" data-avatar="Mia">
+                <div class="avatar-icon">👩‍💼</div>
+                <div class="avatar-name">Mia</div>
+                <div class="avatar-role">direkt, klar, kein Blabla – nur das, was du brauchst</div>
+              </div>
+            </div>
+            <button class="btn-primary" id="startBtn" disabled>
+              Weiter mit deinem Coach ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- Schritt 1: Intro vom Coach -->
+        <div class="card" id="step1" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon" id="coachIcon">🧑‍💼</div>
+            <div class="card-header-title" id="coachTitle">Tom, dein Finanz-Coach</div>
+          </div>
+          <div class="card-body" id="coachSpeech">
+            <!-- Text wird per JS eingesetzt -->
+          </div>
+          <button class="btn-primary" id="toTheoryBtn">
+            Okay, zeig mir die Grundlagen ▶
+          </button>
+        </div>
+
+        <!-- Schritt 2: Theorie -->
+        <div class="card" id="step2" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Grundlagen: Einnahmen &amp; Ausgaben</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Bevor wir irgendetwas rechnen, brauchst du einen klaren Überblick. Es
+              gibt drei wichtige Wörter, die du verstehen musst:
+            </p>
+            <div class="theory-grid">
+              <div class="theory-card">
+                <div class="theory-title">1. Einnahmen</div>
+                <div class="theory-text">
+                  Das ist das Geld, das <strong>zu dir hineinkommt</strong>. Zum Beispiel:
+                  Ausbildungsgehalt, Minijob, Nebenjob, vielleicht Kindergeld.
+                </div>
+              </div>
+              <div class="theory-card">
+                <div class="theory-title">2. Fixkosten</div>
+                <div class="theory-text">
+                  Kosten, die <strong>jeden Monat sicher anfallen</strong>. Sie sind ziemlich
+                  stabil und kommen immer wieder:<br>
+                  Miete, Handyvertrag, Internet, Deutschlandticket, Versicherungen.
+                </div>
+              </div>
+              <div class="theory-card">
+                <div class="theory-title">3. Variable Kosten</div>
+                <div class="theory-text">
+                  Kosten, die sich <strong>jeden Monat ändern</strong>. Zum Beispiel:<br>
+                  Essen, Drogerie, Kleidung, Kino, Gaming, Ausgehen, Geschenke.
+                </div>
+              </div>
+            </div>
+            <p class="small">
+              Wenn du diese drei Begriffe drauf hast, kannst du jedes Budget verstehen –
+              egal ob Ausbildungsgehalt oder Spitzenverdienst.
+            </p>
+          </div>
+          <button class="btn-primary" id="toQuestionBtn">
+            Ich hab’s ungefähr verstanden ▶
+          </button>
+        </div>
+
+        <!-- Schritt 3: Check-Frage -->
+        <div class="card" id="step3" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Kurzer Check: Fixkosten</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Bevor wir weitergehen, prüfen wir kurz, ob die Grundlagen sitzen.
+            </p>
+            <p style="font-weight:600; margin-bottom:0.3rem;">
+              Was sind Fixkosten?
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-correct="false">
+                <span>🅰️</span>
+                <span>Kosten, die man nur einmal im Jahr hat.</span>
+              </button>
+              <button class="answer-btn" data-correct="true">
+                <span>🅱️</span>
+                <span>Kosten, die jeden Monat ungefähr gleich sind und immer wieder kommen.</span>
+              </button>
+              <button class="answer-btn" data-correct="false">
+                <span>🅾️</span>
+                <span>Geld, das man für Freizeit und shoppen ausgibt.</span>
+              </button>
+            </div>
+            <div class="feedback" id="questionFeedback"></div>
+            <button class="btn-secondary" id="backToTheoryBtn" style="display:none;">
+              ⏪ Grundlagen nochmal ansehen
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte: Budget-Spiel -->
+      <section>
+        <!-- Schritt 4: Budget-Szenario -->
+        <div class="card" id="step4" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon">📊</div>
+            <div class="card-header-title">Dein erster Monatsplan</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Stell dir vor, du startest in die Ausbildung und bekommst
+              <strong>950&nbsp;€ netto</strong> im Monat. Du wohnst (noch) nicht allein, aber
+              du zahlst einige Dinge selbst.
+            </p>
+            <p class="small">
+              Triff jetzt ein paar Entscheidungen. Danach rechnen wir zusammen,
+              ob dein Plan realistisch ist – oder ob du am Monatsende im Minus landest.
+            </p>
+
+            <div class="budget-grid">
+              <div>
+                <div class="field">
+                  <label for="phoneSelect">Handyvertrag</label>
+                  <select id="phoneSelect">
+                    <option value="39">Vertrag: neues Handy, 39&nbsp;€/Monat</option>
+                    <option value="25">Vertrag: günstiger Tarif, 25&nbsp;€/Monat</option>
+                    <option value="15">Prepaid: flexibel, ca. 15&nbsp;€/Monat</option>
+                  </select>
+                  <div class="hint">
+                    Je teurer dein Handyvertrag, desto weniger bleibt für andere Dinge.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="ticketSelect">Ticket für Bus &amp; Bahn</label>
+                  <select id="ticketSelect">
+                    <option value="49">Deutschlandticket, 49&nbsp;€/Monat</option>
+                    <option value="35">Schülerticket/Jobticket, 35&nbsp;€/Monat</option>
+                    <option value="0">Ich fahre mit Fahrrad / zu Fuß, 0&nbsp;€</option>
+                  </select>
+                  <div class="hint">
+                    Mobilität kostet – aber ohne kommst du schwer zur Schule oder Arbeit.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="foodSelect">Geld für Essen &amp; Trinken</label>
+                  <select id="foodSelect">
+                    <option value="80">80&nbsp;€ – sehr wenig (eher unrealistisch)</option>
+                    <option value="250" selected>250&nbsp;€ – realistisch</option>
+                    <option value="450">450&nbsp;€ – eher Luxus</option>
+                  </select>
+                  <div class="hint">
+                    Viele unterschätzen, wie viel Essen im Monat kostet.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="funSelect">Freizeit &amp; sonstiges</label>
+                  <select id="funSelect">
+                    <option value="60">60&nbsp;€ – eher sparsam</option>
+                    <option value="120" selected>120&nbsp;€ – normal</option>
+                    <option value="200">200&nbsp;€ – du gönnst dir einiges</option>
+                  </select>
+                  <div class="hint">
+                    Kino, Gaming, Ausgehen, mal was bestellen – alles steckt hier drin.
+                  </div>
+                </div>
+
+                <button class="btn-primary" id="calcBudgetBtn">
+                  Budget prüfen ▶
+                </button>
+              </div>
+
+              <div>
+                <table class="budget-table">
+                  <thead>
+                    <tr>
+                      <th>Posten</th>
+                      <th>Betrag pro Monat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Einnahmen gesamt</td>
+                      <td id="incomeCell">950&nbsp;€</td>
+                    </tr>
+                    <tr>
+                      <td>Handyvertrag</td>
+                      <td id="phoneCell">–</td>
+                    </tr>
+                    <tr>
+                      <td>Ticket</td>
+                      <td id="ticketCell">–</td>
+                    </tr>
+                    <tr>
+                      <td>Essen &amp; Trinken</td>
+                      <td id="foodCell">–</td>
+                    </tr>
+                    <tr>
+                      <td>Freizeit &amp; sonstiges</td>
+                      <td id="funCell">–</td>
+                    </tr>
+                    <tr class="total-row">
+                      <td>Gesamte Ausgaben</td>
+                      <td id="totalOutCell">–</td>
+                    </tr>
+                    <tr class="total-row">
+                      <td>Am Monatsende übrig</td>
+                      <td id="restCell">–</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div id="budgetMessage"></div>
+              </div>
+            </div>
+
+            <div id="finishArea" style="display:none; margin-top:0.7rem;">
+              <p class="budget-ok">
+                Glückwunsch! Dein Plan ist nicht im Minus. Damit hast du einen soliden
+                ersten Monatsplan erstellt.
+              </p>
+              <p class="small">
+                Merke: In der Realität kommen noch Dinge dazu (Versicherungen, eigene
+                Wohnung, Rücklagen). Aber die Logik bleibt immer gleich: Einnahmen minus
+                Fixkosten minus variable Kosten.
+              </p>
+              <button class="btn-secondary" onclick="window.location.href='app.html'">
+                Zurück zur Übersicht ▸
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // State
+    let selectedAvatar = null;
+
+    const step0 = document.getElementById('step0');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const step4 = document.getElementById('step4');
+
+    const startBtn = document.getElementById('startBtn');
+    const toTheoryBtn = document.getElementById('toTheoryBtn');
+    const toQuestionBtn = document.getElementById('toQuestionBtn');
+    const backToTheoryBtn = document.getElementById('backToTheoryBtn');
+    const questionFeedback = document.getElementById('questionFeedback');
+
+    const coachIcon = document.getElementById('coachIcon');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachSpeech = document.getElementById('coachSpeech');
+
+    // Avatar-Auswahl
+    document.querySelectorAll('.avatar-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedAvatar = card.getAttribute('data-avatar');
+        startBtn.disabled = false;
+      });
+    });
+
+    function setCoachText() {
+      if (!selectedAvatar) return;
+      if (selectedAvatar === 'Tom') {
+        coachIcon.textContent = '🧑‍💼';
+        coachTitle.textContent = 'Tom, dein Finanz-Coach';
+        coachSpeech.innerHTML = `
+          <p>
+            Hey, ich bin <strong>Tom</strong>. Ich helfe dir dabei, dein Geld
+            so zu planen, dass du am Monatsende nicht im Minus landest.
+          </p>
+          <p>
+            Bevor wir über Schulden, Wohnung oder Versicherungen sprechen, musst du
+            eine Sache wirklich draufhaben:
+            <strong>Was kommt rein – und was geht raus?</strong>
+          </p>
+          <p>
+            Keine Angst, wir machen das Schritt für Schritt und mit echten Beispielen.
+          </p>
+        `;
+      } else {
+        coachIcon.textContent = '👩‍💼';
+        coachTitle.textContent = 'Mia, deine Finanz-Coachin';
+        coachSpeech.innerHTML = `
+          <p>
+            Hey, ich bin <strong>Mia</strong>. Ich zeige dir, wie du dein Geld
+            so organisierst, dass du nicht ständig denkst: „Wo ist das alles hin?“
+          </p>
+          <p>
+            Egal ob Ausbildungsgehalt oder Minijob – die Regel ist immer gleich:
+            <strong>Du brauchst Überblick.</strong>
+          </p>
+          <p>
+            Wir schauen jetzt zusammen, wie ein sinnvoller Monatsplan aussieht –
+            ohne komplizierte Fachwörter.
+          </p>
+        `;
+      }
+    }
+
+    // Schrittwechsel
+    startBtn.addEventListener('click', () => {
+      setCoachText();
+      step0.style.display = 'none';
+      step1.style.display = 'block';
+    });
+
+    toTheoryBtn.addEventListener('click', () => {
+      step1.style.display = 'none';
+      step2.style.display = 'block';
+    });
+
+    toQuestionBtn.addEventListener('click', () => {
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+    });
+
+    backToTheoryBtn.addEventListener('click', () => {
+      questionFeedback.textContent = '';
+      backToTheoryBtn.style.display = 'none';
+      step3.style.display = 'none';
+      step2.style.display = 'block';
+    });
+
+    // Check-Frage
+    document.querySelectorAll('#step3 .answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const correct = btn.getAttribute('data-correct') === 'true';
+        if (correct) {
+          questionFeedback.textContent = 'Genau. Fixkosten kommen jeden Monat ziemlich zuverlässig und bleiben relativ ähnlich.';
+          questionFeedback.className = 'feedback';
+          backToTheoryBtn.style.display = 'none';
+          // kurzer Delay, dann weiter
+          setTimeout(() => {
+            step3.style.display = 'none';
+            step4.style.display = 'block';
+          }, 900);
+        } else {
+          questionFeedback.textContent = 'Nicht ganz. Schau dir die Grundlagen zu Fixkosten nochmal an – dann wird es klarer.';
+          questionFeedback.className = 'feedback error';
+          backToTheoryBtn.style.display = 'inline-flex';
+        }
+      });
+    });
+
+    // Budget-Rechnung
+    const phoneSelect = document.getElementById('phoneSelect');
+    const ticketSelect = document.getElementById('ticketSelect');
+    const foodSelect = document.getElementById('foodSelect');
+    const funSelect = document.getElementById('funSelect');
+
+    const incomeCell = document.getElementById('incomeCell');
+    const phoneCell = document.getElementById('phoneCell');
+    const ticketCell = document.getElementById('ticketCell');
+    const foodCell = document.getElementById('foodCell');
+    const funCell = document.getElementById('funCell');
+    const totalOutCell = document.getElementById('totalOutCell');
+    const restCell = document.getElementById('restCell');
+    const budgetMessage = document.getElementById('budgetMessage');
+    const calcBudgetBtn = document.getElementById('calcBudgetBtn');
+    const finishArea = document.getElementById('finishArea');
+
+    const INCOME = 950;
+
+    function formatEuro(value) {
+      return value.toLocaleString('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        maximumFractionDigits: 0
+      });
+    }
+
+    function updateBudget() {
+      const phone = parseInt(phoneSelect.value, 10);
+      const ticket = parseInt(ticketSelect.value, 10);
+      const food = parseInt(foodSelect.value, 10);
+      const fun = parseInt(funSelect.value, 10);
+
+      incomeCell.textContent = formatEuro(INCOME);
+      phoneCell.textContent = '- ' + formatEuro(phone);
+      ticketCell.textContent = '- ' + formatEuro(ticket);
+      foodCell.textContent = '- ' + formatEuro(food);
+      funCell.textContent = '- ' + formatEuro(fun);
+
+      const totalOut = phone + ticket + food + fun;
+      const rest = INCOME - totalOut;
+
+      totalOutCell.textContent = '- ' + formatEuro(totalOut);
+      restCell.textContent = formatEuro(rest);
+
+      finishArea.style.display = 'none';
+
+      if (rest >= 100) {
+        budgetMessage.className = 'budget-ok';
+        budgetMessage.textContent =
+          'Sehr gut! Du hast noch ' + formatEuro(rest) +
+          ' übrig. Damit kannst du Rücklagen bilden oder dir etwas gönnen.';
+        finishArea.style.display = 'block';
+      } else if (rest >= 0 && rest < 100) {
+        budgetMessage.className = 'budget-ok';
+        budgetMessage.textContent =
+          'Dein Plan ist knapp, aber im Plus. Überleg dir, ob du ein bisschen weniger für Handy oder Freizeit ausgeben möchtest, damit mehr Puffer bleibt.';
+        finishArea.style.display = 'block';
+      } else {
+        budgetMessage.className = 'budget-bad';
+        budgetMessage.textContent =
+          'Uff… du bist im Minus. So geht das auf Dauer nicht gut. Versuch, einen günstigeren Vertrag zu wählen oder weniger für Freizeit/Luxus einzuplanen. Passe deine Auswahl an und klicke nochmal auf „Budget prüfen“.';
+      }
+    }
+
+    calcBudgetBtn.addEventListener('click', updateBudget);
+  </script>
+</body>
+</html>

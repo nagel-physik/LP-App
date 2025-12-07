@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 8 – Gesundheit & Krankenkassen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    /* Avatar */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .avatar-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.4), rgba(15,23,42,0.98));
+      padding: 0.75rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .avatar-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+      border-color: #38bdf8;
+    }
+
+    .avatar-card.selected {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), rgba(15,23,42,0.98));
+    }
+
+    .avatar-icon { font-size: 1.6rem; }
+    .avatar-name { font-size: 0.9rem; font-weight: 700; }
+    .avatar-role { font-size: 0.76rem; color: #cbd5f5; }
+
+    /* Info-Karten */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon {
+      font-size: 1.1rem;
+    }
+
+    .info-title {
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+
+    .info-card.open .info-arrow {
+      transform: rotate(90deg);
+    }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    /* Fragen */
+    .question-card { margin-top: 0.9rem; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">🏥</span>Kapitel 8 – Gesundheit &amp; Krankenkassen</h1>
+        <p>
+          Was passiert, wenn du krank wirst? Wer bezahlt Arzt, Krankenhaus und Medikamente –
+          und was macht eigentlich eine Krankenkasse?
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="app.html">← Zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <p class="step-label">Einstieg · Wie Gesundheitssystem &amp; Krankenkasse für dich funktionieren</p>
+
+    <main class="layout">
+      <!-- Linke Spalte -->
+      <section>
+        <!-- Coach -->
+        <div class="card" id="coachCard">
+          <div class="card-header">
+            <div class="card-header-icon">🩺</div>
+            <div class="card-header-title">Wähle deinen Gesundheits-Coach</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Krankenkassen, Versichertenkarte, Zuzahlungen – ganz schön viel Zeug.
+              Such dir jemanden aus, der dir das in Ruhe erklärt.
+            </p>
+            <div class="avatar-grid">
+              <div class="avatar-card" data-avatar="Tom">
+                <div class="avatar-icon">🧑‍⚕️</div>
+                <div class="avatar-name">Tom</div>
+                <div class="avatar-role">erklärt entspannt, was „versichert sein“ bedeutet</div>
+              </div>
+              <div class="avatar-card" data-avatar="Mia">
+                <div class="avatar-icon">👩‍⚕️</div>
+                <div class="avatar-name">Mia</div>
+                <div class="avatar-role">sagt klar, was die Kasse zahlt – und was nicht</div>
+              </div>
+            </div>
+            <button class="btn-primary" id="coachStartBtn" disabled>Coach starten ▶</button>
+          </div>
+        </div>
+
+        <!-- Coach-Text -->
+        <div class="card" id="coachTalk" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon" id="coachIcon">🧑‍⚕️</div>
+            <div class="card-header-title" id="coachTitle">Dein Gesundheits-Coach</div>
+          </div>
+          <div class="card-body" id="coachText"></div>
+        </div>
+
+        <!-- Frage 1 -->
+        <div class="card question-card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Check: Wozu brauchst du eine Krankenkasse?</div>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom:0.4rem;">
+              Welche Aussage passt am besten?
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅰️</span>
+                <span>Damit der Arzt reich wird, wenn du krank bist.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="true">
+                <span>🅱️</span>
+                <span>Damit deine Behandlung beim Arzt/ Krankenhaus bezahlt wird, ohne dass du alles selbst zahlen musst.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅾️</span>
+                <span>Man braucht sie nur, wenn man einen Unfall hatte.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Krankenkasse, Versichertenkarte &amp; Arztbesuch</div>
+          </div>
+          <div class="card-body">
+            <div class="info-list">
+              <!-- Karte 1 -->
+              <div class="info-card" data-card="grundprinzip">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🏛️</div>
+                    <div class="info-title">Wie funktioniert Krankenversicherung grob?</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    In Deutschland gibt es eine Pflicht, krankenversichert zu sein.
+                    Das bedeutet:
+
+                    • Wenn du krank wirst, musst du nicht alleine zahlen.
+                    • Die Krankenkasse übernimmt einen großen Teil der Kosten
+                      für Arzt, Krankenhaus, Medikamente usw.
+                    • Das Geld dafür kommt aus Beiträgen, die viele Menschen einzahlen.
+
+                    Du bist also Teil eines großen Systems:
+                    Alle zahlen ein – und wer krank wird, bekommt Hilfe.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 2 -->
+              <div class="info-card" data-card="karte">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">💳</div>
+                    <div class="info-title">Die elektronische Gesundheitskarte</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Von deiner Krankenkasse bekommst du eine Gesundheitskarte
+                    (oft einfach „Krankenkassenkarte“ genannt).
+
+                    • Die nimmst du zu Arztbesuchen mit.
+                    • Beim Arzt wird sie eingelesen – damit weiß die Praxis:
+                      Du bist versichert und bei welcher Kasse.
+                    • Deine Daten (Name, Geburtsdatum, Kasse) sind dort gespeichert.
+
+                    Ohne Karte kann es kompliziert werden:
+                    Du musst dann oft nachträglich nachweisen, dass du versichert bist.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 3 -->
+              <div class="info-card" data-card="schueler">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🧑‍🎓</div>
+                    <div class="info-title">Wie bist du als Schüler:in/Azubi versichert?</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Als Schüler:in bist du meistens:
+
+                    • über deine Eltern familienversichert
+                      (z.B. bei einer gesetzlichen Krankenkasse)
+                    • das heißt: Du hast Schutz, ohne eigene Beiträge zu zahlen.
+
+                    In der Ausbildung:
+                    • bist du in der Regel selbst Mitglied einer Krankenkasse.
+                    • dein Beitrag wird vom Lohn abgezogen (steht auf dem Lohnzettel).
+
+                    Wichtig:
+                    • Wenn du 18 wirst, ändern sich manchmal Dinge.
+                    • Bei Ausbildung/Studium musst du dich bewusst um deine Versicherung kümmern.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 4 -->
+              <div class="info-card" data-card="arzt">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">👨‍⚕️</div>
+                    <div class="info-title">Was passiert beim Arztbesuch?</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Ganz grob:
+
+                    1. Du gehst mit deiner Gesundheitskarte zur Praxis.
+                    2. Die Praxis liest deine Karte ein.
+                    3. Der Arzt / die Ärztin untersucht dich und stellt fest, was los ist.
+                    4. Die Praxis rechnet direkt mit deiner Krankenkasse ab.
+
+                    Du bekommst also keine Rechnung in voller Höhe,
+                    sondern trägst maximal kleine Zuzahlungen
+                    (z.B. bei manchen Medikamenten oder Hilfsmitteln).
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 5 -->
+              <div class="info-card" data-card="nichtalles">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">⚠️</div>
+                    <div class="info-title">Zahlt die Kasse alles?</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Nein, die Krankenkasse zahlt nicht alles.
+
+                    Beispiele, die oft nicht oder nur teilweise übernommen werden:
+                    • bestimmte Zahnbehandlungen (z.B. teure Füllungen)
+                    • Brillen/Kontaktlinsen (nur in bestimmten Fällen)
+                    • Schönheits-OPs ohne medizinischen Grund
+                    • manche „Zusatzleistungen“
+
+                    Es gibt einen Unterschied zwischen:
+                    • medizinisch notwendig (Kasse zahlt meist)
+                    • „nice to have“ / Luxus (musst du oft selbst zahlen)
+
+                    Deswegen ist es wichtig zu wissen:
+                    Wenn du etwas Ungewöhnliches machen willst, frag vorher:
+                    „Zahlt das die Krankenkasse?“
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Frage 2 -->
+            <div class="card question-card" style="margin-top:0.8rem;">
+              <div class="card-header">
+                <div class="card-header-icon">🧠</div>
+                <div class="card-header-title">Check: Arztbesuch &amp; Kosten</div>
+              </div>
+              <div class="card-body">
+                <p style="margin-bottom:0.4rem;">
+                  Du gehst mit deiner Gesundheitskarte zum Hausarzt. Wer bezahlt in der Regel?
+                </p>
+                <div class="answers">
+                  <button class="answer-btn" data-q="2" data-correct="true">
+                    <span>🅰️</span>
+                    <span>Die Krankenkasse rechnet mit der Praxis ab. Du zahlst höchstens kleine Zuzahlungen.</span>
+                  </button>
+                  <button class="answer-btn" data-q="2" data-correct="false">
+                    <span>🅱️</span>
+                    <span>Du musst alles selbst bezahlen und bekommst nichts zurück.</span>
+                  </button>
+                  <button class="answer-btn" data-q="2" data-correct="false">
+                    <span>🅾️</span>
+                    <span>Deine Schule bezahlt alles.</span>
+                  </button>
+                </div>
+               <div class="feedback" id="feedback2"></div>
+
+<p class="small">
+  Später können wir hier noch eine zweite Seite zu
+  <strong>„Krankmeldung, AU &amp; was tun bei längerer Krankheit?“</strong> anhängen.
+</p>
+
+<!-- Button zu Teil 2: Krankmeldung & AU -->
+<div style="margin-top: 1rem;">
+  <button class="btn-primary" onclick="window.location.href='gesundheit_krankmeldung.html'">
+    Weiter zu Krankmeldung &amp; AU ▶
+  </button>
+</div>
+
+</div> <!-- Ende Fragekarte -->
+</div> <!-- Ende rechte card -->
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let selectedAvatar = null;
+    const coachStartBtn = document.getElementById('coachStartBtn');
+    const coachTalk = document.getElementById('coachTalk');
+    const coachIcon = document.getElementById('coachIcon');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachText = document.getElementById('coachText');
+    const feedback1 = document.getElementById('feedback1');
+    const feedback2 = document.getElementById('feedback2');
+
+    document.querySelectorAll('.avatar-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedAvatar = card.getAttribute('data-avatar');
+        coachStartBtn.disabled = false;
+      });
+    });
+
+    function setCoachText() {
+      if (!selectedAvatar) return;
+      if (selectedAvatar === 'Tom') {
+        coachIcon.textContent = '🧑‍⚕️';
+        coachTitle.textContent = 'Tom, dein Gesundheits-Coach';
+        coachText.innerHTML = `
+          <p>
+            Hey, ich bin <strong>Tom</strong>. Ich zeige dir,
+            was deine Krankenkasse für dich tut – damit du im Krankheitsfall nicht planlos dastehst.
+          </p>
+        `;
+      } else {
+        coachIcon.textContent = '👩‍⚕️';
+        coachTitle.textContent = 'Mia, deine Gesundheits-Coachin';
+        coachText.innerHTML = `
+          <p>
+            Hi, ich bin <strong>Mia</strong>. Ich will, dass du weißt,
+            was deine Karte bedeutet, wer was bezahlt und wann du nachfragen solltest.
+          </p>
+        `;
+      }
+    }
+
+    coachStartBtn.addEventListener('click', () => {
+      setCoachText();
+      coachTalk.style.display = 'block';
+    });
+
+    // Info-Karten (Auf-/Zuklappen)
+    document.querySelectorAll('.info-card').forEach(card => {
+      const header = card.querySelector('.info-header');
+      const body = card.querySelector('.info-body');
+
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+
+        // andere schließen
+        document.querySelectorAll('.info-card').forEach(other => {
+          if (other !== card) {
+            other.classList.remove('open');
+            const otherBody = other.querySelector('.info-body');
+            if (otherBody) otherBody.style.display = 'none';
+          }
+        });
+
+        if (isOpen) {
+          card.classList.remove('open');
+          body.style.display = 'none';
+        } else {
+          card.classList.add('open');
+          body.style.display = 'block';
+        }
+      });
+    });
+
+    // Fragen-Logik
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.getAttribute('data-q');
+        const correct = btn.getAttribute('data-correct') === 'true';
+
+        if (q === '1') {
+          if (correct) {
+            feedback1.textContent = 'Genau: Die Krankenkasse hilft, deine Behandlung zu bezahlen, damit du nicht allein davorstehst.';
+            feedback1.className = 'feedback';
+          } else {
+            feedback1.textContent = 'Nicht ganz. Überleg noch mal: Wer bezahlt Arzt, Krankenhaus und Medikamente mit?';
+            feedback1.className = 'feedback error';
+          }
+        }
+
+        if (q === '2') {
+          if (correct) {
+            feedback2.textContent = 'Richtig: Die Praxis rechnet mit der Kasse ab – du siehst die Rechnung meistens gar nicht.';
+            feedback2.className = 'feedback';
+          } else {
+            feedback2.textContent = 'Nicht richtig. In Deutschland läuft das meistens über die Krankenkasse, nicht über dich alleine.';
+            feedback2.className = 'feedback error';
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

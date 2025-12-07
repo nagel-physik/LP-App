@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 2 – Schulden & Konsum (Grundlagen)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    /* Top-Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      color: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 0.45rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: #38bdf8;
+    }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .avatar-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.4), rgba(15,23,42,0.98));
+      padding: 0.75rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .avatar-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+      border-color: #38bdf8;
+    }
+
+    .avatar-card.selected {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), rgba(15,23,42,0.98));
+    }
+
+    .avatar-icon {
+      font-size: 1.6rem;
+    }
+
+    .avatar-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .avatar-role {
+      font-size: 0.76rem;
+      color: #cbd5f5;
+    }
+
+    .theory-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-top: 0.3rem;
+    }
+
+    .theory-card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 14px;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid rgba(148,163,184,0.75);
+    }
+
+    .theory-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .theory-text {
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
+    .example-box {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, rgba(248,113,113,0.25), rgba(15,23,42,0.96));
+      border: 1px solid rgba(248,113,113,0.6);
+      font-size: 0.8rem;
+    }
+
+    .example-title {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .question-card {
+      margin-top: 0.9rem;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+
+    .next-block { margin-top: 0.7rem; }
+
+    /* Popup – rot & vibrierend */
+    .popup-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(127, 29, 29, 0.96);
+      color: #fee2e2;
+      padding: 0.8rem 1.3rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.65);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+      z-index: 9999;
+    }
+
+    .popup-box.show {
+      opacity: 1;
+      animation: shake 0.35s ease-in-out 0s 2;
+    }
+
+    @keyframes shake {
+      0%   { transform: translate(-50%, 0); }
+      25%  { transform: translate(calc(-50% - 4px), 0); }
+      50%  { transform: translate(calc(-50% + 4px), 0); }
+      75%  { transform: translate(calc(-50% - 4px), 0); }
+      100% { transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">⚠️</span>Kapitel 2 – Schulden &amp; Konsum</h1>
+        <p>
+          Teil 1: Grundlagen. Hier geht es um Ratenkauf, „Später zahlen“, Dispo &amp; Co –
+          und warum Schulden so heimlich wachsen können.
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="app.html">← Zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <p class="step-label">Schritt 1 von 3 · Grundlagen verstehen → später Schulden-Spiel → dann weitere Kapitel</p>
+
+    <main class="layout">
+      <!-- Linke Spalte -->
+      <section>
+        <!-- Coach-Auswahl -->
+        <div class="card" id="coachCard">
+          <div class="card-header">
+            <div class="card-header-icon">🙂</div>
+            <div class="card-header-title">Wähle deinen Coach</div>
+          </div>
+          <div class="card-body">
+            <p>Such dir aus, wer dich durch das Thema Schulden &amp; Konsum begleitet.</p>
+            <div class="avatar-grid">
+              <div class="avatar-card" data-avatar="Tom">
+                <div class="avatar-icon">🧑‍💼</div>
+                <div class="avatar-name">Tom</div>
+                <div class="avatar-role">ruhig, erklärt dir Zahlen Schritt für Schritt</div>
+              </div>
+              <div class="avatar-card" data-avatar="Mia">
+                <div class="avatar-icon">👩‍💼</div>
+                <div class="avatar-name">Mia</div>
+                <div class="avatar-role">direkt, zeigt dir die Fallen ohne Blabla</div>
+              </div>
+            </div>
+            <button class="btn-primary" id="coachStartBtn" disabled>Coach starten ▶</button>
+          </div>
+        </div>
+
+        <!-- Coach-Text -->
+        <div class="card" id="coachTalk" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon" id="coachIcon">🧑‍💼</div>
+            <div class="card-header-title" id="coachTitle">Dein Coach</div>
+          </div>
+          <div class="card-body" id="coachText"></div>
+        </div>
+
+        <!-- Frage 1 -->
+        <div class="card question-card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Check: Was sind Schulden?</div>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom:0.4rem;">
+              „Schulden“ bedeutet …
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅰️</span>
+                <span>Wenn du am Ende des Monats kein Geld mehr übrig hast.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="true">
+                <span>🅱️</span>
+                <span>Wenn du Geld oder etwas bekommen hast und es noch zurückzahlen musst.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅾️</span>
+                <span>Wenn du viel Bargeld im Portemonnaie hast.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Schulden &amp; Konsum – die Basics</div>
+          </div>
+          <div class="card-body">
+            <div class="theory-grid">
+              <div class="theory-card">
+                <div class="theory-title">Was sind Schulden?</div>
+                <div class="theory-text">
+                  Schulden bedeutet: Du hast <strong>Geld oder etwas bekommen</strong>,
+                  hast aber noch nicht alles bezahlt. Du musst es später
+                  <strong>zurückzahlen</strong> – oft mit extra Kosten (Zinsen, Gebühren).
+                </div>
+              </div>
+
+              <div class="theory-card">
+                <div class="theory-title">Konsum – nichts Schlimmes, aber …</div>
+                <div class="theory-text">
+                  „Konsum“ heißt: Dinge kaufen und nutzen – Kleidung, Technik, Essen,
+                  Freizeit. Das ist normal. Problematisch wird es, wenn du Dinge kaufst,
+                  die du dir eigentlich nicht leisten kannst, und dafür Schulden machst.
+                </div>
+              </div>
+
+              <div class="theory-card">
+                <div class="theory-title">Typische Schuldenfallen</div>
+                <div class="theory-text">
+                  <ul style="margin:0.3rem 0 0.2rem 1rem; padding:0;">
+                    <li>Ratenkauf: „Zahl in 24 kleinen Raten“</li>
+                    <li>„Später zahlen“ (Pay-Later, Klarna, etc.)</li>
+                    <li>Dispo (Konto im Minus)</li>
+                    <li>Abos und In-App-Käufe, die man vergisst</li>
+                  </ul>
+                  Viele Angebote klingen harmlos – aber viele kleine Beträge
+                  können zu einer großen Summe werden.
+                </div>
+              </div>
+            </div>
+
+            <div class="example-box">
+              <div class="example-title">Beispiel: Handy für 1&nbsp;€ – wirklich ein Schnäppchen?</div>
+              <div>
+                Neues Handy: <strong>900&nbsp;€</strong> Listenpreis.<br>
+                Angebot: „Jetzt nur 1&nbsp;€ – der Rest in 24 Raten à 39&nbsp;€“.
+                <ul style="margin:0.3rem 0 0.2rem 1rem; padding:0;">
+                  <li>24 × 39&nbsp;€ = <strong>936&nbsp;€</strong></li>
+                  <li>+ 1&nbsp;€ Anzahlung → <strong>937&nbsp;€</strong></li>
+                </ul>
+                Du zahlst also <strong>37&nbsp;€ mehr</strong> und bist 2 Jahre gebunden.
+              </div>
+            </div>
+
+            <p class="small">
+              Viele achten nur auf „1&nbsp;€ heute“ – nicht auf die Gesamtkosten.
+            </p>
+          </div>
+        </div>
+
+        <!-- Dispo & Frage 2 -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">💳</div>
+            <div class="card-header-title">Dispo &amp; „Später zahlen“</div>
+          </div>
+          <div class="card-body">
+            <div class="theory-grid">
+              <div class="theory-card">
+                <div class="theory-title">Dispo – Konto im Minus</div>
+                <div class="theory-text">
+                  Beim <strong>Dispo</strong> erlaubt dir die Bank, dein Konto ins Minus zu
+                  ziehen. Klingt praktisch, ist aber teuer: Die Zinsen sind oft über
+                  <strong>10&nbsp;% im Jahr</strong>. Im Dispo zu bleiben ist eine der teuersten
+                  Arten, Schulden zu haben.
+                </div>
+              </div>
+
+              <div class="theory-card">
+                <div class="theory-title">„Später zahlen“</div>
+                <div class="theory-text">
+                  „Jetzt kaufen, in 30 Tagen zahlen“ wirkt entspannt.  
+                  Problem: Wenn du keinen Überblick hast oder es vergisst, kommen
+                  <strong>Mahngebühren</strong> dazu – und aus 40&nbsp;€ werden schnell 55&nbsp;€ oder mehr.
+                </div>
+              </div>
+            </div>
+
+            <div class="question-card next-block">
+              <p style="font-weight:600; margin-bottom:0.25rem;">
+                Warum ist der Dispo so gefährlich?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="2" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Weil er hohe Zinsen kostet und man leicht vergisst, dass man im Minus ist.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Weil die Bank sofort dein Konto sperrt.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Weil du dann keine Karte mehr hast.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback2"></div>
+
+              <div class="next-block">
+                <p class="small" id="gateHintSchulden">
+                  🔒 Du kannst erst weiter, wenn du beide Fragen oben richtig beantwortet hast.
+                </p>
+                <button class="btn-secondary" id="toGameBtn">
+                  Weiter zum Schulden-Spiel ▶
+                </button>
+                <p class="small">
+                  Im Schulden-Spiel siehst du dann, wie sich deine Entscheidungen in Zahlen auswirken.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Popup-Box -->
+  <div id="popupBox" class="popup-box"></div>
+
+  <script>
+    let selectedAvatar = null;
+    let question1Correct = false;
+    let question2Correct = false;
+    let gateOpenSchulden = false;
+
+    const coachStartBtn = document.getElementById('coachStartBtn');
+    const coachTalk = document.getElementById('coachTalk');
+    const coachIcon = document.getElementById('coachIcon');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachText = document.getElementById('coachText');
+    const feedback1 = document.getElementById('feedback1');
+    const feedback2 = document.getElementById('feedback2');
+    const toGameBtn = document.getElementById('toGameBtn');
+
+    function showPopup(message) {
+      const box = document.getElementById('popupBox');
+      box.textContent = message;
+      box.classList.add('show');
+      setTimeout(() => {
+        box.classList.remove('show');
+      }, 2200);
+    }
+
+    function updateGateHintSchulden() {
+      const hint = document.getElementById('gateHintSchulden');
+      if (question1Correct && question2Correct) {
+        gateOpenSchulden = true;
+        hint.textContent = '✅ Super! Du hast beide Fragen richtig beantwortet – du kannst jetzt zum Schulden-Spiel weitergehen.';
+      } else {
+        gateOpenSchulden = false;
+        hint.textContent = '🔒 Du kannst erst weiter, wenn du beide Fragen oben richtig beantwortet hast.';
+      }
+    }
+
+    // Avatar-Auswahl
+    document.querySelectorAll('.avatar-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedAvatar = card.getAttribute('data-avatar');
+        coachStartBtn.disabled = false;
+      });
+    });
+
+    function setCoachText() {
+      if (!selectedAvatar) return;
+      if (selectedAvatar === 'Tom') {
+        coachIcon.textContent = '🧑‍💼';
+        coachTitle.textContent = 'Tom, dein Coach für Schulden & Konsum';
+        coachText.innerHTML = `
+          <p>
+            Hey, ich bin <strong>Tom</strong>. Ich zeige dir, wie Schulden ganz leise wachsen können – und wie du das stoppst.
+          </p>
+        `;
+      } else {
+        coachIcon.textContent = '👩‍💼';
+        coachTitle.textContent = 'Mia, deine Coachin für Schulden & Konsum';
+        coachText.innerHTML = `
+          <p>
+            Hi, ich bin <strong>Mia</strong>. Ich will, dass du verstehst, wie Shops, Banken und Apps an dir verdienen.
+          </p>
+        `;
+      }
+    }
+
+    coachStartBtn.addEventListener('click', () => {
+      setCoachText();
+      coachTalk.style.display = 'block';
+    });
+
+    // Fragen-Logik
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.getAttribute('data-q');
+        const correct = btn.getAttribute('data-correct') === 'true';
+
+        if (q === '1') {
+          if (correct) {
+            feedback1.textContent = 'Richtig: Schulden bedeuten immer, dass du etwas noch zurückzahlen musst.';
+            feedback1.className = 'feedback';
+            question1Correct = true;
+          } else {
+            feedback1.textContent = 'Nicht ganz. Es geht bei Schulden immer darum, dass du noch etwas zurückzahlen musst.';
+            feedback1.className = 'feedback error';
+            question1Correct = false;
+          }
+        }
+
+        if (q === '2') {
+          if (correct) {
+            feedback2.textContent = 'Genau: Dispo ist gefährlich, weil er teuer ist und man leicht im Minus hängen bleibt.';
+            feedback2.className = 'feedback';
+            question2Correct = true;
+          } else {
+            feedback2.textContent = 'Nicht richtig. Das Problem am Dispo sind vor allem die hohen Zinsen – nicht sofortige Sperrung.';
+            feedback2.className = 'feedback error';
+            question2Correct = false;
+          }
+        }
+
+        updateGateHintSchulden();
+      });
+    });
+
+    // Weiter-Button mit Popup-Gate
+    toGameBtn.addEventListener('click', () => {
+      if (!gateOpenSchulden) {
+        showPopup('🔒 Bitte beantworte zuerst beide Fragen richtig, bevor du zum Schulden-Spiel gehst.');
+        return;
+      }
+      window.location.href = 'schulden.html';
+    });
+  </script>
+</body>
+</html>

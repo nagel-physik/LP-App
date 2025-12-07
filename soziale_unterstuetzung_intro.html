@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapitel 10 – Soziale Unterstützung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 0;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 34rem;
+    }
+
+    .top-bar-right a {
+      font-size: 0.8rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .top-bar-right a:hover {
+      border-color: #38bdf8;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.7rem;
+      margin-right: 0.6rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    /* Avatare */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .avatar-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top, rgba(59,130,246,0.4), rgba(15,23,42,0.98));
+      padding: 0.75rem 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .avatar-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+      border-color: #38bdf8;
+    }
+
+    .avatar-card.selected {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.7);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), rgba(15,23,42,0.98));
+    }
+
+    .avatar-icon { font-size: 1.6rem; }
+    .avatar-name { font-size: 0.9rem; font-weight: 700; }
+    .avatar-role { font-size: 0.76rem; color: #cbd5f5; }
+
+    /* Typing-Effekt */
+    .typing {
+      border-right: 2px solid #a5f3fc;
+      white-space: pre-line;
+      min-height: 3.2rem;
+    }
+
+    /* Info-Karten */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon {
+      font-size: 1.1rem;
+    }
+
+    .info-title {
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+
+    .info-card.open .info-arrow {
+      transform: rotate(90deg);
+    }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    /* Fragen */
+    .question-card { margin-top: 0.9rem; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+
+    .warn-box {
+      background: rgba(127,29,29,0.85);
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: #fee2e2;
+      margin-top: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1><span class="icon">🤝</span>Kapitel 10 – Soziale Unterstützung</h1>
+        <p>
+          Manchmal reicht das Geld nicht, zu Hause ist Stress oder du weißt nicht weiter.
+          Hier geht es darum: Wer kann helfen – und welche Unterstützung es grundsätzlich gibt.
+        </p>
+      </div>
+      <div class="top-bar-right">
+        <a href="app.html">← Zurück zur Übersicht</a>
+      </div>
+    </header>
+
+    <p class="step-label">Einstieg · Wenn das Leben schwer wird: nicht allein bleiben.</p>
+
+    <main class="layout">
+      <!-- Linke Spalte -->
+      <section>
+        <!-- Coach -->
+        <div class="card" id="coachCard">
+          <div class="card-header">
+            <div class="card-header-icon">🧭</div>
+            <div class="card-header-title">Wähle deine Unterstützungs-Person</div>
+          </div>
+          <div class="card-body">
+            <p>
+              Such dir jemanden aus, der dir kurz erklärt, was es für Hilfe geben kann.
+              Niemand muss alles alleine schaffen.
+            </p>
+            <div class="avatar-grid">
+              <div class="avatar-card" data-avatar="Sara">
+                <div class="avatar-icon">👩‍🏫</div>
+                <div class="avatar-name">Sara</div>
+                <div class="avatar-role">Schulsozialarbeiterin – kennt Hilfe rund um Schule &amp; Familie</div>
+              </div>
+              <div class="avatar-card" data-avatar="Emre">
+                <div class="avatar-icon">🧑‍🎧</div>
+                <div class="avatar-name">Emre</div>
+                <div class="avatar-role">Jugendtreff – kennt Beratungsstellen &amp; Freizeitangebote</div>
+              </div>
+            </div>
+            <button class="btn-primary" id="coachStartBtn" disabled>Coach starten ▶</button>
+            <p class="small">
+              Hinweis: Alles hier ist vereinfacht. Regeln für Geldleistungen (z.B. Bürgergeld, Wohngeld, BAföG)
+              ändern sich und hängen von der Situation der Familie ab.
+              Diese App ersetzt keine Beratung, sondern gibt nur einen groben Überblick.
+            </p>
+          </div>
+        </div>
+
+        <!-- Coach-Text mit Tipp-Effekt -->
+        <div class="card" id="coachTalk" style="display:none;">
+          <div class="card-header">
+            <div class="card-header-icon" id="coachIcon">👩‍🏫</div>
+            <div class="card-header-title" id="coachTitle">Deine Unterstützungs-Person</div>
+          </div>
+          <div class="card-body">
+            <div id="coachText" class="typing"></div>
+          </div>
+        </div>
+
+        <!-- Frage 1 -->
+        <div class="card question-card">
+          <div class="card-header">
+            <div class="card-header-icon">❓</div>
+            <div class="card-header-title">Check: Was ist ein guter erster Schritt?</div>
+          </div>
+          <div class="card-body">
+            <p style="margin-bottom:0.4rem;">
+              Das Geld zu Hause ist knapp, du machst dir Sorgen. Was ist eine sinnvolle Reaktion?
+            </p>
+            <div class="answers">
+              <button class="answer-btn" data-q="1" data-correct="true">
+                <span>🅰️</span>
+                <span>Ich suche mir eine erwachsene Vertrauensperson (z.B. Schulsozialarbeit, Lehrkraft, Beratungsstelle) und rede darüber.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅱️</span>
+                <span>Ich behalte alles für mich, mache mir alleine Stress und hoffe, dass es irgendwie weggeht.</span>
+              </button>
+              <button class="answer-btn" data-q="1" data-correct="false">
+                <span>🅾️</span>
+                <span>Ich nehme einfach Schulden auf oder bestelle Dinge auf Pump, ohne mit jemandem zu reden.</span>
+              </button>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rechte Spalte -->
+      <section>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">📘</div>
+            <div class="card-header-title">Wo gibt es Hilfe? (sehr vereinfacht)</div>
+          </div>
+          <div class="card-body">
+            <div class="info-list">
+              <!-- Karte 1: Erste Anlaufstellen -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🧑‍🤝‍🧑</div>
+                    <div class="info-title">Erste Anlaufstellen, wenn es schwierig wird</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Wenn du merkst: „Zu Hause oder mit Geld/Alltag wird es echt schwer“,
+                    musst du damit nicht allein bleiben.
+
+                    Mögliche erste Anlaufstellen:
+                    • Schulsozialarbeit an deiner Schule
+                    • Vertrauenslehrkraft oder Klassenleitung
+                    • Jugendtreff / Jugendclub
+                    • Telefonische oder Online-Beratungsangebote für Jugendliche
+
+                    Wichtig:
+                    • Du darfst Hilfe holen – das ist kein „Petzen“, sondern Verantwortung für dich selbst.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 2: Geld wird knapp – grober Überblick -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">💶</div>
+                    <div class="info-title">Wenn das Geld knapp ist (ganz grob)</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    In Deutschland gibt es verschiedene Leistungen,
+                    damit Menschen mit wenig Geld Unterstützung bekommen können.
+
+                    Beispiele (stark vereinfacht):
+                    • Kindergeld / Kinderzuschlag (für Familien mit Kindern)
+                    • Bürgergeld (Jobcenter) für Menschen mit sehr wenig Einkommen/Vermögen
+                    • Wohngeld als Unterstützung bei den Wohnkosten
+                    • BAföG / ähnliche Unterstützungen für Ausbildung/Schule/Studium
+
+                    Die genauen Regeln:
+                    • hängen von Einkommen, Familie, Wohnsituation usw. ab
+                    • ändern sich immer mal wieder
+
+                    Darum:
+                    • Immer aktuelle Infos nutzen (z.B. offizielle Webseiten)
+                    • oder Beratungsstellen fragen (z.B. Sozialberatung, Jugendamt, Jobcenter).
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 3: Schule & Ausbildung -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🏫</div>
+                    <div class="info-title">Hilfe rund um Schule &amp; Ausbildung</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Rund um Schule und Ausbildung gibt es Unterstützungs-Ideen wie:
+
+                    • Schulsozialarbeit – bei Stress zu Hause, mit Mitschüler:innen,
+                      Lehrkräften oder bei Sorgen allgemein
+                    • Förderangebote / Lernhilfe (je nach Schule und Bundesland)
+                    • Beratung bei der Berufsorientierung (z.B. Berufsberatung, BIZ, Projekte)
+                    • Unterstützungsleistungen für Schüler:innen / Azubis
+                      (z.B. Zuschüsse für Fahrtkosten oder Lernmittel – je nach Regelung)
+
+                    Frag in deiner Schule:
+                    • Gibt es eine Schulsozialarbeiterin / einen Schulsozialarbeiter?
+                    • Wer ist für Beratung bei Ausbildung und Beruf zuständig?
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 4: Wohnen & Familie – grob -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🏠</div>
+                    <div class="info-title">Wohnen &amp; Familie – Unterstützung (grob)</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Wenn es bei Wohnen und Familie schwierig wird, kann es Unterstützung geben.
+
+                    Beispiele (vereinfacht):
+                    • Wohngeld (für Menschen mit wenig Einkommen zur Unterstützung bei Miete)
+                    • Familienhilfe / Unterstützung durch das Jugendamt
+                    • Beratungsstellen bei Konflikten in der Familie
+                    • Anlaufstellen für Wohnungslose / von Wohnungslosigkeit bedrohte Menschen
+
+                    Wichtig:
+                    • Hier geht es oft um sehr persönliche Themen.
+                    • Beratung kann helfen, Lösungen zu finden und weitere Stellen zu kennen.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karte 5: Psychische Belastung & Krise -->
+              <div class="info-card">
+                <button class="info-header">
+                  <div class="info-title-wrap">
+                    <div class="info-icon">🧠</div>
+                    <div class="info-title">Wenn es dir psychisch schlecht geht</div>
+                  </div>
+                  <div class="info-arrow">▶</div>
+                </button>
+                <div class="info-body">
+                  <div class="info-body-inner">
+                    Manchmal ist der Kopf voll: Stress, Angst, Traurigkeit, Druck.
+
+                    Mögliche Wege:
+                    • Vertrauenslehrkraft, Schulsozialarbeit
+                    • Ärztin / Arzt oder Kinder- und Jugendpsychiatrie / Psychotherapie
+                    • anonyme Beratungsangebote (Telefon, Chat, Online-Beratungen)
+                    • Notruf / Krisendienste in akuten Notfällen
+
+                    Wichtig:
+                    • Über psychische Gesundheit zu sprechen ist okay.
+                    • Es ist mutig, sich Hilfe zu holen – nicht schwach.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Frage 2 -->
+            <div class="card question-card" style="margin-top:0.8rem;">
+              <div class="card-header">
+                <div class="card-header-icon">🧠</div>
+                <div class="card-header-title">Check: Was stimmt zu „Hilfe holen“?</div>
+              </div>
+              <div class="card-body">
+                <p style="margin-bottom:0.4rem;">
+                  Welche Aussage passt (am besten) zu sozialer Unterstützung?
+                </p>
+                <div class="answers">
+                  <button class="answer-btn" data-q="2" data-correct="true">
+                    <span>🅰️</span>
+                    <span>Hilfe zu suchen ist okay – niemand muss schwere Situationen komplett allein lösen.</span>
+                  </button>
+                  <button class="answer-btn" data-q="2" data-correct="false">
+                    <span>🅱️</span>
+                    <span>Ich darf niemals mit Erwachsenen über Probleme reden, das ist immer petzen.</span>
+                  </button>
+                  <button class="answer-btn" data-q="2" data-correct="false">
+                    <span>🅾️</span>
+                    <span>Wenn es schwierig wird, ist es am besten, alles zu verstecken und zu schweigen.</span>
+                  </button>
+                </div>
+                <div class="feedback" id="feedback2"></div>
+
+                <p class="warn-box">
+                  ⚠️ Hinweis (stark vereinfacht):
+                  Soziale Leistungen (z.B. Bürgergeld, Wohngeld, BAföG) haben genaue Regeln
+                  und ändern sich. Diese Seite ersetzt keine Rechtsberatung.
+                  Sie soll dir nur zeigen, dass es Unterstützung gibt und dass du dir Hilfe holen darfst.
+                </p>
+
+                <p class="small">
+                  Später können wir hier noch extra Seiten machen:
+                  <strong>„Geld-Leistungen im Überblick“</strong> und
+                  <strong>„Beratungsstellen &amp; Notfallkontakte“</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEUE KARTE: Weiterführende Themen -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-icon">➡️</div>
+            <div class="card-header-title">Weiterführende Themen</div>
+          </div>
+          <div class="card-body">
+            <p class="small" style="margin-top:0;">
+              Hier kannst du tiefer einsteigen:
+            </p>
+            <button class="btn-primary" onclick="window.location.href='soziale_unterstuetzung_geld.html'">
+              💶 Geld-Leistungen im Überblick
+            </button>
+            <button class="btn-primary" onclick="window.location.href='soziale_unterstuetzung_beratungen.html'">
+              📞 Beratungsstellen &amp; Notfallkontakte
+            </button>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let selectedAvatar = null;
+    const coachStartBtn = document.getElementById('coachStartBtn');
+    const coachTalk = document.getElementById('coachTalk');
+    const coachIcon = document.getElementById('coachIcon');
+    const coachTitle = document.getElementById('coachTitle');
+    const coachText = document.getElementById('coachText');
+    const feedback1 = document.getElementById('feedback1');
+    const feedback2 = document.getElementById('feedback2');
+
+    // Avatare auswählen
+    document.querySelectorAll('.avatar-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedAvatar = card.getAttribute('data-avatar');
+        coachStartBtn.disabled = false;
+      });
+    });
+
+    // Tipp-Effekt
+    let typingInterval = null;
+
+    function typeText(element, text, speed = 25) {
+      if (typingInterval) clearInterval(typingInterval);
+      element.textContent = '';
+      let index = 0;
+      typingInterval = setInterval(() => {
+        if (index <= text.length) {
+          element.textContent = text.slice(0, index);
+          index++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, speed);
+    }
+
+    function getCoachText() {
+      if (selectedAvatar === 'Sara') {
+        coachIcon.textContent = '👩‍🏫';
+        coachTitle.textContent = 'Sara, Schulsozialarbeit';
+        return (
+          'Hey, ich bin Sara.\n\n' +
+          'Ich bin z.B. an Schulen dafür da, mit Schüler:innen zu reden,\n' +
+          'wenn zu Hause, in der Klasse oder im Kopf gerade viel los ist.\n\n' +
+          'Wichtig ist: Du musst Probleme nicht allein tragen.\n' +
+          'Gemeinsam kann man schauen, welche Unterstützung es gibt\n' +
+          '(Beratung, Hilfsangebote, manchmal auch finanzielle Hilfe für die Familie).'
+        );
+      } else {
+        coachIcon.textContent = '🧑‍🎧';
+        coachTitle.textContent = 'Emre, Jugendtreff';
+        return (
+          'Hey, ich bin Emre aus dem Jugendtreff.\n\n' +
+          'Zu uns kommen viele Jugendliche, die einfach einen sicheren Ort brauchen,\n' +
+          'zum Reden, Zocken, Sport machen oder um Beratung zu bekommen.\n\n' +
+          'Wir kennen oft gute Stellen in der Stadt, die bei Geldproblemen,\n' +
+          'Stress in der Familie oder psychischen Belastungen helfen können.'
+        );
+      }
+    }
+
+    coachStartBtn.addEventListener('click', () => {
+      if (!selectedAvatar) return;
+      coachTalk.style.display = 'block';
+      const text = getCoachText();
+      typeText(coachText, text, 25);
+    });
+
+    // Info-Karten (Auf-/Zuklappen)
+    document.querySelectorAll('.info-card').forEach(card => {
+      const header = card.querySelector('.info-header');
+      const body = card.querySelector('.info-body');
+
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+
+        // andere schließen
+        document.querySelectorAll('.info-card').forEach(other => {
+          if (other !== card) {
+            other.classList.remove('open');
+            const otherBody = other.querySelector('.info-body');
+            if (otherBody) otherBody.style.display = 'none';
+          }
+        });
+
+        if (isOpen) {
+          card.classList.remove('open');
+          body.style.display = 'none';
+        } else {
+          card.classList.add('open');
+          body.style.display = 'block';
+        }
+      });
+    });
+
+    // Fragen-Logik
+    document.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.getAttribute('data-q');
+        const correct = btn.getAttribute('data-correct') === 'true';
+
+        if (q === '1') {
+          if (correct) {
+            feedback1.textContent = 'Genau: Allein grübeln hilft selten – eine erwachsene Vertrauensperson kann mit dir gemeinsam Lösungen suchen.';
+            feedback1.className = 'feedback';
+          } else {
+            feedback1.textContent = 'Nicht ganz. Probleme komplett alleine zu tragen macht oft nur noch mehr Stress.';
+            feedback1.className = 'feedback error';
+          }
+        }
+
+        if (q === '2') {
+          if (correct) {
+            feedback2.textContent = 'Richtig: Hilfe zu holen ist okay – und ein Zeichen von Stärke, nicht von Schwäche.';
+            feedback2.className = 'feedback';
+          } else {
+            feedback2.textContent = 'Nicht richtig. Schweigen und alles verstecken kann Situationen eher verschlimmern.';
+            feedback2.className = 'feedback error';
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

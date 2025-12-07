@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verträge – Handy &amp; Streaming</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #4f46e5 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.6rem 1.25rem 2.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.88rem;
+      color: #a5f3fc;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+    }
+
+    .back-link:hover { border-color: #38bdf8; transform: translateY(-1px); }
+
+    .top-bar-left h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .top-bar-left h1 span.icon { font-size: 1.7rem; }
+
+    .top-bar-left p {
+      margin: 0.25rem 0 1rem;
+      font-size: 0.86rem;
+      color: #cbd5f5;
+      max-width: 36rem;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+      gap: 1.3rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      border-radius: 18px;
+      padding: 1rem 1.05rem 1.1rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.95);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header-icon { font-size: 1.3rem; }
+    .card-header-title { font-size: 0.98rem; font-weight: 700; }
+
+    .card-body {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-top: 0.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.45rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 0.84rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+
+    @media (max-width: 640px) {
+      .input-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #022c22;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(34,197,94,0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      margin-top: 0.4rem;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .result-box {
+      margin-top: 0.6rem;
+      padding: 0.6rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 0.83rem;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .result-highlight {
+      font-weight: 700;
+      color: #bbf7d0;
+    }
+
+    .warn-box {
+      background: rgba(127,29,29,0.85);
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.8);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: #fee2e2;
+      margin-top: 0.8rem;
+    }
+
+    /* Info-Karten */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.75);
+      background: rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .info-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #e5e7eb;
+      font-size: 0.86rem;
+    }
+
+    .info-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .info-icon {
+      font-size: 1.1rem;
+    }
+
+    .info-title {
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .info-arrow {
+      font-size: 0.9rem;
+      transition: transform 0.2s ease-out;
+    }
+
+    .info-card.open .info-arrow {
+      transform: rotate(90deg);
+    }
+
+    .info-body {
+      padding: 0 0.75rem 0.65rem;
+      border-top: 1px solid rgba(51,65,85,0.9);
+      display: none;
+    }
+
+    .info-body-inner {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    /* Fragen */
+    .question-card { margin-top: 0.9rem; }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.55rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .answer-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .feedback {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #bfdbfe;
+    }
+
+    .feedback.error {
+      color: #fecaca;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <a href="vertraege_intro.html" class="back-link">← zurück zu „Verträge verstehen“ (Grundlagen)</a>
+
+  <header class="top-bar-left">
+    <h1><span class="icon">📱</span>Handy- &amp; Streaming-Verträge</h1>
+    <p>
+      Monatlich „nur“ 20 € klingt wenig – aber was kostet dich das über 2 Jahre?
+      Hier checkst du Handy- und Streaming-Verträge mit einem einfachen Rechner.
+    </p>
+  </header>
+
+  <p class="step-label">Kapitel 9 · Vertiefung · Handyvertrag, Streaming &amp; Abo-Fallen</p>
+
+  <main class="layout">
+    <!-- Linke Spalte: Rechner -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🧮</div>
+          <div class="card-header-title">Was kostet dein Vertrag wirklich?</div>
+        </div>
+        <div class="card-body">
+          <p style="margin-bottom:0.5rem;">
+            Trage ein, was dein Handy- oder Streaming-Vertrag kostet.
+            Der Rechner zeigt dir, wie hoch die Gesamtkosten über die Laufzeit sind.
+          </p>
+
+          <div class="input-row">
+            <div>
+              <label for="monat">Monatlicher Preis in €</label>
+              <input type="number" id="monat" min="0" step="1" value="20" />
+            </div>
+            <div>
+              <label for="laufzeit">Laufzeit in Monaten</label>
+              <input type="number" id="laufzeit" min="1" step="1" value="24" />
+            </div>
+          </div>
+
+          <div class="input-row">
+            <div>
+              <label for="einmalig">Einmalige Kosten (z.B. Anschluss, Handy-Anzahlung)</label>
+              <input type="number" id="einmalig" min="0" step="1" value="50" />
+            </div>
+            <div>
+              <label for="versteckt">Weitere Gebühren (z.B. Zusatzoptionen)</label>
+              <input type="number" id="versteckt" min="0" step="1" value="0" />
+            </div>
+          </div>
+
+          <button class="btn-primary" id="calcBtn">
+            Gesamtkosten berechnen ▶
+          </button>
+
+          <div class="result-box" id="resultBox">
+            Trage deine Werte ein und klicke auf „Gesamtkosten berechnen“.
+          </div>
+
+          <p class="small">
+            Tipp für die Klasse:
+            Lass die SuS verschiedene Angebote vergleichen
+            (z.B. 10 €, 20 €, 35 € im Monat – jeweils 24 Monate + Handy-Kosten).
+          </p>
+        </div>
+      </div>
+
+      <!-- Frage 1: Vertrag vs Prepaid -->
+      <div class="card question-card">
+        <div class="card-header">
+          <div class="card-header-icon">❓</div>
+          <div class="card-header-title">Check: Vertrag oder Prepaid?</div>
+        </div>
+        <div class="card-body">
+          <p style="margin-bottom:0.4rem;">
+            Was ist ein Vorteil von Prepaid (im Vergleich zu einem festen 24-Monats-Vertrag)?
+          </p>
+          <div class="answers">
+            <button class="answer-btn" data-q="1" data-correct="true">
+              <span>🅰️</span>
+              <span>Ich habe keine lange Laufzeit und kann einfach aufhören, wenn ich kein Guthaben mehr auflade.</span>
+            </button>
+            <button class="answer-btn" data-q="1" data-correct="false">
+              <span>🅱️</span>
+              <span>Ich bin automatisch 5 Jahre gebunden und kann nie kündigen.</span>
+            </button>
+            <button class="answer-btn" data-q="1" data-correct="false">
+              <span>🅾️</span>
+              <span>Es ist immer viel billiger, egal wie viel ich telefoniere und streame.</span>
+            </button>
+          </div>
+          <div class="feedback" id="feedback1"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rechte Spalte: Info-Karten -->
+    <section>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📋</div>
+          <div class="card-header-title">Handyvertrag, Streaming &amp; Abo-Fallen</div>
+        </div>
+        <div class="card-body">
+          <div class="info-list">
+            <!-- Karte 1: Typischer Handyvertrag -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">📱</div>
+                  <div class="info-title">Typischer Handyvertrag – was steht drin?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  In vielen Handyverträgen findest du:
+
+                  • Grundgebühr pro Monat (z.B. 20–40 €)
+                  • Laufzeit (oft 24 Monate)
+                  • Datenvolumen (z.B. 10 GB)
+                  • Minuten / SMS (z.B. Allnet-Flat)
+                  • Regelung für EU-Roaming
+                  • Optional: ein Handy, das über die Monatsraten mitbezahlt wird
+
+                  Wichtig:
+                  • Handy „für 1 €“ bedeutet nicht, dass es wirklich nur 1 € kostet –
+                    du zahlst den Rest über die monatlichen Gebühren mit.
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 2: Gesamtpreis statt nur Monatsrate -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">💰</div>
+                  <div class="info-title">Schau immer auf den Gesamtpreis!</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Beispiel:
+                  • 25 € im Monat
+                  • Laufzeit 24 Monate
+
+                  25 € × 24 Monate = 600 €  
+                  plus z.B. 50 € Anschlussgebühr = 650 €
+
+                  Frage:
+                  • Würdest du das Handy + die Leistung auch für einen Einmalpreis von 650 € kaufen?
+                  • Oder gibt es Prepaid/Monats-Pakete, die flexibler sind?
+
+                  Merke:
+                  • „Nur 20 € pro Monat“ klingt wenig –
+                    aber auf 2 Jahre hochgerechnet kann es sehr viel sein.
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 3: Streaming & Testphase -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">🎬</div>
+                  <div class="info-title">Streaming &amp; Testphase – wo ist der Haken?</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Viele Streaming-Dienste bieten:
+
+                  • „30 Tage kostenlos testen“
+                  • Danach: monatlicher Preis (z.B. 9–15 €)
+                  • Automatische Verlängerung, wenn du nicht kündigst
+
+                  Typische Falle:
+                  • Du testest „nur kurz“, vergisst die Kündigung
+                  • Der Dienst läuft monatelang weiter und zieht Geld ein
+
+                  Merke:
+                  • Wenn du testest, direkt einen Erinnerungs-Termin zum Kündigen setzen.
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 4: Mehrere Abos gleichzeitig -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">📺</div>
+                  <div class="info-title">Viele kleine Abos = großer Betrag</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Beispiel:
+
+                  • Musik-Streaming: 10 € / Monat
+                  • Video-Streaming: 13 € / Monat
+                  • Game-Pass: 10 € / Monat
+                  • Cloud-Speicher: 3 € / Monat
+
+                  Zusammen: 36 € jeden Monat.  
+                  Auf 1 Jahr: 36 € × 12 = 432 €.
+
+                  Merke:
+                  • Viele kleine Beträge können dein Budget stark belasten.
+                  • Überlege: Nutze ich das wirklich? Oder kann ich kündigen/pausieren?
+                </div>
+              </div>
+            </div>
+
+            <!-- Karte 5: Widerruf (ganz grob) -->
+            <div class="info-card">
+              <button class="info-header">
+                <div class="info-title-wrap">
+                  <div class="info-icon">↩️</div>
+                  <div class="info-title">Widerruf – grob erklärt (online/Telefon)</div>
+                </div>
+                <div class="info-arrow">▶</div>
+              </button>
+              <div class="info-body">
+                <div class="info-body-inner">
+                  Stark vereinfacht:
+
+                  • Bei vielen Verträgen, die du online, per Telefon oder an der Haustür abschließt,
+                    gibt es ein Widerrufsrecht (z.B. 14 Tage).
+                  • In dieser Zeit kannst du den Vertrag oft ohne Angabe von Gründen widerrufen.
+
+                  Aber:
+                  • Die genauen Regeln hängen vom Vertrag ab.
+                  • Es gibt Ausnahmen (z.B. bei bereits genutzten digitalen Inhalten).
+
+                  Wichtig:
+                  • Rechtzeitig informieren und im Zweifel Hilfe holen
+                    (Verbraucherzentrale, Erwachsene, Beratungsstellen).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Frage 2 -->
+          <div class="card question-card" style="margin-top:0.8rem;">
+            <div class="card-header">
+              <div class="card-header-icon">🧠</div>
+              <div class="card-header-title">Check: Testphase &amp; Streaming</div>
+            </div>
+            <div class="card-body">
+              <p style="margin-bottom:0.4rem;">
+                Ein Streaming-Dienst bietet „7 Tage gratis testen, danach 12 € / Monat“.
+                Was ist schlau?
+              </p>
+              <div class="answers">
+                <button class="answer-btn" data-q="2" data-correct="true">
+                  <span>🅰️</span>
+                  <span>Nur testen, wenn ich es wirklich ausprobieren will – und mir direkt eine Erinnerung zum Kündigen setzen.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅱️</span>
+                  <span>Egal, ich klicke alles – wenn es Geld kostet, ist halt Pech.</span>
+                </button>
+                <button class="answer-btn" data-q="2" data-correct="false">
+                  <span>🅾️</span>
+                  <span>Ich ignoriere alle Mails und hoffe, dass der Anbieter mich vergisst.</span>
+                </button>
+              </div>
+              <div class="feedback" id="feedback2"></div>
+
+              <p class="warn-box">
+                ⚠️ Hinweis (vereinfacht):
+                Vertrags- und Widerrufsregeln sind kompliziert und können sich ändern.
+                Diese Seite ersetzt keine Rechtsberatung, sondern soll dir helfen,
+                typische Kostenfallen bei Handy- und Streaming-Verträgen zu erkennen.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const monatInput = document.getElementById('monat');
+  const laufzeitInput = document.getElementById('laufzeit');
+  const einmaligInput = document.getElementById('einmalig');
+  const verstecktInput = document.getElementById('versteckt');
+  const calcBtn = document.getElementById('calcBtn');
+  const resultBox = document.getElementById('resultBox');
+  const feedback1 = document.getElementById('feedback1');
+  const feedback2 = document.getElementById('feedback2');
+
+  function formatEuro(value) {
+    return value.toFixed(2).replace('.', ',') + ' €';
+  }
+
+  calcBtn.addEventListener('click', () => {
+    const monat = Number(monatInput.value) || 0;
+    const laufzeit = Number(laufzeitInput.value) || 0;
+    const einmalig = Number(einmaligInput.value) || 0;
+    const versteckt = Number(verstecktInput.value) || 0;
+
+    if (monat < 0 || laufzeit <= 0 || einmalig < 0 || versteckt < 0) {
+      resultBox.textContent = 'Bitte sinnvolle Werte eintragen (keine negativen Zahlen, Laufzeit größer 0).';
+      return;
+    }
+
+    const summeMonate = monat * laufzeit;
+    const gesamt = summeMonate + einmalig + versteckt;
+
+    let text = `Deine Eingaben:
+• Monatlicher Preis: ${formatEuro(monat)}
+• Laufzeit: ${laufzeit} Monate
+• Einmalige Kosten: ${formatEuro(einmalig)}
+• Weitere Gebühren: ${formatEuro(versteckt)}
+
+Gesamtkosten über die ganze Laufzeit:
+• Aus den Monatsraten: ${formatEuro(summeMonate)}
+• Zusammen mit allen Zusatzkosten: ${formatEuro(gesamt)}
+`;
+
+    if (laufzeit >= 24 && monat >= 20) {
+      text += `\n💡 Hinweis:
+Dieser Vertrag bindet dich relativ lange und ist nicht ganz billig.
+Überlege, ob ein flexiblerer Tarif (z.B. Prepaid oder kürzere Laufzeit)
+zu deinem Budget passt.`;
+    } else if (laufzeit <= 12 && monat <= 15) {
+      text += `\n👍 Das wirkt eher wie ein überschaubarer Vertrag.
+Trotzdem: Nur abschließen, wenn du die monatlichen Kosten wirklich tragen kannst.`;
+    } else {
+      text += `\nMerke:
+Nicht nur auf den Monatsbetrag schauen – der Gesamtpreis zeigt dir,
+wie teuer es wirklich wird.`;
+    }
+
+    resultBox.innerHTML = text.replace(
+      'Gesamtkosten über die ganze Laufzeit:',
+      '<span class="result-highlight">Gesamtkosten über die ganze Laufzeit:</span>'
+    );
+  });
+
+  // Info-Karten (auf/zu)
+  document.querySelectorAll('.info-card').forEach(card => {
+    const header = card.querySelector('.info-header');
+    const body = card.querySelector('.info-body');
+
+    header.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+
+      document.querySelectorAll('.info-card').forEach(other => {
+        if (other !== card) {
+          other.classList.remove('open');
+          const otherBody = other.querySelector('.info-body');
+          if (otherBody) otherBody.style.display = 'none';
+        }
+      });
+
+      if (isOpen) {
+        card.classList.remove('open');
+        body.style.display = 'none';
+      } else {
+        card.classList.add('open');
+        body.style.display = 'block';
+      }
+    });
+  });
+
+  // Fragen-Logik
+  document.querySelectorAll('.answer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.getAttribute('data-q');
+      const correct = btn.getAttribute('data-correct') === 'true';
+
+      if (q === '1') {
+        if (correct) {
+          feedback1.textContent = 'Genau: Bei Prepaid bist du flexibler – keine lange Laufzeit, du entscheidest, wann du auflädst.';
+          feedback1.className = 'feedback';
+        } else {
+          feedback1.textContent = 'Nicht ganz. Prepaid bedeutet gerade nicht, dass du lange gebunden bist.';
+          feedback1.className = 'feedback error';
+        }
+      }
+
+      if (q === '2') {
+        if (correct) {
+          feedback2.textContent = 'Richtig: Testphasen nur bewusst nutzen – und direkt einen Termin zum Kündigen setzen.';
+          feedback2.className = 'feedback';
+        } else {
+          feedback2.textContent = 'Nicht richtig. Ignorieren hilft selten – Anbieter buchen einfach weiter ab.';
+          feedback2.className = 'feedback error';
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
